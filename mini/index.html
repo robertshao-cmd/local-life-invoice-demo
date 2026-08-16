@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>發票載具 · 官方小程序 DEMO</title>
+<style>
+  :root{--ink:#1F2430;--red:#E4001A;--mut:#8C8C8C;--line:#EDEFF2;--shelf:#DFF3D8;--new:#F04B3E}
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{font-family:-apple-system,"PingFang TC","Noto Sans TC",sans-serif;background:#F5F7FA;color:var(--ink);min-height:100dvh}
+  button{font-family:inherit;border:none;background:none;cursor:pointer;color:inherit}
+  .phone{max-width:430px;margin:0 auto;background:#fff;min-height:100dvh;position:relative;overflow:hidden}
+
+  /* 0730:標題文字要真的置中在整條 bar 的正中間,不能只是「填滿剩餘空間」
+     (剩餘空間左對齊看起來會偏左)。用 position:absolute 置中,不管左右兩側元素多寬都準。 */
+  .bar{background:var(--red);color:#fff;padding:calc(8px + env(safe-area-inset-top,0)) 12px 8px;
+       display:flex;align-items:center;gap:8px;position:relative}
+  .bar b{font-size:15px;display:flex;align-items:center;gap:6px;
+         position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);white-space:nowrap}
+  .bar b img{width:20px;height:20px;border-radius:6px;flex:none}
+  .src{margin-left:auto;display:flex;background:rgba(255,255,255,.18);border-radius:99px;padding:2px}
+  .src button{font-size:10.5px;font-weight:800;color:#fff;padding:6px 10px;border-radius:99px;opacity:.6;min-height:32px}
+  .src button.on{background:#fff;color:var(--red);opacity:1}
+
+  .sky{background:linear-gradient(180deg,#CFEAF7,#E8F6EC);padding:20px 16px 34px;position:relative}
+  .bubble{background:#fff;border-radius:14px;padding:9px 12px;font-size:12.5px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.08);display:inline-block}
+  .hill{margin-top:14px;text-align:center;font-size:34px}
+
+  .shelf-hd{margin:-22px 14px -6px;display:flex;align-items:baseline;gap:8px;position:relative;z-index:3}
+  .shelf-hd b{font-size:13px;font-weight:900;color:#1F4D33}
+  .shelf-hd span{font-size:10.5px;color:#5C7A69;font-weight:700}
+  .shelf{position:relative;z-index:3;margin:6px 10px 0;background:linear-gradient(180deg,#E7F7E2,var(--shelf));border-radius:18px;padding:14px 8px 12px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+  .shelf::-webkit-scrollbar{display:none}
+  .tile{position:relative;flex:0 0 80px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;font-weight:800;color:#263B31;min-height:44px}
+  .tile .tic{width:58px;height:58px;border-radius:15px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:27px;box-shadow:0 3px 10px rgba(80,130,90,.26)}
+  .tile .new{position:absolute;top:-6px;right:6px;font-size:9px;font-weight:800;color:#fff;background:var(--new);border-radius:99px;padding:2px 7px;box-shadow:0 2px 5px rgba(240,75,62,.35)}
+  .tile.seen .new{display:none}
+  .tile .dot{position:absolute;bottom:20px;right:10px;width:9px;height:9px;border-radius:99px;border:2px solid #fff}
+  .tile .dot.up{background:#22C55E}.tile .dot.down{background:#CBD5E1}
+  @keyframes pop{0%{transform:scale(.55) translateY(10px);opacity:0}62%{transform:scale(1.1);opacity:1}100%{transform:scale(1)}}
+  @keyframes wig{0%,100%{transform:translateY(0) rotate(0)}14%{transform:translateY(-7px) rotate(-7deg)}30%{transform:translateY(0) rotate(6deg)}46%{transform:translateY(-5px) rotate(-4deg)}62%{transform:translateY(0) rotate(3deg)}80%{transform:translateY(-2px) rotate(0)}}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+  .tile:not(.seen) .new{animation:pulse 1.6s ease-in-out infinite}
+  @media (prefers-reduced-motion:reduce){.tile:not(.seen) .new{animation:none}}
+
+  .card{margin:14px 12px 0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px}
+  .card b{font-size:13px}
+  .row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:8px 0;border-bottom:1px dashed var(--line)}
+  .row:last-child{border:none}
+  .row code{font-size:10.5px;color:var(--mut);font-family:Menlo,monospace}
+  .pill{font-size:10px;font-weight:800;padding:3px 8px;border-radius:99px}
+  .pill.up{background:#DCFCE7;color:#15803D}.pill.down{background:#F1F5F9;color:#64748B}
+  .hint{font-size:10.5px;color:var(--mut);line-height:1.8;margin:10px 12px 20px}
+
+  /* 單元 webview(iframe):正式環境就是這樣開的 */
+  #view{position:fixed;inset:0;background:#fff;display:none;flex-direction:column;z-index:50}
+  #view.on{display:flex}
+  .vbar{background:#1F2430;color:#fff;display:flex;align-items:center;gap:8px;padding:calc(8px + env(safe-area-inset-top,0)) 8px 8px}
+  .vbar button{color:#fff;font-size:19px;font-weight:900;min-width:44px;min-height:44px}
+  .vbar b{font-size:13.5px;flex:1;text-align:center}
+  .vbar small{font-size:9.5px;opacity:.7;font-family:Menlo,monospace;max-width:38%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #frame{flex:1;width:100%;border:none;background:#fff}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="bar">
+    <b><img src="data:image/webp;base64,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" alt="">發票載具</b>
+    <div class="src">
+      <button id="srcLocal" class="on" onclick="setSrc('local')">這個 demo</button>
+      <button id="srcDev" onclick="setSrc('dev')">ailab-dev</button>
+    </div>
+  </div>
+
+  <div class="sky">
+    <div class="bubble">致癌油流入市面，你中鏢了嗎？ ▸</div>
+    <div class="hill">🌱</div>
+  </div>
+
+  <div class="shelf-hd"><b>🌱 官方小程序</b><span>免下載，點開就玩</span></div>
+  <div class="shelf" id="shelf"></div>
+
+  <div class="card">
+    <b>單元狀態</b>
+    <div id="status"></div>
+  </div>
+
+  <!-- 靜態發佈版移除「其他單元改了什麼」(需要 node /api/changes) -->
+
+  <div class="hint">
+    這個殼用 <b>iframe</b> 開單元——正式環境的載具 App 就是用 webview 開
+    <code>ailab-dev.cmoney.tw/&lt;slug&gt;</code>，所以這裡看到的就是上線後的樣子。<br>
+    四個 session 各自改自己的資料夾，改完在這裡重新點一次就看得到，不需要任何整合。<br>
+    切到「ailab-dev」可以比對本機版與已部署版的差異。
+  </div>
+</div>
+
+<div id="view">
+  <div class="vbar">
+    <button onclick="closeView()" aria-label="關閉">‹</button>
+    <b id="vTitle">單元</b>
+    <small id="vUrl"></small>
+    <button onclick="reload()" aria-label="重新載入">⟳</button>
+  </div>
+  <iframe id="frame" title="小程序" allow="clipboard-write; web-share"></iframe>
+</div>
+
+<script>
+var UNITS = [
+  { slug:'detox',  name:'解毒吧',     emoji:'🧪', bg:'#FDECEC', port:5181, isNew:true },
+  { slug:'bored',  name:'無聊快篩',   emoji:'😶', bg:'#EAF1FF', port:5182, isNew:true },
+  { slug:'wealth', name:'幾歲破產',   emoji:'💸', bg:'#FDEDED', port:5183, isNew:true,
+    devSlug:'wealth-check' },   /* 已部署的那顆叫 wealth-check */
+  /* 暖暖窩是「點到」的店,不是我們的單元 → 開它的店家頁 https://dotdao-eat.cmoney.tw/<shopId>/order
+     shopId 的單一資料源是 _kit/unit-kit.js 的 UK.shops.REGISTRY.nnw;這個殼刻意不載入 kit
+     (kit 一載入就 injectCSS,會蓋掉殼自己的樣式;shell/server.js 也只服務 shell/ 這層目錄)。
+     所以這裡是第二處要填的地方 —— verify.py 會比對這兩個值,不一致就警告。
+     取得方式:掃店內桌卡 QR,或商家後台 → 顧客點餐連結。先用
+       python nest-integration/verify-shop.py <UUID>
+     確認那串 UUID 真的是暖暖窩(順便驗 enableInvoice)再填。 */
+  { slug:'nnw',    name:'暖暖窩點單', emoji:'🍝', bg:'#FBF0EC', isNew:true,
+    ext:'https://dotdao-eat.cmoney.tw', shopId:'994d0ad0-32e0-45df-9f45-d6172e706b79' }
+    /* 0813 填入:桌卡 QR 解碼取得,已用 prod menu API 驗店名=暖暖窩義式廚房 */
+];
+var SRC = 'local';
+var SEEN_KEY = 'shell_seen';
+
+/* ══ 埋點(0730 Melon:每個可被點擊的地方都要埋)══════════════════
+   這個殼刻意不載入 unit-kit.js(kit 一載入就 injectCSS,會蓋掉殼自己的樣式),
+   所以這裡自己接一份最小的 gtag —— 事件命名與參數形狀跟 kit 的 UK.track 對齊,
+   GA4 報表才拼得起來(靠 unit 參數分來源)。
+
+   ⚠️ 這一層的 shelf_open 才是 Robert 要的「點進去幾個人」:
+      使用者是從載具首頁的貨架點進單元的,單元自己的 bored_view 只看得到
+      「已經進來的人」。兩個一起看才有轉換率:shelf_open → bored_view。
+
+   GA4_ID 填了才會真的送;沒填就只有 console(本機開發不會亂送資料上去)。 */
+/* 0730 已接上:InvoiceManager property 的「官方自營小程序（H5）」網站串流。
+   貨架與三顆單元共用同一個 ID —— 這樣 shelf_open → bored_view 的轉換率
+   才算得出來(跨 ID 就接不起來了)。 */
+var GA4_ID = 'G-MTZ5H145TC';
+var GA_ON = false;
+(function initGA(){
+  if (!GA4_ID || !/^G-[A-Z0-9]+$/i.test(GA4_ID)) return;
+  try {
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ window.dataLayer.push(arguments); };
+    var s = document.createElement('script');
+    s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(GA4_ID);
+    document.head.appendChild(s);
+    gtag('js', new Date());
+    gtag('config', GA4_ID, { unit: 'shell' });
+    GA_ON = true;
+  } catch(e){}
+})();
+var CUR_SLUG = '', CUR_AT = 0;   /* 目前開著哪顆單元、什麼時候開的(給 shelf_close 用) */
+function track(ev, extra){
+  try {
+    console.log('[track]', ev, extra || {});
+    if (GA_ON && window.gtag) {
+      var p = {}, n = 0;
+      for (var k in (extra||{})) {
+        if (!Object.prototype.hasOwnProperty.call(extra,k) || n>=24) continue;
+        var v = extra[k];
+        if (v === null || v === undefined || typeof v === 'object') continue;
+        if (typeof v === 'boolean') v = v ? 1 : 0;
+        if (typeof v === 'string' && v.length > 100) v = v.slice(0,100);
+        p[String(k).slice(0,40)] = v; n++;
+      }
+      p.unit = 'shell';
+      gtag('event', String(ev).toLowerCase().replace(/[^a-z0-9_]/g,'_').slice(0,40), p);
+    }
+  } catch(e){}
+}
+
+function seen(){ try{ return JSON.parse(localStorage.getItem(SEEN_KEY)||'{}')||{}; }catch(e){ return {}; } }
+function markSeen(s){ try{ var m=seen(); if(!m[s]){ m[s]=1; localStorage.setItem(SEEN_KEY, JSON.stringify(m)); } }catch(e){} paint(); }
+
+function urlOf(u){
+  /* 外部站(點到):shopId 填了才是「直達店家頁」;沒填就只有裸網域,不是可驗的入口 */
+  if (u.ext) return u.shopId ? (u.ext + '/' + u.shopId + '/order') : u.ext;
+  /* 用 location.hostname,不要寫死 localhost。
+     手機從 LAN IP 開這個殼時,localhost 指的是「手機自己」→ 一定連線被拒。
+     跟著殼被開啟的位址走:localhost 開就是 localhost,192.168.x.x 開就是同一台。 */
+  if (SRC === 'local') return './' + u.slug + '/?v=87c57c10';   /* 靜態發佈版:同層資料夾 + 破快取 */
+  return 'https://ailab-dev.cmoney.tw/' + (u.devSlug || u.slug);
+}
+
+function render(){
+  var m = seen();
+  document.getElementById('shelf').innerHTML = UNITS.map(function(u){
+    return '<button class="tile' + (m[u.slug]?' seen':'') + '" data-slug="'+u.slug+'" onclick="openUnit(\''+u.slug+'\')">'
+      + '<span class="tic" style="background:'+u.bg+'">'+u.emoji+'</span>'+u.name
+      + (u.isNew?'<span class="new">NEW</span>':'')
+      + '<span class="dot down" id="dot-'+u.slug+'"></span></button>';
+  }).join('');
+  document.getElementById('status').innerHTML = UNITS.map(function(u){
+    return '<div class="row"><span>'+u.emoji+' '+u.name+'</span>'
+      + '<span style="display:flex;align-items:center;gap:8px">'
+      + '<code>'+urlOf(u).replace(/^https?:\/\//,'')+'</code>'
+      + '<span class="pill down" id="pill-'+u.slug+'">檢查中</span></span></div>';
+  }).join('');
+  probeAll();
+  animate();
+}
+function paint(){
+  var m = seen();
+  document.querySelectorAll('.tile').forEach(function(t){
+    if (m[t.dataset.slug]) t.classList.add('seen'); else t.classList.remove('seen');
+  });
+}
+
+/* 起了沒:用 no-cors fetch 探測。
+   (不要用 iframe onload——連線失敗時瀏覽器會載入錯誤頁,onload 照樣觸發,會誤報「運作中」) */
+function probe(u){
+  if (u.ext) return Promise.resolve(true);          /* 外部站不探測 */
+  var ctrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+  var t = setTimeout(function(){ if (ctrl) ctrl.abort(); }, 2000);
+  return fetch(urlOf(u), { mode:'no-cors', cache:'no-store', signal: ctrl ? ctrl.signal : undefined })
+    .then(function(){ clearTimeout(t); return true; })
+    .catch(function(){ clearTimeout(t); return false; });
+}
+function probeAll(){
+  UNITS.forEach(function(u){
+    probe(u).then(function(up){
+      var dot = document.getElementById('dot-'+u.slug), pill = document.getElementById('pill-'+u.slug);
+      if (dot)  dot.className  = 'dot ' + (up?'up':'down');
+      if (pill){
+        pill.className = 'pill ' + (up && !(u.ext && !u.shopId) ? 'up' : 'down');
+        pill.textContent = u.ext ? (u.shopId ? '外部站' : '待填') : (up ? '運作中' : '未啟動');
+      }
+    });
+  });
+}
+
+/* 吸睛動效:進場彈跳 + 未讀擺動;點過就安靜(注意力到被確認為止) */
+var reduce=false; try{ reduce = matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+var wigTimer = null;
+function animate(){
+  if (reduce) return;
+  var tiles = document.querySelectorAll('.tile');
+  tiles.forEach(function(t,i){
+    var ic = t.querySelector('.tic');
+    setTimeout(function(){ ic.style.animation = 'pop .5s ease-out'; }, 220 + i*70);
+  });
+  if (wigTimer) clearInterval(wigTimer);
+  wigTimer = setInterval(function(){
+    if (document.hidden || document.getElementById('view').classList.contains('on')) return;
+    document.querySelectorAll('.tile:not(.seen)').forEach(function(t,i){
+      var ic = t.querySelector('.tic');
+      setTimeout(function(){ ic.style.animation='none'; void ic.offsetWidth; ic.style.animation='wig .9s ease-in-out'; }, i*150);
+    });
+  }, 6000);
+}
+
+function openUnit(slug){
+  var u = UNITS.filter(function(x){ return x.slug===slug; })[0]; if(!u) return;
+  var wasSeen = !!seen()[slug];      /* 一定要在 markSeen 之前抓,不然永遠都是「看過」 */
+  markSeen(slug);
+  /* 誠實的空狀態:跟 kit 的 UK.shops.open 同一個原則 —— shopId 沒填就不假裝可點餐,
+     也不用裸網域(店家首頁)冒充直達 */
+  if (u.ext && !u.shopId){
+    /* 被擋下來也要記:這是「有人想點但我們還沒開通」的需求證據 */
+    track('shelf_blocked', { slug: slug, reason: 'no_shopid' });
+    alert('店家連結待填：掃店內桌卡 QR 或到商家後台複製顧客點餐連結，\n'
+        + '先跑 nest-integration/verify-shop.py <UUID> 驗過，\n'
+        + '再填 _kit/unit-kit.js 的 REGISTRY.nnw.shopId 與本檔 UNITS 的 nnw.shopId。');
+    return;
+  }
+  var url = urlOf(u);
+  /* ⭐ 主轉換事件:從貨架點進單元。GA4 後台建議把這顆標成「關鍵事件」。
+     first_open 分辨「第一次點」與「回訪再點」——NEW 標記的效果就看這個。 */
+  track('shelf_open', { slug: slug, name: u.name, src: SRC, first_open: wasSeen ? 0 : 1 });
+  CUR_SLUG = slug; CUR_AT = Date.now();
+  document.getElementById('vTitle').textContent = u.emoji + ' ' + u.name;
+  document.getElementById('vUrl').textContent = url.replace(/^https?:\/\//,'');
+  document.getElementById('frame').src = url;
+  document.getElementById('view').classList.add('on');
+  history.pushState({v:1},'');
+}
+function closeView(){
+  var v = document.getElementById('view');
+  if (!v.classList.contains('on')) return false;
+  /* 關閉單元 = 回貨架。slug 直接記在 CUR_SLUG,不從 iframe src 反解 ——
+     本機 dev 的網址是 localhost:5182/(用 port 分單元),裡面根本沒有 slug,
+     反解只在靜態發佈版(./bored/?v=)成立,兩種環境會有一種永遠是空的。
+     sec 帶停留秒數:跟 shelf_open 配對就知道「點進去之後有沒有真的看」。 */
+  track('shelf_close', { slug: CUR_SLUG || '',
+                         sec: CUR_AT ? Math.round((Date.now() - CUR_AT) / 1000) : 0 });
+  CUR_SLUG = ''; CUR_AT = 0;
+  v.classList.remove('on');
+  document.getElementById('frame').src = 'about:blank';
+  return true;
+}
+function reload(){
+  track('shelf_reload', { slug: CUR_SLUG || '' });
+  var f = document.getElementById('frame'), s = f.src;
+  f.src = 'about:blank'; setTimeout(function(){ f.src = s; }, 60);
+}
+function setSrc(s){
+  track('shelf_src_switch', { src: s });     /* 本機 dev ↔ ailab-dev 切換(開發用,不是使用者行為) */
+  SRC = s;
+  document.getElementById('srcLocal').classList.toggle('on', s==='local');
+  document.getElementById('srcDev').classList.toggle('on', s==='dev');
+  render();
+}
+window.addEventListener('popstate', function(){ closeView(); });
+window.addEventListener('keydown', function(e){ if(e.key==='Escape') closeView(); });
+
+/* 單元在入口頁按返回 → kit 會 postMessage 過來 → 關掉 webview 回到首頁小程序列。
+   這樣「首頁 → 小程序 → 單元 → 返回首頁」是一個閉環,不會卡在單元裡。 */
+window.addEventListener('message', function(e){
+  var d = e.data;
+  if (d && d.uk === 'home') closeView();
+});
+
+/* 其他單元改了什麼(唯讀 git;四個 session 平行時最需要的那塊資訊) */
+function loadChanges(){
+  var box = document.getElementById('changes');
+  box.textContent = '載入中…';
+  fetch('/api/changes', { cache:'no-store' })
+    .then(function(r){ return r.json(); })
+    .then(function(j){
+      box.innerHTML = j.repos.map(function(r){
+        if (r.missing) return '<div class="row"><span>'+r.name+'</span><span class="pill down">沒有 repo</span></div>';
+        var dirty = r.dirty
+          ? '<span class="pill up" title="'+(r.dirtyFiles||[]).join(', ')+'">未提交 '+r.dirty+' 個檔</span>'
+          : '<span class="pill down">乾淨</span>';
+        return '<div class="row" style="align-items:flex-start">'
+          + '<span style="flex:1"><b style="font-size:12px">'+r.name+'</b>'
+          + '<div style="font-size:10.5px;color:var(--mut);margin-top:2px">'
+          + (r.subject ? (r.subject.length>34 ? r.subject.slice(0,34)+'…' : r.subject) : '(還沒有 commit)')
+          + '</div>'
+          + '<div style="font-size:10px;color:#94A3B8;margin-top:1px">'
+          + (r.hash ? r.hash+' · '+r.when+' · 共 '+r.commits+' 個 commit' : '')
+          + '</div></span>' + dirty + '</div>';
+      }).join('');
+    })
+    .catch(function(){
+      box.innerHTML = '<span style="color:#B45309">讀不到 /api/changes —— 請用 <code>node _kit/shell/server.js</code> 啟動殼(不要用其他靜態伺服器)</span>';
+    });
+}
+
+render();
+/* loadChanges() 靜態版沒有 */
+/* 貨架被看到(分母)。GA4 自己的 page_view 也會有,但這一顆帶了貨架上有幾顆單元,
+   之後加減單元時能解釋轉換率為什麼變。 */
+track('shelf_view', { tiles: UNITS.length, src: SRC });
+</script>
+</body>
+</html>

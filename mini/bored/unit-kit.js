@@ -1,0 +1,1343 @@
+/*!
+ * unit-kit.js v1.0.0 — 發票載具官方自營小程序 · 共用層
+ * 單一資料源。四個單元共用同一份,任何單元都不得自行修改(verify.py 會以 hash 比對擋下)。
+ * 無外部依賴;需先載入同目錄的 qrcode.min.js(MIT, kazuhikoarase)。
+ *
+ * 為什麼要有這一層:
+ *   - NAV-STACK 是踩過兩個 P0 bug 才收斂出來的(id 撞號、過場頁誤刪返回堆疊)
+ *   - DATA 決定跨頁數字一致性(正式版換中台只改這裡)
+ *   - SHARE 決定裂變(圖+圖內 QR:圖被轉傳時文字連結會被剝掉,QR 活著)
+ *   三份各寫一次 = 三份各壞一次。
+ */
+(function (global) {
+  'use strict';
+  var UK = { version: '1.0.0' };
+
+  /* ═══════════════ 0. DEMO_MODE ═══════════════
+     ?demo=0 → 全站自動移除「(示範)/示範數據」標記(含動態文案與 toast)。
+     上線前不必逐字拆文案。 */
+  UK.DEMO = (function () {
+    try { return new URLSearchParams(location.search).get('demo') !== '0'; }
+    catch (e) { return true; }
+  })();
+  var DEMO_RE = /[（(]\s*示範[^）)]*[）)]|示範數據/g;
+  UK.dmText = function (t) {
+    if (UK.DEMO || !t) return t;
+    return String(t).replace(DEMO_RE, '').replace(/\s{2,}/g, ' ').replace(/[，,、·]\s*$/, '').trim();
+  };
+  UK.applyDemoMode = function (root) {
+    if (UK.DEMO) return;
+    var w = document.createTreeWalker(root || document.body, NodeFilter.SHOW_TEXT, null), n;
+    while ((n = w.nextNode())) {
+      if (DEMO_RE.test(n.nodeValue)) n.nodeValue = n.nodeValue.replace(DEMO_RE, '').replace(/\s{2,}/g, ' ');
+    }
+  };
+
+  /* ═══════════════ 1. DATA — 全站唯一資料源 ═══════════════
+     正式版:呼叫 UK.data.load(apiBase) 從中台 /features/summary + /invoices 取真值;
+     失敗時保留示範值並回報,畫面不會空掉。單元頁面一律只讀 UK.data.*,不自己寫死數字。 */
+  UK.data = {
+    /* 三個時間窗口彼此單調一致(30天 < 期別 < 90天),跨頁對得起來 */
+    INV: {
+      d30:    { n: 47,  shops: 23 },
+      period: { label: '05-06月', n: 88 },
+      d90:    { n: 128, shops: 61, items: 84 }
+    },
+    /* 五毒:值 + 權重。雷達列與綜合分都從這裡長出來 */
+    POISON: [
+      { k: 'sugar', nm: '🧋 糖毒',   v: 82, w: .30 },
+      { k: 'oil',   nm: '🍗 油毒',   v: 74, w: .25 },
+      { k: 'salt',  nm: '🧂 鈉毒',   v: 58, w: .20 },
+      { k: 'proc',  nm: '🥫 加工',   v: 46, w: .15 },
+      { k: 'caf',   nm: '☕ 咖啡因', v: 66, w: .10 }
+    ],
+    source: 'demo',           /* 'demo' | 'platform' */
+    /* 綜合毒值 = 最毒一項 ×70% + 其餘平均 ×30%
+       仿空品 AQI:取最嚴重項目為主——一項超標不會因為其他項乾淨就變安全。
+       不取平均是刻意的;結果頁必須把這行算式印出來(見 UK.data.formula)。 */
+    composite: function () {
+      var vs = this.POISON.map(function (p) { return p.v; });
+      if (!vs.length) return 0;
+      var mx = Math.max.apply(null, vs);
+      var rest = vs.filter(function (v, i) { return i !== vs.indexOf(mx); });
+      var avg = rest.length ? rest.reduce(function (a, b) { return a + b; }, 0) / rest.length : mx;
+      return Math.round(mx * 0.7 + avg * 0.3);
+    },
+    formula: function () {
+      var vs = this.POISON.map(function (p) { return p.v; });
+      var mx = Math.max.apply(null, vs);
+      var rest = vs.filter(function (v, i) { return i !== vs.indexOf(mx); });
+      var avg = Math.round(rest.reduce(function (a, b) { return a + b; }, 0) / rest.length * 10) / 10;
+      return {
+        total: this.composite(), max: mx, avg: avg, topName: this.topPoison(true),
+        text: '綜合毒值 ' + this.composite() + ' ＝ 最毒的一項（' + this.topPoison(true) + ' ' + mx + '）×70% ＋ 其餘平均（' + avg + '）×30%',
+        why: '為什麼不取平均：一項超標，不會因為其他項乾淨就變安全（同空品 AQI 的取法）'
+      };
+    },
+    topPoison: function (nameOnly) {
+      var top = this.POISON[0] || { nm: '', v: 0 };
+      this.POISON.forEach(function (p) { if (p.v > top.v) top = p; });
+      return nameOnly ? String(top.nm).replace(/^\S+\s*/, '') : top;
+    },
+    /* 發票張數(空狀態門檻用)。?inv=N 可演示不同張數。 */
+    invCount: function () {
+      try {
+        var q = new URLSearchParams(location.search).get('inv');
+        if (q !== null) return (+q || 0);
+      } catch (e) {}
+      return this.INV.d30.n;
+    },
+    MIN_INV: 5,
+    /* 接中台:成功→source='platform';失敗→保留示範值(畫面不空) */
+    load: function (apiBase) {
+      var self = this;
+      if (!apiBase || !global.fetch) return Promise.resolve(self);
+      return fetch(apiBase.replace(/\/$/, '') + '/features/summary', { credentials: 'include' })
+        .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(function (j) {
+          if (j && j.invoices) self.INV = j.invoices;
+          if (j && j.poison && j.poison.length) self.POISON = j.poison;
+          self.source = 'platform';
+          return self;
+        })
+        .catch(function (e) {
+          if (global.console) console.warn('[unit-kit] /features/summary 取用失敗，沿用示範值：', e.message);
+          return self;
+        });
+    }
+  };
+
+  /* ═══════════════ 2. STATE — 持久化 / 回訪 / 趨勢 ═══════════════
+     production 判準之一:狀態記得住。回訪要看得到上次結果與變化。 */
+  UK.state = {
+    load: function (key) {
+      try { return JSON.parse(localStorage.getItem(key) || '{}') || {}; } catch (e) { return {}; }
+    },
+    save: function (key, obj) {
+      try { obj.at = Date.now(); localStorage.setItem(key, JSON.stringify(obj)); } catch (e) {}
+      return obj;
+    },
+    ago: function (t) {
+      if (!t) return '';
+      var d = Math.floor((Date.now() - t) / 86400000);
+      return d <= 0 ? '今天' : (d === 1 ? '昨天' : (d < 30 ? d + ' 天前' : '很久以前'));
+    },
+    /* 回訪盒:上次數值 + 趨勢角標 + 一顆「看上次結果」 */
+    lastBox: function (o) {
+      var trend = '';
+      if (typeof o.prev === 'number' && o.prev !== o.n) {
+        var d = o.n - o.prev;
+        trend = '<i class="' + (d < 0 ? 'dn' : 'up') + '">' + (d < 0 ? '▼' : '▲') + Math.abs(d) + '</i>';
+      }
+      return '<div class="uk-lastbox"><div><small>' + (o.label || '上次') + ' · ' + this.ago(o.at) + '</small>'
+           + '<b>' + o.n + '<span>' + (o.unit || '') + '</span>' + trend + '</b></div>'
+           + '<button class="uk-lastgo" onclick="' + (o.onclick || '') + '">看上次結果 ›</button></div>';
+    },
+    /* 趨勢帶(結果頁頂):有上次且有變化才顯示 */
+    trendHTML: function (cur, prev, unit) {
+      if (typeof prev !== 'number' || prev === cur) return '';
+      var d = cur - prev, dn = d < 0;
+      return '上次 ' + prev + ' → 這次 <b>' + cur + '</b>　<span class="' + (dn ? 'dn' : 'up') + '">'
+           + (dn ? '▼ 降了 ' + Math.abs(d) : '▲ 又漲了 ' + d) + '</span>';
+    }
+  };
+
+  /* ═══════════════ 3. NAV — 返回堆疊 ═══════════════
+     ⚠️ 這是踩過兩個 P0 bug 收斂出來的邏輯,不要重寫:
+       bug1: 靜態視圖與 JS 注入視圖 id 撞號 → 功能永遠打不開(所以 views 必須顯式列出)
+       bug2: 站在「過場頁/一次性頁」按返回會 pop 掉真正的上一頁 → 追蹤 current,
+             不在堆疊頂時只回堆疊頂、不 pop
+     transient = 過場動畫頁、一次性頁(空狀態):進得去但不入堆疊、也不會被誤刪。 */
+  UK.nav = {
+    create: function (cfg) {
+      var views = cfg.views || [];
+      var transient = cfg.transient || [];
+      var render = cfg.render;                        /* function(view) 實際切畫面 */
+      var sheets = cfg.sheets || function () { return []; }; /* 回傳目前開著的浮層 close 函式陣列 */
+      var stack = [], cur = null, popping = false;
+      /* 堆疊見底 → 一律回發票載具首頁(嵌入時 postMessage,單機時導回殼)。
+         單元傳的 onHome 只在非嵌入時當備援。 */
+      function goHome() {
+        if (UK.embedded()) { UK.exitToHome(); return; }
+        UK.exitToHome(cfg.onHome);
+      }
+
+      function isTrans(v) { return transient.indexOf(v) > -1; }
+      function mark(v) {
+        cur = v;
+        if (isTrans(v)) return;
+        if (stack[stack.length - 1] !== v) {
+          stack.push(v);
+          if (!popping) { try { history.pushState({ uk: 1 }, ''); } catch (e) {} }
+        }
+      }
+      function paint(v) { popping = true; render(v); cur = v; popping = false; }
+
+      var api = {
+        views: views,
+        show: function (v) {
+          if (views.indexOf(v) < 0 && global.console) console.warn('[unit-kit] 未登記的 view:', v);
+          mark(v); render(v);
+        },
+        back: function () {
+          /* 0730 Melon:返回鈕也是「可被點擊的地方」,要埋。
+             from 帶當前畫面,sheet 標記這一下是關浮層還是真的退頁——
+             兩者混在一起算,退出率會看起來比實際嚴重。 */
+          var open = sheets();
+          for (var i = 0; i < open.length; i++) {
+            if (open[i]()) { UK.track('nav_back', { from: cur || '', sheet: 1 }); return; }
+          }
+          UK.track('nav_back', { from: cur || '', sheet: 0, depth: stack.length });
+          var top = stack[stack.length - 1];
+          if (cur !== top) { if (top) paint(top); else goHome(); return; }
+          stack.pop();
+          var prev = stack[stack.length - 1];
+          if (!prev) goHome(); else paint(prev);
+        },
+        reset: function (v) { stack = []; cur = null; if (v) api.show(v); },
+        current: function () { return cur; },
+        depth: function () { return stack.length; }
+      };
+      global.addEventListener('popstate', function () { api.back(); });
+      return api;
+    }
+  };
+
+  /* ═══════════════ 3.5 HOME — 回發票載具首頁 ═══════════════
+     正式環境:App 用 webview 開單元,「返回」要回到 App 首頁的小程序列。
+     開發環境:測試殼(5180)用 iframe 開單元 → 用 postMessage 請殼關掉 webview。
+     單機直開(5181/5182/5183):導回測試殼首頁,讓「先進首頁再點單元」這條路永遠存在。
+
+     ⚠️ 這是 kit 層的保證:nav 在「堆疊見底」時一律走這裡,單元不必也不該自己實作。
+        (單元傳的 onHome 只在「非嵌入」時當備援,嵌入時一律 postMessage——
+         否則某個單元寫成 toast,在殼裡就變成死路。) */
+  /* 測試殼位址;正式版由 App 接手,不會用到。
+     不要寫死 localhost:手機從 LAN IP 開單元時,localhost 是手機自己 → 回首頁會斷。
+     跟著目前開啟的主機走,只換 port。 */
+  UK.HOME = (function () {
+    try { return location.protocol + '//' + location.hostname + ':5180/'; }
+    catch (e) { return 'http://localhost:5180/'; }
+  })();
+  UK.embedded = function () {
+    try { return global.parent && global.parent !== global; } catch (e) { return false; }
+  };
+  UK.exitToHome = function (fallback) {
+    /* 1) 嵌在測試殼／App webview 裡 → 請上層關掉 */
+    if (UK.embedded()) {
+      try { global.parent.postMessage({ uk: 'home', from: (global.UK_SLUG || document.title) }, '*'); return true; } catch (e) {}
+    }
+    /* 2) 正式 App 的原生橋(有就用) */
+    try { if (global.fapiao && global.fapiao.close) { global.fapiao.close(); return true; } } catch (e) {}
+    /* 3) 單機直開 → 導回載具首頁(小程序列在那裡) */
+    if (typeof fallback === 'function') { fallback(); return true; }
+    if (UK.HOME) { global.location.href = UK.HOME; return true; }
+    UK.toast('回發票載具首頁');
+    return false;
+  };
+  /* 單機直開時,頁面頂端掛一條「從發票載具首頁進入」——
+     讓正規入口(首頁 → 小程序列 → 單元)永遠看得到,但不擋開發直開。 */
+  UK.homeHint = function () {
+    if (UK.embedded() || document.getElementById('uk-homehint')) return;
+    var a = document.createElement('a');
+    a.id = 'uk-homehint'; a.href = UK.HOME;
+    a.textContent = '⬅ 從發票載具首頁進入（正規路徑：首頁 → 小程序 → 這裡）';
+    document.body.appendChild(a);
+  };
+
+  /* ── 外開連結(0731 Rebecca TestFlight 回報)────────────────────────
+     症狀:在發票載具 TestFlight 測試機裡,按「Google map 帶你去」完全沒反應。
+     原因:WKWebView 只有在 App 實作了 uiDelegate 的
+       webView(_:createWebViewWith:for:windowFeatures:)
+     時才會處理 window.open / target="_blank"。沒實作的話 window.open 直接
+     回 null 而且**完全靜默**——不丟錯、console 也乾淨,所以從外面看像沒接。
+     這也是為什麼同一顆單元在 Safari 正常、在 App 裡壞掉。
+
+     解法不是求 App 改(那要排版本),而是自己退一階:window.open 回 null 就改
+     同視窗導航。webview 一定吃 location.href,而且 nav 有 pushState、
+     App 的原生返回鍵可以把人帶回單元,不會變成死路。
+
+     via 參數是刻意留的:上線後在 GA4 看 uk_external_open 的 via 分佈,就知道
+     App 那邊到底走哪一條——不用再靠人回報「我按了沒反應」。
+     ⚠️ url 只放地點名/官方名單這種公開字串,絕對不要把帶 cid 的網址丟進來。 */
+  UK.openExternal = function (url, meta) {
+    if (!url) return false;
+    meta = meta || {};
+    var w = null;
+    try { w = global.open(url, '_blank'); } catch (e) {}
+    if (w) {
+      try { w.opener = null; } catch (e) {}      /* 不給新視窗回頭操作本頁的把手 */
+      meta.via = 'newtab'; UK.track('uk_external_open', meta);
+      return 'newtab';
+    }
+    meta.via = 'samewindow'; UK.track('uk_external_open', meta);
+    /* 先讓 track 把 beacon 送出去再離開,不然這顆事件會跟著頁面一起被丟掉 */
+    setTimeout(function () { global.location.href = url; }, 120);
+    return 'samewindow';
+  };
+  /* 頁面上寫死的 <a target="_blank"> 有同一個毛病(例如 bored 的「看名單」)。
+     用一個 capture 階段的委派攔下來走 openExternal,單元不用逐個改成 onclick。
+     opt-in:單元自己在 init 呼叫,不在共用層偷偷全域生效。 */
+  UK.bindExternalLinks = function (root) {
+    (root || document).addEventListener('click', function (e) {
+      var a = e.target && e.target.closest && e.target.closest('a[target="_blank"]');
+      if (!a || !a.href) return;
+      e.preventDefault();
+      UK.openExternal(a.href, { kind: 'link' });
+    }, true);
+  };
+
+  /* ═══════════════ 4. TOAST ═══════════════ */
+  UK.toast = function (msg) {
+    msg = UK.dmText(msg);
+    var t = document.getElementById('uk-toast');
+    if (!t) { t = document.createElement('div'); t.id = 'uk-toast'; t.className = 'uk-toast'; document.body.appendChild(t); }
+    t.textContent = msg; t.classList.add('on');
+    clearTimeout(t._h); t._h = setTimeout(function () { t.classList.remove('on'); }, 2400);
+  };
+
+  /* ═══════════════ 5. SHOPS — 商家小程序註冊表 ═══════════════
+     解毒站/好去處要能直達「真的在小程序商店開通的那個商家 App」。
+     點到店家頁格式:https://dotdao-eat.cmoney.tw/{shopId}/order  (shopId = 點到 Shop UUID)
+     取得方式:掃店內桌卡 QR,或商家後台 → 顧客點餐連結。點到沒有公開的店家清單 API。
+     未開通的商家**不給假的點餐入口**——有開通 vs 沒開通的對比就是 BD 的說服素材。 */
+  UK.shops = {
+    BASE: 'https://dotdao-eat.cmoney.tw',
+    REGISTRY: {
+      nnw:     { name: '暖暖窩義式廚房',        platform: '點到', shopId: '994d0ad0-32e0-45df-9f45-d6172e706b79', registered: true  },
+      yuanwei: { name: '原味時代健康餐盒 府中店', platform: null,  shopId: '', registered: false },
+      guoyang: { name: '果漾 Fresh 冷壓蔬果飲',   platform: null,  shopId: '', registered: false }
+    },
+    /* null = 未開通;'' = 已開通但 shopId 待填;字串 = 可直達 */
+    url: function (k) {
+      var sh = this.REGISTRY[k];
+      if (!sh || !sh.registered) return null;
+      return sh.shopId ? (this.BASE + '/' + sh.shopId + '/order') : '';
+    },
+    open: function (k) {
+      var u = this.url(k);
+      if (u === null) { UK.toast('這家還沒開通線上點餐——先幫你導航過去'); return false; }
+      if (u === '')   { UK.toast('店家連結待填：掃店內桌卡 QR 或到商家後台複製顧客點餐連結'); return false; }
+      UK.track('shop_open', { shop: k });
+      UK.openExternal(u, { kind: 'shop' }); return true;   /* App webview 裡 window.open 是靜默失敗的 */
+    },
+    tag: function (k) {
+      var u = this.url(k);
+      return u === null ? '尚未開通線上點餐' : '📱 可線上點餐';
+    }
+  };
+
+  /* ═══════════════ 6. TRACK ═══════════════
+     一個事件同時走三條路,彼此獨立、互不擋:
+       ① console  —— 開發時看得到,永遠都有
+       ② 中台 /track —— 只在 UK.apiBase 有設(部署到 ailab-*)時
+       ③ GA4      —— 只在 UK.ga.init() 呼叫過之後
+
+     為什麼 GA4 放在共用層:三顆單元共用同一套事件命名與參數形狀,
+     報表才拼得起來(靠 unit 參數分單元)。各單元自己接 gtag 一定會長歪。 */
+  UK.apiBase = null;
+
+  /* GA4 ── 0730 Melon 要求:每個可被點擊的地方都要埋。
+     ⚠️ GA4 的硬限制(踩到就是資料默默不見,不會報錯):
+       · 事件名 ≤40 字元,只能 a-z/0-9/_,而且要字母開頭
+       · 參數名 ≤40 字元、參數值 ≤100 字元
+       · 一個事件最多 25 個自訂參數
+       · **自訂參數要在 GA4 後台註冊成「自訂維度」才看得到**,
+         沒註冊的話事件收得到、但參數在報表裡是空的(見 docs/analytics-events.md)
+     所以下面 send() 會先過濾與截斷,不合法的直接丟掉而不是送壞資料上去。 */
+  UK.ga = {
+    id: null,
+    ready: false,
+    /* ══ 個資不進 GA4(0731)══════════════════════════════════════
+       App 外開單元的 URL 會帶敏感參數,實例:
+         /check-food-safety?cid=L0taWVVES0c&phone=MDk4NzY1NDMyMQ
+         cid   = 載具條碼 Base64URL(RFC 4648) → 解出 /KZYUDKG
+         phone = 手機號碼 Base64URL          → 解出 0987654321
+       GA4 的 page_view 預設把「完整 href」當 page_location 送出,
+       等於把條碼與手機號寫進 GA4 —— GA4 就是一種 log,這違反口徑鐵律
+       「載具條碼=個資,只比對不落地、不寫 log(含 error log)」。
+       ⚠️ Base64 不是加密:任何有 GA4 報表權限的人一行就解得開。
+       所以 config 時明確覆寫 page_location / page_referrer,把敏感參數剝掉。
+       這是四顆單元共同需要的,所以放在共用層而不是各單元自己做。 */
+    SENSITIVE: ['cid', 'phone', 'carrier', 'carrierno', 'barcode', 'tel',
+                'email', 'uid', 'userid', 'token', 'idno'],
+    cleanUrl: function (u) {
+      if (!u) return '';
+      try {
+        var url = new URL(u, global.location.href), hit = [], keys = [], self = this;
+        /* 先把現有 key 蒐集成陣列再刪 —— 邊迭代邊刪會漏掉。
+           ⚠️ 不要用 Array.prototype.slice.call(searchParams.keys()):
+           keys() 是迭代器、沒有 length,slice 會回傳空陣列(踩過)。 */
+        url.searchParams.forEach(function (v, k) { keys.push(k); });
+        keys.forEach(function (real) {
+          if (self.SENSITIVE.indexOf(real.toLowerCase()) !== -1) {
+            url.searchParams.delete(real); hit.push(real);
+          }
+        });
+        if (hit.length && global.console) {
+          console.info('[unit-kit] 已從 GA4 的 page_location 剝掉敏感參數:', hit.join(', '));
+        }
+        return url.toString();
+      } catch (e) {
+        /* URL 建不起來(極舊環境)→ 寧可整段 query 丟掉,也不要漏個資出去 */
+        return String(u).split('?')[0];
+      }
+    },
+    /* 呼叫方式:UK.ga.init('G-XXXXXXXXXX', 'bored')
+       unit 會自動掛進每一個事件,GA4 報表就能用它切分三顆單元。 */
+    init: function (id, unit) {
+      if (!id || this.ready) return;
+      if (!/^G-[A-Z0-9]+$/i.test(id)) {
+        if (global.console) console.warn('[unit-kit] GA4 ID 格式不像 G-XXXXXXXXXX,不載入:', id);
+        return;
+      }
+      this.id = id; this.unit = unit || global.UK_SLUG || '';
+      try {
+        global.dataLayer = global.dataLayer || [];
+        global.gtag = function () { global.dataLayer.push(arguments); };
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(id);
+        /* 0731:分得出「腳本真的載到」與「只是把標籤插進去了」。
+           ⚠️ 底下的 this.ready = true 只代表沒丟例外,**不代表 gtag.js 載得到**。
+           在 App 的 WebView 裡如果 googletagmanager.com 被內容阻擋／網域白名單擋掉,
+           整個 GA4 會靜默失效:畫面完全正常、console 乾淨、一個事件都不會到。
+           跟今天那個 window.open 是同一種失敗模式,所以一定要有個地方看得出來。
+           self 而不是 this:onload 觸發時的 this 是 script 元素。 */
+        var self = this;
+        s.onload  = function () { self.scriptOk = true; };
+        s.onerror = function () { self.scriptFail = true; };
+        document.head.appendChild(s);
+        global.gtag('js', new Date());
+        /* 單元是獨立頁面,page_view 就讓 GA4 自己送(不像 SPA 要自己補);
+           但把 unit 設成全域參數,之後每個事件都自動帶上。 */
+        /* page_location 一定要明確給乾淨版,不能讓 GA4 用預設的完整 href */
+        var cfg = { unit: this.unit, page_location: this.cleanUrl(global.location.href) };
+        var ref = this.cleanUrl(document.referrer || '');
+        if (ref) cfg.page_referrer = ref;
+        global.gtag('config', id, cfg);
+        this.ready = true;
+      } catch (e) {
+        if (global.console) console.warn('[unit-kit] GA4 載入失敗(不影響其他埋點):', e && e.message);
+      }
+    },
+    /* 事件名合法化:小寫、非法字元換 _、開頭補 e_、截到 40 */
+    evName: function (ev) {
+      var n = String(ev || '').toLowerCase().replace(/[^a-z0-9_]/g, '_');
+      if (!/^[a-z]/.test(n)) n = 'e_' + n;
+      return n.slice(0, 40);
+    },
+    /* 參數清洗:名字截 40、字串值截 100、物件/陣列丟掉(GA4 不吃)、最多 24 個
+       (留一格給自動掛上的 unit)。null/undefined 直接省略,不要送空字串汙染報表。 */
+    params: function (extra) {
+      var out = {}, n = 0;
+      for (var k in (extra || {})) {
+        if (!Object.prototype.hasOwnProperty.call(extra, k)) continue;
+        if (n >= 24) break;
+        var v = extra[k];
+        if (v === null || v === undefined) continue;
+        if (typeof v === 'object') continue;
+        if (typeof v === 'boolean') v = v ? 1 : 0;
+        if (typeof v === 'string' && v.length > 100) v = v.slice(0, 100);
+        out[String(k).slice(0, 40)] = v;
+        n++;
+      }
+      return out;
+    },
+    send: function (ev, extra) {
+      if (!this.ready || !global.gtag) return false;
+      var p = this.params(extra);
+      if (this.unit && p.unit === undefined) p.unit = this.unit;
+      global.gtag('event', this.evName(ev), p);
+      return true;
+    }
+  };
+
+  /* ?debug=1 → 畫面右下角開一個即時事件記錄,用來人工確認
+     「每一個可點的地方是不是都真的有埋」。只看得到自己這一頁的事件。 */
+  UK._dbg = null;
+  UK.debugOn = function () {
+    try { return new URLSearchParams(location.search).get('debug') === '1'; }
+    catch (e) { return false; }
+  };
+  UK.debugLog = function (ev, extra, sent) {
+    if (!UK.debugOn()) return;
+    var box = UK._dbg;
+    if (!box) {
+      box = UK._dbg = document.createElement('div');
+      box.id = 'uk-dbg';
+      box.style.cssText = 'position:fixed;right:8px;bottom:8px;z-index:99999;width:250px;max-height:44vh;'
+        + 'overflow:auto;background:rgba(17,20,26,.94);color:#D7E2EE;font:11px/1.55 Menlo,monospace;'
+        + 'border-radius:10px;padding:8px 10px;box-shadow:0 4px 18px rgba(0,0,0,.4)';
+      box.innerHTML = '<b style="color:#7FD1CC">埋點即時記錄</b>'
+        + '<span style="float:right;cursor:pointer;padding:0 4px" onclick="this.parentNode.remove();UK._dbg=null">✕</span>'
+        + '<div id="uk-dbg-n" style="color:#8C9BAB"></div>';
+      document.body.appendChild(box);
+      UK._dbgCount = 0;
+    }
+    UK._dbgCount++;
+    var line = document.createElement('div');
+    line.style.cssText = 'border-top:1px solid rgba(255,255,255,.12);padding-top:4px;margin-top:4px;word-break:break-all';
+    var keys = Object.keys(extra || {});
+    line.innerHTML = '<span style="color:' + (sent ? '#8FD98A' : '#E8A33D') + '">'
+      + (sent ? '▲GA4' : '○local') + '</span> <b>' + ev + '</b>'
+      + (keys.length ? '<br><span style="color:#8C9BAB">' + keys.map(function (k) {
+          return k + '=' + extra[k]; }).join(' · ') + '</span>' : '');
+    box.appendChild(line);
+    var n = document.getElementById('uk-dbg-n');
+    if (n) n.textContent = '共 ' + UK._dbgCount + ' 筆 · GA4 ' + (UK.ga.ready ? '已接' : '未接');
+    box.scrollTop = box.scrollHeight;
+  };
+
+  UK.track = function (ev, extra) {
+    var sent = false;
+    try {
+      if (global.console) console.log('[track]', ev, extra || {});
+      if (UK.apiBase && global.fetch) {
+        fetch(UK.apiBase.replace(/\/$/, '') + '/track', {
+          method: 'POST', credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ event: ev, props: extra || {} })
+        }).catch(function () {});
+      }
+      sent = UK.ga.send(ev, extra);
+    } catch (e) {}
+    try { UK.debugLog(ev, extra, sent); } catch (e) {}
+  };
+
+  /* ═══════════════ 7. POI — 地點卡 bottom sheet ═══════════════
+     推薦理由綁回發票證據;合作商家 CTA=看菜單(直達其店家頁),其餘=帶我去(Maps)。
+     每一次點擊都 track:非合作店的點擊熱榜 = 引流商家開通名單的需求證據。 */
+  UK.poi = {
+    _el: null,
+    open: function (row, dict) {
+      var k = row.getAttribute('data-poi'), p = dict[k];
+      if (!p) return;
+      var shopKey = row.getAttribute('data-shop') || null;
+      UK.track('poi_tap', { poi: k, shop: shopKey });
+      var m = this._el;
+      if (!m) {
+        m = document.createElement('div'); m.id = 'uk-poi'; m.className = 'uk-mask';
+        m.innerHTML = '<div class="uk-sheet uk-poi-sheet">'
+          + '<div class="uk-poi-emoji"></div><b class="uk-poi-name"></b>'
+          + '<div class="uk-poi-why"></div><div class="uk-poi-info"></div>'
+          + '<div class="uk-poi-btns"><button class="uk-btn-go"></button><button class="uk-btn-add"></button></div>'
+          + '<button class="uk-sheet-cancel">關閉</button></div>';
+        m.onclick = function (e) { if (e.target === m) UK.poi.close(); };
+        m.querySelector('.uk-sheet-cancel').onclick = function () { UK.poi.close(); };
+        document.body.appendChild(m); this._el = m;
+      }
+      /* 0731:改成 innerHTML —— 單元可能傳 svg 圖示(無聊快篩把 emoji 全換成
+         發票載具 App 風格的線條圖了)。textContent 會把 <svg> 當字面文字印出來。
+         對還在傳 emoji 的單元(解毒吧/幾歲破產)完全沒差,emoji 本來就是合法 HTML 文字。 */
+      m.querySelector('.uk-poi-emoji').innerHTML = p.emoji || '📍';
+      m.querySelector('.uk-poi-name').textContent = p.name;
+      m.querySelector('.uk-poi-why').textContent = p.why || '';
+      var extra = shopKey ? '　·　' + UK.shops.tag(shopKey) : '';
+      m.querySelector('.uk-poi-info').textContent = (p.info || '') + extra;
+
+      var go = m.querySelector('.uk-btn-go');
+      var canOrder = shopKey && UK.shops.url(shopKey) !== null;
+      /* 地點卡的「帶我去」——App webview 裡原本的 window.open 是靜默失敗,改走 openExternal */
+      function nav() {
+        UK.openExternal('https://maps.google.com/?q=' + encodeURIComponent(p.q || p.name),
+                        { kind: 'map_poi' });
+      }
+      if (canOrder) {
+        go.textContent = '🍝 看菜單，先點起來';
+        go.onclick = function () { if (!UK.shops.open(shopKey)) nav(); };
+      } else {
+        go.textContent = '🧭 帶我去';
+        go.onclick = function () { UK.track('poi_nav', { poi: k }); nav(); };
+      }
+      /* 第二顆按鈕:與列表列的按鈕雙向同步(交給單元用 onAdd 定義行為) */
+      var add = m.querySelector('.uk-btn-add');
+      var vf = row.querySelector('.uk-vf');
+      function sync() {
+        var done = vf && vf.classList.contains('done');
+        add.textContent = done ? '✅ 已排入' : (p.addLabel || '就衝這家');
+        add.classList.toggle('done', !!done);
+      }
+      sync();
+      add.onclick = function () { if (p.onAdd) p.onAdd(vf, row); sync(); };
+      m.classList.add('on');
+      try { history.pushState({ uk: 1 }, ''); } catch (e) {}
+    },
+    close: function () {
+      /* 0730 Melon:浮層的關閉/取消也是可點擊的地方,要埋。
+         一個 sheet_close 事件 + sheet 參數分辨是哪一張,不要開四個事件名 —— 
+         GA4 的事件清單越短越好看,要分就用參數分。 */
+      if (this._el && this._el.classList.contains('on')) {
+        this._el.classList.remove('on'); UK.track('sheet_close', { sheet: 'poi' }); return true;
+      }
+      if (this._el) { this._el.classList.remove('on'); return true; }
+      return false;
+    },
+    isOpen: function () { return !!(this._el && this._el.classList.contains('on')); },
+    /* 委派:整列可點,但按鈕區不觸發 sheet */
+    bind: function (dict, selector) {
+      document.addEventListener('click', function (e) {
+        if (!e.target.closest) return;
+        var row = e.target.closest(selector || '[data-poi]');
+        if (!row || e.target.closest('button')) return;
+        UK.poi.open(row, dict);
+      });
+    }
+  };
+
+  /* ═══════════════ 8. SHARE — 一張圖 + 圖內 QR ═══════════════
+     0724 定調:不做多社群尺寸選單。單一 4:5 圖卡(IG/FB/LINE 通吃),
+     回鏈長在圖裡(QR)——圖被轉傳時文字與連結會被剝掉,QR 活著。
+     入口極簡:右上 ⋯ → 複製連結。 */
+  /* 發票載具 App 真實 icon(0730,取代原本的 🌱 emoji)。
+     來源:invoicemanager_screens_assets/app_icon_no_text.webp,480→160 縮圖
+     (真實 UI/UX 素材站:invoicemanager-screens-dev-557076811903.asia-east1.run.app,
+      0730 起以後任何真實素材都從這裡拉,不要再各自去找官方 iOS 素材站或憑印象畫)。
+     ⚠️ 一定要內嵌 data URI,不能抓遠端圖:跨源圖片畫上 canvas 會讓它 tainted,
+        toBlob() 會拋 SecurityError,分享與下載會整組壞掉。data URI 視為同源,安全。
+     載入前(理論上極短)先用 emoji 墊著,載完若分享卡開著就自動重畫一次。 */
+  var APP_ICON = new Image();
+  APP_ICON.src = 'data:image/webp;base64,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';
+  APP_ICON.onload = function () {
+    try { if (UK.share && UK.share.isOpen && UK.share.isOpen()) UK.share.render(); } catch (e) {}
+  };
+
+  UK.share = {
+    SIZE: { w: 1080, h: 1350 },
+    /* 0727 改亮底:動態消息裡亮色卡比深色卡跳,而且和 App 本體(白底)一致。
+       要改回深色只要換這張表,版面 code 不用動。 */
+    THEME: {
+      detox:  { bg:'#FFF1EC', bg2:'#FFDCD0', card:'#FFFBF9', ink:'#2A1416', accent:'#E4001A',
+                head:'#C8321F', mut:'#96777B', sub2:'#6B4A4E', brand:'#B09296', line:'#F2CFC6' },
+      /* 0731:無聊快篩整顆換成發票載具 App 的視覺語言,分享卡也要跟上,
+         不然分享出去的圖跟 App 裡看到的是兩個品牌。色票直接取 App 素材站的 CSS 變數:
+           green100 #E6F7F6 / green200 #B0E6E2 / green600 #01AFA2 / green800 #017C73
+           black1000 #262626 / black700 #8C8C8C / black800 #595959 / black600 #BFBFBF
+         只動 bored 這一組 —— 解毒吧與幾歲破產的卡片配色不受影響。 */
+      bored:  { bg:'#E6F7F6', bg2:'#B0E6E2', card:'#FFFFFF', ink:'#262626', accent:'#01AFA2',
+                head:'#017C73', mut:'#8C8C8C', sub2:'#595959', brand:'#BFBFBF', line:'#B0E6E2' },
+      wcheck: { bg:'#FFF8EA', bg2:'#FFE9BE', card:'#FFFDF8', ink:'#2B1F08', accent:'#C98A00',
+                head:'#A9720B', mut:'#9A8968', sub2:'#6B5A3C', brand:'#BCAD8E', line:'#F3E2BF' }
+    },
+    _get: null,
+    /* getCard: function() → {theme,emoji,acc,sub,tint,score,unitTxt,head,punch,stamp,title,text,url} */
+    open: function (getCard) {
+      this._get = getCard;
+      var m = document.getElementById('uk-share');
+      if (!m) {
+        m = document.createElement('div'); m.id = 'uk-share'; m.className = 'uk-mask';
+        m.innerHTML = '<div class="uk-sheet">'
+          + '<div class="uk-sheet-hd"><span id="uk-share-ttl">分享卡</span><button class="uk-x">✕</button></div>'
+          + '<div class="uk-share-prev"><canvas id="uk-share-cv"></canvas><img id="uk-share-img" alt="分享卡預覽"></div>'
+          + '<div class="uk-note">存不下來？直接長按上面的圖片存下來</div>'
+          + '<div class="uk-note">一張圖＋QR，IG／FB／LINE 都吃這張；掃碼直達</div>'
+          + '<div class="uk-share-btns"><button class="uk-btn-share">📤 分享這張圖</button>'
+          + '<button class="uk-btn-dl">⬇️ 下載</button></div>'
+          + '<div class="uk-share-ch" style="display:none"></div>'
+          + '<div class="uk-note uk-share-chnote" style="display:none">要貼到哪個社群,就複製哪一顆連結——連結不一樣,點擊才追得回來</div></div>';
+        m.onclick = function (e) { if (e.target === m) UK.share.close(); };
+        m.querySelector('.uk-x').onclick = function () { UK.share.close(); };
+        m.querySelector('.uk-btn-share').onclick = function () { UK.share.send(); };
+        m.querySelector('.uk-btn-dl').onclick = function () { UK.share.download(); };
+        document.body.appendChild(m);
+      }
+      /* 0807 wealth 本地先行,0816 回流共用層:卡資料可帶 channels=[{ic,label,onTap}],
+         浮層底部長出社群專用連結列(分渠道 utm 追蹤用)。沒帶就整列不出現,
+         detox/bored 行為完全不變。每次 open 重建——channels 可能隨結果變。 */
+      var chBox = m.querySelector('.uk-share-ch'), chNote = m.querySelector('.uk-share-chnote');
+      var chs = (getCard && getCard() || {}).channels || [];
+      chBox.innerHTML = '';
+      chs.forEach(function (c) {
+        var b = document.createElement('button');
+        b.className = 'uk-share-chbtn'; b.textContent = (c.ic ? c.ic + ' ' : '') + c.label;
+        b.onclick = c.onTap;
+        chBox.appendChild(b);
+      });
+      chBox.style.display = chs.length ? '' : 'none';
+      chNote.style.display = chs.length ? '' : 'none';
+      this.render(); m.classList.add('on');
+      try { history.pushState({ uk: 1 }, ''); } catch (e) {}
+      UK.track('share_open');
+    },
+    close: function () {
+      var m = document.getElementById('uk-share');
+      if (m && m.classList.contains('on')) {
+        m.classList.remove('on'); UK.track('sheet_close', { sheet: 'share' }); return true;
+      }
+      return false;
+    },
+    isOpen: function () { var m = document.getElementById('uk-share'); return !!(m && m.classList.contains('on')); },
+    /* 0807 wealth 本地先行,0816 回流共用層:把卡畫到任意 canvas——結果頁要拿分享卡
+       當主視覺(同事走查:看到的當下就是能曬的圖,分享意願較高)。
+       不動原本的 modal 流程:render() 不帶參數時行為與過去完全相同。 */
+    renderTo: function (cv, getCard) { if (getCard) this._get = getCard; this.render(cv); },
+    render: function (targetCv) {
+      var d = this._get && this._get(); if (!d) return;
+      var p = this.SIZE, T = this.THEME[d.theme] || this.THEME.detox;
+      var cv = targetCv || document.getElementById('uk-share-cv'); if (!cv) return;
+      cv.width = p.w; cv.height = p.h;
+      var ctx = cv.getContext('2d'), cx = p.w / 2;
+      var ttl = document.getElementById('uk-share-ttl');
+      if (!targetCv && ttl) ttl.textContent = (d.title || '分享卡') + '・分享卡';
+
+      /* ══ 分享卡版面(0727 v2 · 三支自營小程式共用) ══
+         參考順豐年度報告卡。它看起來不擠不是因為字少,是因為分區:
+         一張內卡把「數字／結論／角色」框在一起,CTA 獨立在外面,
+         所以每一區只跟自己競爭。舊版九個文字區塊平舖在同一平面,
+         每一塊都在搶注意力,結果數字和 CTA 都不突出。
+
+         這一版做三件事:
+         1. 去重:sub 若把分數又講一次就整行不畫;診斷章直接拿掉
+            (結論色塊已經在扮演「判定徽章」,兩個一起出現就是重複)。
+         2. 數字放大到 150px 並拿掉光暈——亮底上實色才讀得清楚。
+         3. CTA 變成看得出可以按的物件:搜尋框造型 + 單元名(照抄參考卡),
+            不再是一行小字。
+         資料契約沒變,單元一行都不用改。 */
+      var FONT = '"PingFang TC","Noto Sans TC",sans-serif';
+      function rr(x, y, w, h, r) {
+        ctx.beginPath();
+        if (ctx.roundRect) ctx.roundRect(x, y, w, h, r); else ctx.rect(x, y, w, h);
+      }
+      /* 三支文案長度不一,字級不能寫死——縮到裝得下為止 */
+      function fit(txt, weight, start, maxW) {
+        var s = start;
+        while (s > 20) {
+          ctx.font = weight + ' ' + s + 'px ' + FONT;
+          if (ctx.measureText(txt || '').width <= maxW) break;
+          s -= 4;
+        }
+        return s;
+      }
+      /* 底 */
+      var lg = ctx.createLinearGradient(0, 0, 0, p.h);
+      lg.addColorStop(0, T.bg); lg.addColorStop(1, T.bg2);
+      ctx.fillStyle = lg; ctx.fillRect(0, 0, p.w, p.h);
+      ctx.textAlign = 'center';
+
+      /* ① 頂部標題帶(內卡外面) */
+      ctx.fillStyle = T.head; fit(d.head || '', '800', 40, p.w - 150);
+      ctx.fillText(d.head || '', cx, 94);
+
+      /* 內卡:分區的關鍵。角色會被它的下緣裁掉 */
+      var CX0 = 52, CY0 = 132, CW = p.w - 104, CH = 986, CY1 = CY0 + CH;
+      ctx.save();
+      rr(CX0, CY0, CW, CH, 46);
+      ctx.fillStyle = T.card; ctx.fill();
+      ctx.strokeStyle = T.line; ctx.lineWidth = 3; ctx.stroke();
+      ctx.clip();                                   /* 之後畫的東西都被內卡裁切 */
+
+      /* ② 數字:實色、無光暈,亮底上才讀得清楚。
+         0731 Robert:數字旁邊要並排一顆分級表情(d.tierIcon),而且「一樣大」。
+
+         ⚠️ 兩邊都寫 150px 是錯的 —— emoji 的字身比數字高很多(數字只佔到
+            cap height,emoji 幾乎撐滿整個 em box),同樣的名目字級看起來會
+            大一號。所以用 measureText 的 actualBoundingBox 量出兩者**實際**
+            字身高度,再回推 emoji 該用幾 px,讓「看起來」真的一樣高。
+            量完要重設 font 再量一次(字級變了,寬度也變了)。
+         ⚠️ 垂直對齊用字身中心,不是共用基線 —— emoji 有 descent,共用基線
+            會把它整顆壓到數字下面去。
+         沒給 tierIcon 的單元(解毒吧/幾歲破產)走 else,版面完全沒變。 */
+      /* 量的是「墨水」——真正畫到畫布上的像素範圍,不是 measureText 的字身框。
+         踩過:先用 actualBoundingBoxAscent/Descent 對齊,量出來兩邊都 116px、
+         看起來卻差一號。原因是 emoji 的字身框比它畫出來的圖案大一圈(字型本來
+         就留邊),照字身框縮放,實際墨水只有數字的 0.84 倍。
+         每顆 emoji、每個平台的留邊都不一樣,所以不能寫死係數,只能離屏畫一次
+         掃 alpha 量。回傳值是相對基線的,所以垂直對齊也一次算完。
+         只有分享卡開啟時才跑,兩張 420² 的離屏畫布,成本可以忽略。 */
+      function inkBox(txt, font) {
+        try {
+          var S = 420, c = document.createElement('canvas');
+          c.width = S; c.height = S;
+          var g = c.getContext('2d');
+          g.font = font; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+          g.fillText(txt, S / 2, S / 2);
+          var im = g.getImageData(0, 0, S, S).data, top = -1, bot = -1;
+          for (var yy = 0; yy < S; yy++) {
+            for (var xx = 0; xx < S; xx++) {
+              if (im[(yy * S + xx) * 4 + 3] > 12) { if (top < 0) top = yy; bot = yy; break; }
+            }
+          }
+          if (bot < 0) return null;
+          return { top: top - S / 2, bottom: bot - S / 2, h: bot - top + 1 };   /* 相對基線 */
+        } catch (e) { return null; }
+      }
+      var NS = 150, sTxt = String(d.score), NY = 316, NF = '900 ' + NS + 'px ' + FONT;
+      ctx.textAlign = 'center';
+      ctx.font = NF;
+      var wN = ctx.measureText(sTxt).width;
+      /* d.tierImg(HTMLImageElement)優先於 d.tierIcon(emoji 字元)。
+         0731:無聊快篩把 emoji 全換成自製吉祥物 svg,而 canvas 的 fillText 畫不了 svg,
+         所以改成收一個已經載好的 Image 直接 drawImage。
+         沿用 APP_ICON 那一套防禦寫法(complete && naturalWidth):圖沒載好就退回文字路徑,
+         不會因為圖還在載就整張卡少一塊。 */
+      var tImg = (d.tierImg && d.tierImg.complete && d.tierImg.naturalWidth) ? d.tierImg : null;
+      if (tImg) {
+        var bNi = inkBox(sTxt, NF);
+        var ih = bNi ? bNi.h : NS * .74;
+        var iw = Math.round(ih * tImg.naturalWidth / tImg.naturalHeight);
+        var GAPi = 22, xi = cx - (iw + GAPi + wN) / 2;
+        var ceni = bNi ? NY + (bNi.top + bNi.bottom) / 2 : NY - ih / 2;
+        ctx.drawImage(tImg, xi, ceni - ih / 2, iw, ih);
+        ctx.textAlign = 'left';
+        ctx.fillStyle = T.accent; ctx.font = NF;
+        ctx.fillText(sTxt, xi + iw + GAPi, NY);
+        ctx.textAlign = 'center';
+      } else if (d.tierIcon) {
+        var PROBE = 100;
+        var bN = inkBox(sTxt, NF), bE = inkBox(d.tierIcon, PROBE + 'px sans-serif');
+        var es = NS, yE = NY;
+        if (bN && bE && bE.h > 0) {
+          var k = bN.h / bE.h;
+          es = Math.max(40, Math.round(PROBE * k));
+          /* 墨水中心對墨水中心(不是共用基線——emoji 有 descent,共用基線會被壓下去) */
+          yE = NY + (bN.top + bN.bottom) / 2 - (bE.top + bE.bottom) / 2 * k;
+        }
+        ctx.font = es + 'px sans-serif';
+        var wE = ctx.measureText(d.tierIcon).width;
+        var GAP = 26, x0 = cx - (wE + GAP + wN) / 2;
+        ctx.textAlign = 'left';
+        ctx.fillText(d.tierIcon, x0, yE);
+        ctx.fillStyle = T.accent; ctx.font = NF;
+        ctx.fillText(sTxt, x0 + wE + GAP, NY);
+        ctx.textAlign = 'center';
+      } else {
+        ctx.fillStyle = T.accent;
+        ctx.fillText(sTxt, cx, NY);
+      }
+      /* /100 後面可以再掛一個小標(d.unitLabel,例:「無聊值」)。
+         兩段當一組水平置中 —— 各自置中會讓 /100 偏左,看起來像沒對齊。 */
+      if (d.unitTxt) {
+        var uF = '700 32px ' + FONT, lF = '800 26px ' + FONT, uy = 362, LGAP = 12;
+        ctx.font = uF; var wU = ctx.measureText(d.unitTxt).width, wL = 0;
+        if (d.unitLabel) { ctx.font = lF; wL = ctx.measureText(d.unitLabel).width; }
+        var ux = cx - (wU + (wL ? LGAP + wL : 0)) / 2;
+        ctx.textAlign = 'left';
+        ctx.fillStyle = T.mut; ctx.font = uF; ctx.fillText(d.unitTxt, ux, uy);
+        if (d.unitLabel) {
+          ctx.fillStyle = T.sub2; ctx.font = lF;
+          ctx.fillText(d.unitLabel, ux + wU + LGAP, uy);
+        }
+        ctx.textAlign = 'center';
+      }
+      ctx.fillStyle = T.accent; rr(cx - 88, 386, 176, 7, 4); ctx.fill();
+
+      /* ③ 大字結論:整張卡的第一視覺。
+            sub 若把分數又講一次(例:「無聊值 91／100」)就不畫——重複佔掉最大的一行 */
+      var y = 500;
+      var dupe = d.sub && String(d.score) && d.sub.indexOf(String(d.score)) > -1;
+      /* fit() 一定要呼叫來抓行距,即使不畫——不然「跳過 sub」會在角色前面
+         留一塊沒東西的空白(dupe 那格文字比較短,但下面的角色錨點沒有跟著往上提)。 */
+      var f1 = fit(d.sub || '示', '900', 108, CW - 90);
+      if (d.sub && !dupe) {
+        ctx.fillStyle = T.ink; ctx.font = '900 ' + f1 + 'px ' + FONT;
+        ctx.fillText(d.sub, cx, y);
+      }
+      y += f1 * .30;
+      if (d.tint) {
+        var f2 = fit(d.tint, '900', 108, CW - 150);
+        ctx.font = '900 ' + f2 + 'px ' + FONT;
+        var tw = ctx.measureText(d.tint).width, bh = f2 * 1.36;
+        ctx.fillStyle = T.accent; rr(cx - tw / 2 - 34, y + 24, tw + 68, bh, 22); ctx.fill();
+        ctx.fillStyle = '#FFF'; ctx.font = '900 ' + f2 + 'px ' + FONT;
+        ctx.fillText(d.tint, cx, y + 24 + bh * .76);
+        y += 24 + bh;
+      }
+      /* ④ 一句說明 */
+      var punchBase = y + 60;
+      if (d.punch) {
+        ctx.fillStyle = T.sub2; fit(d.punch, '700', 36, CW - 120);
+        ctx.fillText(d.punch, cx, punchBase);
+      }
+      /* ⑤ 主視覺角色:被內卡下緣裁掉,裁切感=有設計過 */
+      var fs = 400;
+      /* 0731:同上,吉祥物是 svg,canvas 畫不了 → 收 d.heroImg 直接 drawImage。
+         位置照原本的邏輯:底部落在內卡下緣之外(CY1+76),被 ctx.clip() 裁掉,
+         裁切感就是設計的一部分。圖沒載好就退回原本的 emoji fillText。 */
+      var hImg = (d.heroImg && d.heroImg.complete && d.heroImg.naturalWidth) ? d.heroImg : null;
+      if (hImg) {
+        var HW = 400, HH = Math.round(HW * hImg.naturalHeight / hImg.naturalWidth);
+        /* ⚠️ 不能照 emoji 那樣用「底部對齊 CY1+76」定位。
+           emoji 在 400px 下字身高只有約 320,所以頂端落在 CY1-244(=874),
+           剛好在說明句(基線 747)下面。但吉祥物圖是 400x472,同樣底部對齊
+           會讓頂端跑到 CY1-396(=722)—— 比說明句還高 25px,直接壓在字上。
+           Robert 截圖回報的就是這個。
+           改成**錨在說明句下面**:top = 說明句基線 + 34。這樣文案多長都不會被壓到。
+           再用 CY1-130 當下限,保證角色至少露出 130px,不會被推到看不見。 */
+        var heroTop = Math.min((d.punch ? punchBase + 34 : y + 40), CY1 - 130);
+        ctx.drawImage(hImg, cx - HW / 2, heroTop, HW, HH);
+      } else {
+        ctx.font = fs + 'px sans-serif'; ctx.fillText(d.emoji || '', cx, CY1 + 76);
+      }
+      if (d.acc) { ctx.font = (fs * .34) + 'px sans-serif'; ctx.fillText(d.acc, cx + fs * .46, CY1 + 76 - fs * .58); }
+      ctx.restore();                                 /* 解除裁切 */
+
+      /* ⑥ CTA:0727 二次修正——使用者指出「應該是叫人去搜尋發票載具本身」。
+            小程式(解毒吧)不是全域可搜尋的東西,搜它的名字什麼都搜不到;
+            能被搜到、能被安裝的是容器 App「發票載具」。所以搜尋框裡要放的
+            字是固定的「發票載具」,不是各單元自己的名字/報告名——
+            上一版把參考卡的「顺丰2025年度报告」誤讀成「小程式名稱該進搜尋框」,
+            但那張卡成立的前提是順豐 App 已經裝了、搜的是 App 內的報告;
+            我們的情境反過來,使用者要搜的是「發票載具」這個入口本身。
+            單元自己的催促語(qrHint)退回當唯一的引導句,不再需要額外一行
+            講「打開哪個 App」——因為搜尋框已經直接示範了要搜什麼。 */
+      var by = CY1 + 34, TX = 292;
+      try {
+        var q = global.qrcode(0, 'M'); q.addData(d.url || location.href); q.make();
+        var n = q.getModuleCount(), qs = 152, cell = qs / n, pad = 14, qx = 74, qy = by + 4;
+        ctx.fillStyle = '#FFF'; rr(qx - pad, qy - pad, qs + pad * 2, qs + pad * 2, 14); ctx.fill();
+        ctx.strokeStyle = T.line; ctx.lineWidth = 2; ctx.stroke();
+        ctx.fillStyle = '#111';
+        for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) if (q.isDark(r, c)) ctx.fillRect(qx + c * cell, qy + r * cell, Math.ceil(cell), Math.ceil(cell));
+      } catch (e) { if (global.console) console.warn('[unit-kit] QR 產生失敗(qrcode.min.js 沒載入?)', e); }
+      /* ⑦ 右側:發票載具 App 圖示徽章(0728)。
+            CTA 區原本 QR 在左、文字在中,右半整塊是空的——版面重心歪一邊。
+            跟 QR 同尺寸同框,像左右書擋:左邊是「怎麼來」(QR),右邊是「來了長什麼樣」
+            (App 的臉:真實 app icon + 名字)。也順便回答搜尋框搜完會看到哪顆 icon。 */
+      var BW = qs + pad * 2 || 180, BX = p.w - 74 - BW, BY = by - 10;
+      ctx.fillStyle = '#FFF'; rr(BX, BY, BW, BW, 14); ctx.fill();
+      ctx.strokeStyle = T.line; ctx.lineWidth = 2; ctx.stroke();
+      ctx.textAlign = 'center';
+      if (APP_ICON.complete && APP_ICON.naturalWidth) {
+        var IS = 104, ix = BX + (BW - IS) / 2, iy = BY + 16;
+        ctx.drawImage(APP_ICON, ix, iy, IS, IS);
+      } else {
+        ctx.font = '86px sans-serif'; ctx.fillText('🌱', BX + BW / 2, BY + 106);
+      }
+      ctx.fillStyle = T.sub2; ctx.font = '800 25px ' + FONT;
+      ctx.fillText('發票載具', BX + BW / 2, BY + 156);
+      /* 0730:中欄(文案 + 搜尋框)要在 TX~BX 這段正中間,不能貼左——
+         原本兩個都用 ctx.textAlign='left' 從 TX 起畫,結果左邊 QR、右邊徽章
+         都是「置中的方塊」,中間這欄卻整段偏左貼著 QR,三欄看起來不平衡。
+         改成算出這段的中心點 midCx,文字與搜尋框膠囊都繞著它置中。 */
+      var midL = TX, midR = BX - 24, midCx = (midL + midR) / 2;
+      ctx.textAlign = 'center';
+      ctx.fillStyle = T.ink; fit(d.qrHint || '掃碼，開啟發票載具', '800', 30, midR - midL);
+      ctx.fillText(d.qrHint || '掃碼，開啟發票載具', midCx, by + 34);
+      /* 搜尋框寬度「跟著字走」,不要撐滿剩餘寬度。
+         0728:原本 pw = 剩下的全部(約 714px),但裡面只有「🔍 發票載具」約 170px,
+         看起來就是一條又長又空的膠囊。改成量完字再加內距。 */
+      var SEARCH = '發票載具';                 /* 固定字——搜這個名字才搜得到東西 */
+      var padL = 26, iconW = 34, gap = 16, padR = 34;
+      ctx.font = '900 34px ' + FONT;
+      var textW = ctx.measureText(SEARCH).width;
+      var pw = Math.min(padL + iconW + gap + textW + padR, midR - midL);
+      var ph = 72, py = by + 58, px = midCx - pw / 2;
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 4; rr(px, py, pw, ph, 36); ctx.stroke();
+      ctx.textAlign = 'left';
+      ctx.fillStyle = T.ink; ctx.font = '700 30px ' + FONT;
+      ctx.fillText('🔍', px + padL, py + 48);
+      ctx.fillStyle = T.ink; ctx.font = '900 34px ' + FONT;
+      ctx.fillText(SEARCH, px + padL + iconW + gap, py + 49);
+      ctx.textAlign = 'center';
+      ctx.fillStyle = T.brand; ctx.font = '700 22px ' + FONT;
+      ctx.fillText(UK.dmText('發票載具 × 官方自營（示範）'), cx, p.h - 26);
+      /* 0810(wealth 上線走查抓到,回流共用層):canvas 本身沒有「長按存圖」這個原生行為——
+         只有 <img> 有。這是 embedded WebView(發票載具 App)裡「下載按鈕點了沒反應」的
+         根因:<a download> 在 WebView 裡常被靜默吃掉,使用者連退路都沒有。
+         浮層預覽的 canvas 一律鏡射進一張真正的 <img>(用 toDataURL 同步轉),長按這張圖
+         在任何環境都吃得到系統的「儲存圖片」——不依賴 JS API 支不支援。
+         只在畫「浮層自己的」canvas 時做(targetCv 有帶入代表是別處借去畫,如結果頁主視覺)。 */
+      if (!targetCv) {
+        var img = document.getElementById('uk-share-img');
+        if (img) img.src = cv.toDataURL('image/png');
+      }
+    },
+    _blob: function (cb) { document.getElementById('uk-share-cv').toBlob(cb, 'image/png'); },
+    send: function () {
+      var d = this._get && this._get(); if (!d) return;
+      this._blob(function (blob) {
+        var file = new File([blob], 'fapiao-card.png', { type: 'image/png' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          navigator.share({ files: [file], text: d.text }).catch(function () {});
+        } else {
+          /* 0730:系統分享面板支援文字但不支援檔案(webview/舊瀏覽器很常見)時,
+             navigator.share({title,text,url}) 會顯示「分享成功」但圖卡整個消失、
+             沒有任何提示——使用者以為分享出去一張圖,結果朋友只收到一段連結。
+             寧可兩種「分享不了檔案」的情況都當同一種處理:把圖存起來,
+             老實告訴他自己去貼,不要用看起來成功、實際上偷樑換柱的路徑。 */
+          UK.toast('已下載圖卡——貼到社群，QR 就是回程票'); UK.share.download();
+        }
+        UK.track('share_send', { title: d.title });
+      });
+    },
+    /* 0810 再修(wealth 實機回報「按下載完全沒反應」):原本只把 toBlob 換掉還不夠——
+       WebView 裡 <a download> 常常被整個吃掉,不報錯、不提示,體感上就是「壞了」,
+       而長按存圖這條退路只寫在畫面一行小字,沒人會去讀。
+       所以按鈕現在**優先做一件保證看得到的事**:跳 toast 講清楚下一步、把預覽圖
+       捲進畫面正中央並閃兩下——不管 a.click() 最後有沒有真的觸發下載,使用者都會
+       知道「要長按上面那張圖」,而不是覺得整個按鈕是死的。
+       toDataURL() 同步執行(不像 toBlob 的 callback 是非同步),user activation
+       視窗還在,a.click() 在能動的平台(Android/桌機)才會真的觸發下載。 */
+    download: function () {
+      var cv = document.getElementById('uk-share-cv'); if (!cv) return;
+      UK.toast('長按上面的圖片,選「儲存圖片」');
+      var img = document.getElementById('uk-share-img');
+      if (img) {
+        img.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        img.classList.remove('pulse');
+        void img.offsetWidth;
+        img.classList.add('pulse');
+      }
+      var a = document.createElement('a');
+      a.href = cv.toDataURL('image/png');
+      a.download = 'fapiao-card.png';
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  };
+
+  /* ═══════════════ 9. MENU — ⋯ 極簡選單(0728:分享 + 複製連結) ═══════════════
+     0724 定調的是「不做多社群尺寸選單」,不是「不能分享」——複製連結是給
+     沒有 Web Share API 的桌機瀏覽器當退路,手機上應該直接跳系統分享面板
+     (LINE/IG/簡訊都在那裡面),不是每次都手動複製再自己去貼。
+     meta 可選:{title, text},沒給就用 document.title / 空字串。 */
+  UK.menu = {
+    open: function (link, meta) {
+      var m = document.getElementById('uk-menu');
+      if (!m) {
+        m = document.createElement('div'); m.id = 'uk-menu'; m.className = 'uk-mask';
+        m.innerHTML = '<div class="uk-sheet">'
+          + '<button class="uk-sheet-item" id="uk-native-share">📤 分享</button>'
+          + '<button class="uk-sheet-item" id="uk-copy">🔗 複製連結</button>'
+          + '<button class="uk-sheet-item" id="uk-reload">🔄 重新載入</button>'
+          + '<button class="uk-sheet-item" id="uk-gohome" style="display:none">🏠 回發票載具首頁</button>'
+          + '<div id="uk-copy-fb" style="display:none">'
+          + '<div class="uk-note">瀏覽器擋掉自動複製了——長按下面這行複製</div>'
+          + '<input id="uk-copy-link" class="uk-copy-link" readonly></div>'
+          + '<button class="uk-sheet-cancel">取消</button></div>';
+        m.onclick = function (e) { if (e.target === m) UK.menu.close(); };
+        m.querySelector('.uk-sheet-cancel').onclick = function () { UK.menu.close(); };
+        document.body.appendChild(m);
+      }
+      var lk = link || location.href.split('?')[0];
+      var title = (meta && meta.title) || document.title;
+      var text = (meta && meta.text) || '';
+      /* 每次開都先收掉上一次的手動複製區,不然殘留在那邊像是又失敗了 */
+      var fb = m.querySelector('#uk-copy-fb'); if (fb) fb.style.display = 'none';
+      /* 三條路依序試,全失敗也有出路,不會變死按鈕。
+         0728:這段是從 wealth 搬上來的——它踩過兩個坑,原本 kit 的版本會踩到:
+         1. execCommand 必須跑在使用者手勢的呼叫堆疊裡,一放進 clipboard API 的
+            promise callback 就永遠回 false,所以它要排第一順位;
+         2. 失敗時不能用 prompt(),容器/webview 會直接吃掉——要把連結攤在面板上讓人長按。
+         clipboard API 在 webview 常被 NotAllowedError 打回,所以排第二。 */
+      function copyToClipboard() {
+        function ok(via) { UK.toast('連結已複製，貼給朋友'); UK.track('menu_copy', { via: via }); UK.menu.close(); }
+        function legacy() {
+          try {
+            var ta = document.createElement('textarea');
+            ta.value = lk; ta.setAttribute('readonly', '');
+            ta.style.position = 'fixed'; ta.style.top = '0'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, lk.length);
+            var done = document.execCommand('copy'); document.body.removeChild(ta);
+            if (done) { ok('execCommand'); return true; }
+          } catch (e) {}
+          return false;
+        }
+        function manual() {
+          var w = document.getElementById('uk-copy-fb'), i = document.getElementById('uk-copy-link');
+          i.value = lk; w.style.display = ''; i.focus(); i.select();
+          UK.toast('自動複製被擋下——長按下面那行');   /* 說實話:不能沿用「已複製」的 toast */
+          UK.track('menu_copy', { via: 'manual' });
+        }
+        if (legacy()) return;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(lk).then(function () { ok('api'); }, manual);
+        } else manual();
+      }
+      m.querySelector('#uk-native-share').onclick = function () {
+        if (navigator.share) {
+          UK.menu.close();
+          navigator.share({ title: title, text: text, url: lk }).then(function () {
+            UK.track('menu_share', { via: 'native' });
+          }).catch(function () {});   /* 使用者自己取消分享面板,不是錯誤,不用處理 */
+        } else {
+          /* 桌機瀏覽器常常沒有系統分享面板:退回複製連結,不當死按鈕 */
+          copyToClipboard();
+        }
+      };
+      m.querySelector('#uk-copy').onclick = copyToClipboard;
+      /* 分享卡在轉圈、系統面板叫不出來、webview 卡住時的逃生門。
+         reload(true) 已廢棄且各家行為不一,改用「網址加一次性參數」強制不吃快取。 */
+      m.querySelector('#uk-reload').onclick = function () {
+        UK.track('menu_reload');
+        UK.menu.close();
+        try {
+          var u = new URL(location.href);
+          u.searchParams.set('_r', String(Date.now()));
+          location.replace(u.toString());          /* replace:不在返回堆疊留一筆 */
+        } catch (e) { location.reload(); }
+      };
+      /* 選用:「回發票載具首頁」。預設不顯示——detox/bored 靠標題列與 homeHint 回去,
+         選單裡再放一顆是重複。wealth 刻意把離開單元的出口收在選單裡,傳 home:true 開啟。 */
+      var gh = m.querySelector('#uk-gohome');
+      if (meta && meta.home) {
+        gh.style.display = '';
+        gh.onclick = function () { UK.menu.close(); UK.exitToHome(); };
+      } else {
+        gh.style.display = 'none';
+        gh.onclick = null;
+      }
+      m.classList.add('on');
+      try { history.pushState({ uk: 1 }, ''); } catch (e) {}
+    },
+    close: function () {
+      var m = document.getElementById('uk-menu');
+      if (m && m.classList.contains('on')) {
+        m.classList.remove('on'); UK.track('sheet_close', { sheet: 'menu' }); return true;
+      }
+      return false;
+    },
+    isOpen: function () { var m = document.getElementById('uk-menu'); return !!(m && m.classList.contains('on')); }
+  };
+
+  /* ═══════════════ 9.5 CARRIER — 手機條碼(消費鏈路的最後一哩) ═══════════════
+     0728 定調:三支小程式不能只做到「好玩」。要走完
+     「進場 → 被推去某家店 → 真的消費 → 用載具開發票 → 數據回流」這條鏈路,
+     消費當下就得叫得出條碼。原本三支都只在「發票太少」的空狀態提到條碼,
+     而且做法是把人踢回載具首頁自己找——人踢出去,這一趟就斷在那裡了。
+
+     所以條碼改成「浮層」:在店裡、在結帳前的那一刻直接蓋在當前頁上,
+     關掉就回到原本在看的東西,不離開單元。
+
+     ⚠️ 條碼字串正式版一定要由載具 App / 中台給(那是使用者真實的載具號)。
+        單元啟動時用 UK.carrier.setCode(來自平台的載具號) 注入。
+        沒注入時走 DEMO 字串,而且畫面上會標「示範」——不假裝是真的。 */
+  UK.carrier = {
+    DEMO: '/AB12345',
+    _code: null,
+    setCode: function (c) { this._code = c || null; return this; },
+    code: function () { return this._code || this.DEMO; },
+    isReal: function () { return !!this._code; },
+
+    /* Code 39:每個字 9 個元素(5 條 + 4 空),其中 3 個是寬的。
+       真的照規格編碼,不是畫個好看的假條碼——示範時掃得出來才有意義。 */
+    _C39: {
+      '0':'nnnwwnwnn','1':'wnnwnnnnw','2':'nnwwnnnnw','3':'wnwwnnnnn','4':'nnnwwnnnw',
+      '5':'wnnwwnnnn','6':'nnwwwnnnn','7':'nnnwnnwnw','8':'wnnwnnwnn','9':'nnwwnnwnn',
+      'A':'wnnnnwnnw','B':'nnwnnwnnw','C':'wnwnnwnnn','D':'nnnnwwnnw','E':'wnnnwwnnn',
+      'F':'nnwnwwnnn','G':'nnnnnwwnw','H':'wnnnnwwnn','I':'nnwnnwwnn','J':'nnnnwwwnn',
+      'K':'wnnnnnnww','L':'nnwnnnnww','M':'wnwnnnnwn','N':'nnnnwnnww','O':'wnnnwnnwn',
+      'P':'nnwnwnnwn','Q':'nnnnnnwww','R':'wnnnnnwwn','S':'nnwnnnwwn','T':'nnnnwnwwn',
+      'U':'wwnnnnnnw','V':'nwwnnnnnw','W':'wwwnnnnnn','X':'nwnnwnnnw','Y':'wwnnwnnnn',
+      'Z':'nwwnwnnnn','-':'nwnnnnwnw','.':'wwnnnnwnn',' ':'nwwnnnwnn','$':'nwnwnwnnn',
+      '/':'nwnwnnnwn','+':'nwnnnwnwn','%':'nnnwnwnwn','*':'nwnnwnwnn'
+    },
+    _draw: function (cv, code) {
+      var self = this, s = '*' + String(code).toUpperCase() + '*', pats = [];
+      for (var i = 0; i < s.length; i++) {
+        var p = self._C39[s.charAt(i)];
+        if (!p) return false;                       /* 有不能編碼的字就整個不畫,不畫半套 */
+        pats.push(p);
+      }
+      var NARROW = 3, WIDE = 9, GAP = 3, H = 76;
+      var units = 0;
+      pats.forEach(function (p, i) {
+        for (var j = 0; j < 9; j++) units += (p.charAt(j) === 'w' ? WIDE : NARROW);
+        if (i < pats.length - 1) units += GAP;
+      });
+      var PAD = 14;
+      cv.width = units + PAD * 2; cv.height = H + PAD * 2;
+      var ctx = cv.getContext('2d');
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cv.width, cv.height);
+      ctx.fillStyle = '#111';
+      var x = PAD;
+      pats.forEach(function (p, i) {
+        for (var j = 0; j < 9; j++) {
+          var w = (p.charAt(j) === 'w' ? WIDE : NARROW);
+          if (j % 2 === 0) ctx.fillRect(x, PAD, w, H);   /* 偶數 index = 條,奇數 = 空 */
+          x += w;
+        }
+        if (i < pats.length - 1) x += GAP;
+      });
+      return true;
+    },
+
+    /* opts.onDone:店員掃完之後單元想接的動作(例:標記這次消費、推下一步) */
+    open: function (opts) {
+      opts = opts || {};
+      var m = document.getElementById('uk-carrier');
+      if (!m) {
+        m = document.createElement('div'); m.id = 'uk-carrier'; m.className = 'uk-mask';
+        m.innerHTML = '<div class="uk-sheet">'
+          + '<div class="uk-sheet-hd"><span>我的手機條碼</span><button class="uk-x">✕</button></div>'
+          + '<div class="uk-carrier-wrap"><canvas id="uk-carrier-cv"></canvas>'
+          + '<div class="uk-carrier-code" id="uk-carrier-code">—</div></div>'
+          + '<div class="uk-carrier-hint" id="uk-carrier-hint"></div>'
+          + '<button class="uk-sheet-item uk-carrier-done" id="uk-carrier-done">✅ 店員掃好了</button>'
+          + '<button class="uk-sheet-cancel">關閉</button></div>';
+        m.onclick = function (e) { if (e.target === m) UK.carrier.close(); };
+        m.querySelector('.uk-x').onclick = function () { UK.carrier.close(); };
+        m.querySelector('.uk-sheet-cancel').onclick = function () { UK.carrier.close(); };
+        document.body.appendChild(m);
+      }
+      var code = this.code();
+      this._draw(document.getElementById('uk-carrier-cv'), code);
+      document.getElementById('uk-carrier-code').textContent = code;
+      document.getElementById('uk-carrier-hint').innerHTML =
+        '結帳時給店員掃 → 發票自動歸戶，不用拍不用存'
+        + (this.isReal() ? '' : '<br><span class="uk-carrier-demo">示範條碼 · 正式版會帶出你自己的載具號</span>');
+      document.getElementById('uk-carrier-done').onclick = function () {
+        UK.track('carrier_done', { from: opts.from || '' });
+        UK.carrier.close();
+        if (opts.onDone) opts.onDone();
+        else UK.toast('這張發票會自動進你的載具（示範）');
+      };
+      m.classList.add('on');
+      try { history.pushState({ uk: 1 }, ''); } catch (e) {}
+      UK.track('carrier_open', { from: opts.from || '' });
+    },
+    close: function () {
+      var m = document.getElementById('uk-carrier');
+      if (m && m.classList.contains('on')) {
+        m.classList.remove('on'); UK.track('sheet_close', { sheet: 'carrier' }); return true;
+      }
+      return false;
+    },
+    isOpen: function () { var m = document.getElementById('uk-carrier'); return !!(m && m.classList.contains('on')); }
+  };
+
+  /* 給 nav 用的浮層關閉序(返回鍵優先關浮層) */
+  UK.sheetClosers = function () {
+    return [
+      function () { return UK.carrier.close(); },
+      function () { return UK.poi.close() && UK.poi.isOpen() === false && true; },
+      function () { return UK.menu.close(); },
+      function () { return UK.share.close(); }
+    ].map(function (f) { return f; });
+  };
+  /* 更精確的版本:只在真的有開著的浮層時才吃掉返回 */
+  UK.closeTopSheet = function () {
+    if (UK.carrier.isOpen()) { UK.carrier.close(); return true; }  /* 條碼會蓋在地點卡上,要最先關 */
+    if (UK.poi.isOpen())   { UK.poi.close();   return true; }
+    if (UK.menu.isOpen())  { UK.menu.close();  return true; }
+    if (UK.share.isOpen()) { UK.share.close(); return true; }
+    return false;
+  };
+
+  /* ═══════════════ 10. CHIPS — 單選組(可取消選取) ═══════════════
+     Robert 指定:所有選項鈕再點一次要能取消,並回中性值。
+     用法:UK.chips.bind(container, {onPick:function(key,val){}}) — 需要 data-k / data-v。 */
+  UK.chips = {
+    bind: function (root, cfg) {
+      (root || document).querySelectorAll('[data-chips]').forEach(function (g) {
+        g.addEventListener('click', function (e) {
+          var b = e.target.closest('[data-v]'); if (!b) return;
+          var was = b.classList.contains('on');
+          g.querySelectorAll('[data-v]').forEach(function (c) { c.classList.remove('on'); });
+          var key = g.getAttribute('data-chips');
+          if (was) { cfg.onPick && cfg.onPick(key, null, true); }
+          else { b.classList.add('on'); cfg.onPick && cfg.onPick(key, b.getAttribute('data-v'), false); }
+        });
+      });
+    }
+  };
+
+  /* ═══════════════ 11. CSS(一次性注入)═══════════════
+     浮層/回訪盒/toast/chip 的樣式由 kit 提供,四單元外觀一致。
+     單元只負責自己的頁面樣式,不要複製這些。 */
+  var CSS = ''
+  + '.uk-toast{position:fixed;left:50%;bottom:calc(30px + env(safe-area-inset-bottom,0));transform:translateX(-50%) translateY(20px);background:#1F2430;color:#fff;font-size:13px;font-weight:700;padding:11px 18px;border-radius:99px;opacity:0;transition:.25s;pointer-events:none;max-width:88vw;text-align:center;z-index:9999}'
+  + '.uk-toast.on{opacity:1;transform:translateX(-50%) translateY(0)}'
+  + '.uk-mask{position:fixed;inset:0;background:rgba(15,20,30,.5);display:none;align-items:flex-end;z-index:9000}'
+  + '.uk-mask.on{display:flex}'
+  + '.uk-sheet{width:100%;max-width:430px;margin:0 auto;background:#fff;border-radius:20px 20px 0 0;padding:14px 14px calc(16px + env(safe-area-inset-bottom,0));max-height:88%;overflow-y:auto;text-align:center}'
+  + '.uk-sheet-hd{display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:800;color:#1F2430}'
+  + '.uk-x{font-size:20px;padding:8px 10px;color:#8B96A3;min-height:44px;background:none;border:none}'
+  + '.uk-sheet-item{display:block;width:100%;padding:14px;font-size:15px;font-weight:800;color:#1F2430;border-radius:12px;min-height:48px;background:none;border:none}'
+  + '.uk-sheet-cancel{display:block;width:100%;padding:14px;font-size:15px;font-weight:700;color:#8B96A3;border-radius:12px;min-height:48px;background:none;border:none;margin-top:2px}'
+  + '.uk-note{font-size:10.5px;color:#6E5558;margin-top:8px;text-align:center}'
+  + '.uk-share-prev{display:flex;justify-content:center;margin-top:10px;background:#F5F6F8;border-radius:12px;padding:10px}'
+  + '.uk-share-prev canvas{display:none}'
+  + '.uk-share-prev img{max-width:100%;max-height:300px;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.15)}'
+  /* 0810(wealth 上線走查抓到,回流共用層):按下「下載」時用來把視線導到預覽圖上——
+     WebView 裡按鈕本身常常沒有任何反應,不用這個閃兩下,使用者會以為整個功能是壞的
+     (見 download() 註解)。 */
+  + '@keyframes uk-share-pulse{0%{box-shadow:0 0 0 0 rgba(228,0,26,.55)}70%{box-shadow:0 0 0 16px rgba(228,0,26,0)}100%{box-shadow:0 0 0 0 rgba(228,0,26,0)}}'
+  + '.uk-share-prev img.pulse{animation:uk-share-pulse .9s ease-out 2}'
+  + '.uk-share-btns{display:flex;gap:8px;margin-top:10px}'
+  + '.uk-share-btns button{flex:1;padding:13px;border-radius:12px;font-size:14px;font-weight:800;min-height:48px;border:none}'
+  + '.uk-btn-share{background:#E4001A;color:#fff}'
+  + '.uk-btn-dl{background:#fff;border:1.5px solid #D8DEE6!important;color:#33404F}'
+  /* 0807 wealth 本地先行,0816 回流:分渠道連結列(卡帶 channels 才出現) */
+  + '.uk-share-ch{display:flex;gap:8px;margin-top:10px}'
+  + '.uk-share-chbtn{flex:1;padding:11px 6px;border-radius:99px;font-size:12.5px;font-weight:800;min-height:44px;background:#fff;border:1.5px solid #D8DEE6;color:#33404F}'
+  + '.uk-poi-emoji{font-size:44px}'
+  + '.uk-poi-sheet b.uk-poi-name{font-size:16px;font-weight:900;color:#1F2430;display:block;margin-top:4px}'
+  + '.uk-poi-why{font-size:12.5px;font-weight:800;color:#8A5A00;margin-top:8px;line-height:1.7}'
+  + '.uk-poi-info{font-size:12px;color:#6E7684;margin-top:6px}'
+  + '.uk-poi-btns{display:flex;gap:8px;margin-top:14px}'
+  + '.uk-poi-btns button{flex:1;padding:13px 8px;border-radius:12px;font-size:14px;font-weight:800;min-height:48px;border:none}'
+  + '.uk-btn-go{background:#E4001A;color:#fff}'
+  + '.uk-btn-add{background:#fff;border:1.5px solid #D8DEE6!important;color:#33404F}'
+  + '.uk-btn-add.done{background:#9BB3A6;border-color:#9BB3A6!important;color:#fff}'
+  + '.uk-lastbox{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1.5px solid #F0E0E1;border-radius:13px;padding:11px 13px;margin-top:12px}'
+  + '.uk-lastbox small{display:block;font-size:10.5px;color:#8B96A3;font-weight:700}'
+  + '.uk-lastbox b{font-size:26px;color:#D7000F;line-height:1.2}'
+  + '.uk-lastbox b span{font-size:12px;color:#8B96A3}'
+  + '.uk-lastbox b i{font-style:normal;font-size:12px;margin-left:6px;font-weight:900}'
+  + '.uk-lastbox b i.dn{color:#177A4C}.uk-lastbox b i.up{color:#D7000F}'
+  + '.uk-lastgo{font-size:12.5px;font-weight:800;color:#A50011;background:#FFE9EB;border-radius:99px;padding:10px 13px;min-height:44px;border:none}'
+  + '.uk-trend{display:flex;align-items:center;justify-content:center;background:#fff;border:1.5px solid #F0E0E1;border-radius:12px;padding:10px 12px;margin-bottom:10px;font-size:12.5px;font-weight:800;color:#5A4548}'
+  + '.uk-trend .dn{color:#177A4C}.uk-trend .up{color:#D7000F}'
+  + '.uk-chip{font-size:13px;background:#fff;border:1.5px solid #D8DEE6;border-radius:99px;padding:10px 14px;color:#33404F;font-weight:700;min-height:44px}'
+  + '.uk-chip.on{border-color:#2B4BD7;color:#2B4BD7;background:#EDF1FE}'
+  + '.uk-vf{min-height:44px;font-size:12px;font-weight:800;background:#FFE9EB;color:#A50011;border-radius:9px;padding:8px 10px;border:none}'
+  + '.uk-vf.done{background:#9BB3A6;color:#fff}'
+  + '.uk-copy-link{display:block;width:100%;min-height:44px;padding:11px 12px;font-family:inherit;font-size:13px;font-weight:700;color:#33404F;text-align:center;background:#F5F6F8;border:1.5px solid #D8DEE6;border-radius:12px;-webkit-user-select:all;user-select:all}'
+  + '.uk-carrier-wrap{background:#fff;border:2px solid #1F2430;border-radius:14px;padding:12px 10px;margin-top:12px}'
+  + '.uk-carrier-wrap canvas{width:100%;max-width:320px;height:auto;display:block;margin:0 auto;image-rendering:pixelated}'
+  + '.uk-carrier-code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:20px;font-weight:800;letter-spacing:3px;color:#1F2430;margin-top:8px}'
+  + '.uk-carrier-hint{font-size:12px;font-weight:700;color:#5A4548;line-height:1.8;margin-top:10px}'
+  + '.uk-carrier-demo{font-size:10.5px;color:#8B96A3;font-weight:700}'
+  + '.uk-carrier-done{background:#E4001A!important;color:#fff!important;margin-top:12px}'
+  + '#uk-homehint{position:fixed;left:0;right:0;bottom:0;z-index:8000;display:block;text-align:center;'
+  + 'background:#1F2430;color:#fff;font-size:11px;font-weight:800;text-decoration:none;'
+  + 'padding:10px 12px calc(10px + env(safe-area-inset-bottom,0));opacity:.92}'
+  + '@media (prefers-reduced-motion:reduce){.uk-toast{transition:none}}';
+
+  UK.injectCSS = function () {
+    if (document.getElementById('uk-css')) return;
+    var st = document.createElement('style'); st.id = 'uk-css'; st.textContent = CSS;
+    document.head.appendChild(st);
+  };
+
+  /* ═══════════════ 12. 自檢(production 判準的機械檢查)═══════════════
+     單元頁面按一下 UK.selfCheck() 就能知道有沒有踩到共同的坑。 */
+  UK.selfCheck = function () {
+    var issues = [];
+    /* 觸控 ≥44 */
+    document.querySelectorAll('button,a[role="button"],input[type="range"]').forEach(function (b) {
+      var r = b.getBoundingClientRect();
+      if (r.width > 0 && r.height > 0 && r.height < 44) issues.push('觸控過小(<44px): ' + (b.id || b.className || b.textContent.slice(0, 12)));
+    });
+    /* 橫向捲動:比 clientWidth(不含捲軸)。視窗量不到尺寸(隱藏分頁/headless)就跳過,否則誤判 */
+    var de = document.documentElement;
+    if (de.clientWidth > 200 && de.scrollWidth > de.clientWidth + 1) {
+      issues.push('頁面出現橫向捲動: ' + de.scrollWidth + ' > ' + de.clientWidth);
+    }
+    /* 死按鈕:沒有 onclick、也不是委派處理(chip 群組/浮層/data-poi 列)、也沒被 disabled */
+    document.querySelectorAll('button').forEach(function (b) {
+      if (b.onclick || b.getAttribute('onclick') || b.disabled) return;
+      if (b.closest('.uk-mask')) return;                 /* kit 浮層自己接 */
+      if (b.closest('[data-chips]') && b.hasAttribute('data-v')) return;  /* UK.chips 委派 */
+      if (b.closest('[data-poi]')) return;               /* UK.poi 委派 */
+      if (b.hasAttribute('data-action')) return;          /* 單元自訂委派的慣例 */
+      issues.push('可能的死按鈕: ' + (b.id || b.textContent.slice(0, 12)));
+    });
+    /* 數字一致性 */
+    var c = UK.data.composite();
+    if (typeof c !== 'number' || isNaN(c)) issues.push('綜合分算不出來');
+    if (global.console) {
+      if (issues.length) console.warn('[unit-kit selfCheck] ' + issues.length + ' 個問題:\n- ' + issues.join('\n- '));
+      else console.log('[unit-kit selfCheck] 全過 ✓');
+    }
+    return issues;
+  };
+
+  /* init */
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', UK.injectCSS);
+  else UK.injectCSS();
+
+  global.UK = UK;
+})(window);

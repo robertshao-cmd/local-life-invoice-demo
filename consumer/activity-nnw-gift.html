@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>D2 活動頁面 mockup｜憑發票贈炸雞球/洋蔥圈（暖暖窩）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* 發票載具 design system（保留品牌識別） */
+    --green600:#01AFA2;--green700:#019F93;--green100:#E6F7F6;--green300:#8ADAD4;
+    --orange600:#FF9924;--orange700:#E88B21;--orange100:#FFF5E9;--orange300:#FFD09A;
+    /* 暖色底層（取代原本冷灰 #F5F5F5 / #FFFFFF 的大面積留白） */
+    --cream:#FFF4E6;        /* 頁面底 */
+    --card:#FFFCF6;         /* 卡片底 */
+    --line:#F2E3CE;         /* 暖色分隔線 */
+    --ink:#3F3128;          /* 暖黑字（取代 #262626 冷黑） */
+    --ink2:#7C6553;         /* 次要字 */
+    --coral:#FF8C7A;--gold:#F0A64A;--brown:#8A5A2B;
+    --teal:#6CC5C1;         /* 取樣自 Warm Nest 插畫背景 */
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;font-family:"PingFang TC","Noto Sans TC","SF Pro",-apple-system,sans-serif;
+    background:#E9D9C3;padding:24px;display:flex;flex-wrap:wrap;gap:56px 28px;justify-content:center;
+    color:var(--ink);
+  }
+  .note{width:100%;max-width:980px;background:#FFFBEC;border:1px solid #EBD08A;border-radius:10px;
+    padding:14px 18px;font-size:13px;color:#5c4a00;line-height:1.7;}
+  .note b{color:#a35b00;}
+  .frame{position:relative;margin:0 48px;}
+  .phone{width:375px;background:var(--cream);border-radius:28px;overflow:hidden;
+    box-shadow:0 10px 28px rgba(90,60,30,0.22);border:6px solid #2B2320;}
+  .status{height:24px;background:#fff;}
+  .col-title{font-size:12px;text-align:center;padding:5px 0;background:#2B2320;color:#F6E4CC;
+    border-radius:6px 6px 0 0;}
+  .len{font-size:11px;color:#7a6142;text-align:center;padding-top:6px;}
+
+  /* ===== 共用 ===== */
+  .hand{font-family:'LXGW WenKai TC','PingFang TC',cursive;}
+  .nav{height:44px;display:flex;align-items:center;justify-content:center;background:#fff;
+    font-size:17px;font-weight:600;color:var(--ink);position:relative;border-bottom:1px solid var(--line);}
+  .nav .h{position:absolute;left:14px;font-size:13px;color:var(--green700);}
+  .scr{background:var(--cream);}
+
+  /* ===== 畫面 0：首頁通知 ===== */
+  .home-bg{background:linear-gradient(180deg,#D8F0EE 0%,var(--cream) 200px);height:420px;position:relative;}
+  .home-hdr{padding:14px 16px 0;display:flex;justify-content:space-between;font-size:12px;color:var(--ink2);}
+  .home-hdr .code{color:var(--green700);font-weight:700;}
+  .tree-area{height:104px;display:flex;align-items:flex-end;justify-content:center;font-size:52px;}
+  .vcard{margin:8px 16px 0;background:#fff;border-radius:16px;padding:13px 16px;
+    box-shadow:0 2px 8px rgba(120,80,40,0.08);display:flex;justify-content:space-between;
+    align-items:center;font-size:13px;color:var(--ink2);}
+  .vcard b{color:var(--ink);font-size:15px;}
+  .notif-wrap{position:absolute;top:14px;left:10px;right:10px;}
+  .notif{background:rgba(255,255,255,0.99);border-radius:16px;padding:11px 13px;display:flex;gap:10px;
+    box-shadow:0 8px 22px rgba(90,60,30,0.20);border:1px solid var(--line);}
+  .notif .ic{width:38px;height:38px;border-radius:10px;flex-shrink:0;overflow:hidden;background:var(--teal);}
+  .notif .ic img{width:100%;height:100%;object-fit:cover;}
+  .notif .body{flex:1;min-width:0;}
+  .notif .top{display:flex;justify-content:space-between;font-size:11px;color:var(--ink2);margin-bottom:1px;}
+  .notif .app{font-weight:700;color:var(--ink);}
+  .notif .ti{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:1px;}
+  .notif .sub{font-size:12px;color:var(--ink2);line-height:1.4;}
+
+  /* ===== 畫面 A：推薦活動卡 ===== */
+  .sec{padding:16px 16px 0;}
+  .sec-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .sec-h .t{font-size:16px;font-weight:700;color:var(--ink);}
+  .promo{height:84px;border-radius:14px;overflow:hidden;background:var(--card);display:flex;
+    box-shadow:0 2px 8px rgba(120,80,40,0.09);border:1px solid var(--line);}
+  .promo .ph{width:84px;flex-shrink:0;background:var(--teal);display:flex;align-items:center;
+    justify-content:center;font-size:32px;overflow:hidden;}
+  .promo .ph img{width:100%;height:100%;object-fit:cover;}
+  .promo .body{flex:1;padding:9px 12px;display:flex;flex-direction:column;justify-content:center;
+    gap:3px;min-width:0;}
+  .promo .tag{align-self:flex-start;background:var(--orange100);color:var(--orange700);font-size:11px;
+    font-weight:700;padding:1px 8px;border-radius:8px;}
+  .promo .ti{font-size:14px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .promo .sub{font-size:12px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .promo.other{margin-top:10px;opacity:0.5;}
+
+  /* ===== 畫面 B：活動詳情頁（版面已壓縮） ===== */
+  .hero{height:172px;position:relative;overflow:hidden;background:var(--teal);}
+  .hero>img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 40%;}
+  .hero .badge{position:absolute;top:10px;right:10px;background:rgba(255,255,255,0.96);border-radius:20px;
+    padding:4px 11px;font-size:11px;font-weight:700;color:var(--orange700);box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+  .hero .storebar{position:absolute;left:0;right:0;bottom:0;padding:20px 12px 9px;
+    background:linear-gradient(transparent,rgba(45,30,20,0.72));color:#fff;display:flex;
+    justify-content:space-between;align-items:flex-end;gap:8px;}
+  .hero .storebar .n{font-size:15px;font-weight:700;line-height:1.3;}
+  .hero .storebar .a{font-size:11px;opacity:0.9;}
+
+  .gift-row{display:flex;gap:8px;padding:0;align-items:center;margin-bottom:12px;}
+  .offer-tag{display:inline-block;background:var(--green100);color:var(--green700);font-size:11px;
+    font-weight:700;padding:3px 10px;border-radius:10px;margin-bottom:6px;}
+  .mini-label{font-size:12px;font-weight:700;color:var(--brown);margin-bottom:6px;}
+  .gift-row .g{flex:1;border-radius:13px;height:78px;background:linear-gradient(180deg,#FFF3DE,#FFE7C4);
+    border:1px solid #F3DCB8;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .gift-row .g svg{width:54px;height:40px;display:block;}
+  .gift-row .g .gname{font-size:15px;color:var(--brown);}
+
+  .detail-body{padding:12px 14px 0;}
+  h1.act-title{font-size:18px;font-weight:700;color:var(--ink);margin:0 0 2px;line-height:1.4;}
+  .squig-title{width:126px;height:8px;display:block;margin-bottom:7px;}
+  .act-desc{font-size:13px;color:var(--ink2);line-height:1.75;margin:0 0 10px;}
+  .card{background:var(--card);border-radius:13px;padding:12px 14px;margin-bottom:10px;
+    border:1px solid var(--line);}
+  .card h3{font-size:13px;font-weight:700;color:var(--ink);margin:0 0 8px;
+    display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .step{display:flex;gap:8px;margin-bottom:7px;}
+  .step:last-child{margin-bottom:0;}
+  .step .n{width:19px;height:19px;border-radius:50%;background:var(--gold);color:#fff;font-size:11px;
+    font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .step .t{font-size:12.5px;color:var(--ink);line-height:1.5;}
+  .tos{font-size:11.5px;color:var(--ink2);line-height:1.65;margin:0;padding-left:14px;}
+  .tos .tbd{color:var(--orange700);font-weight:700;background:var(--orange100);padding:0 4px;border-radius:4px;}
+  .cta{margin:2px 14px 14px;background:var(--green600);color:#fff;text-align:center;padding:12px;
+    border-radius:13px;font-size:15px;font-weight:700;box-shadow:0 4px 12px rgba(1,175,162,0.28);}
+  .cta .s{display:block;font-size:11px;font-weight:400;opacity:0.9;margin-top:2px;}
+  .already-here{text-align:center;font-size:12px;color:var(--ink2);margin:-6px 14px 16px;}
+  .already-here b{color:var(--green700);font-weight:700;}
+
+  /* ===== 四隻毛孩：可愛「小狗頭」剪影小圖示（不是圓形大頭貼），跟文字並排不覆蓋 =====
+     剪影用 clip-path 剪出兩個耳朵凸起＋圓潤下巴，讀起來像一隻可愛小狗，不是被關在圓圈裡的大頭照 */
+  .dogc{width:22px;height:22px;flex-shrink:0;display:inline-block;
+    filter:drop-shadow(0 2px 4px rgba(90,60,30,0.35));}
+  .dogc.big{width:26px;height:26px;}
+  .dogc img{width:100%;height:100%;display:block;object-fit:cover;
+    clip-path:url(#dogHeadClip);-webkit-clip-path:url(#dogHeadClip);}
+  .d-hero,.d-gift,.d-step,.d-tos{animation:bob 3.6s ease-in-out infinite;}
+  .d-gift{animation-delay:0.3s;}
+  .d-step{animation-delay:0.6s;}
+  .d-tos{animation-delay:0.9s;}
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+  @media (prefers-reduced-motion:reduce){
+    .dogc{animation:none;}
+  }
+
+  /* ===== 畫面 B2：顧客核銷頁（出示給店員看） ===== */
+  .redeem-hero{padding:28px 20px 8px;text-align:center;}
+  .redeem-hero .rt{font-size:13px;color:var(--ink2);margin-bottom:2px;}
+  .redeem-hero .rn{font-size:17px;font-weight:700;color:var(--ink);}
+  .qr-card{background:#fff;border-radius:18px;margin:14px 20px;padding:20px;text-align:center;
+    box-shadow:0 4px 14px rgba(90,60,30,0.12);border:1px solid var(--line);}
+  .qr-card img{width:168px;height:168px;display:block;margin:0 auto;}
+  .qr-card .code{font-family:monospace;font-size:13px;color:var(--ink2);margin-top:10px;letter-spacing:1px;}
+  .qr-card .hint{font-size:12px;color:var(--ink2);margin-top:6px;}
+  .qr-status{display:inline-flex;align-items:center;gap:5px;background:var(--green100);color:var(--green700);
+    font-size:12px;font-weight:700;padding:4px 12px;border-radius:14px;margin:0 20px 14px;}
+  .qr-status .dot{width:7px;height:7px;border-radius:50%;background:var(--green600);animation:blink 1.6s ease-in-out infinite;}
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+  .redeem-rule{margin:0 20px;font-size:11.5px;color:var(--ink2);line-height:1.7;text-align:center;}
+  .qr-status.done{background:var(--green600);color:#fff;}
+  .qr-status.done .dot{background:#fff;animation:none;}
+
+  /* ===== 畫面 B3：核銷完成收尾狀態 ===== */
+  .done-card{background:#fff;border-radius:18px;margin:14px 20px;padding:26px 20px;text-align:center;
+    box-shadow:0 4px 14px rgba(90,60,30,0.12);border:1px solid var(--line);}
+  .done-icon{width:56px;height:56px;border-radius:50%;background:var(--green600);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px;}
+  .done-title{font-size:15px;font-weight:700;color:var(--ink);}
+  .done-sub{font-size:12px;color:var(--ink2);margin-top:6px;}
+
+  /* ===== 畫面 C2：商家核銷確認 ===== */
+  .scan-result{background:#fff;border-radius:16px;margin:16px;padding:20px;text-align:center;
+    box-shadow:0 4px 14px rgba(90,60,30,0.12);border:1px solid var(--line);}
+  .scan-result .ok{width:52px;height:52px;border-radius:50%;background:var(--green600);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 10px;}
+  .scan-result .name{font-size:16px;font-weight:700;color:var(--ink);}
+  .scan-result .meta{font-size:12px;color:var(--ink2);margin-top:4px;}
+  .pick-row{display:flex;gap:10px;margin:16px;}
+  .pick{flex:1;border:2px solid var(--line);border-radius:14px;padding:14px 8px;text-align:center;
+    background:var(--card);}
+  .pick.sel{border-color:var(--green600);background:var(--green100);}
+  .pick svg{width:44px;height:36px;display:block;margin:0 auto 4px;}
+  .pick .gname{font-size:13px;color:var(--brown);}
+  .confirm-btn{margin:4px 16px 16px;background:var(--green600);color:#fff;text-align:center;padding:14px;
+    border-radius:14px;font-size:15px;font-weight:700;box-shadow:0 4px 12px rgba(1,175,162,0.28);}
+  .confirm-btn.disabled{background:var(--line);color:var(--ink2);box-shadow:none;font-weight:400;}
+
+  /* ===== 畫面 C：商家端核銷 ===== */
+  .merch-body{padding:16px;}
+  .counter{background:var(--card);border-radius:14px;padding:16px;text-align:center;margin-bottom:12px;
+    border:1px solid var(--line);}
+  .counter .num{font-size:34px;font-weight:700;color:var(--green700);line-height:1;}
+  .counter .lbl{font-size:12px;color:var(--ink2);margin-top:4px;}
+  .redeem-btn{background:var(--green600);color:#fff;text-align:center;padding:15px;border-radius:14px;
+    font-size:15px;font-weight:700;margin-bottom:12px;box-shadow:0 4px 12px rgba(1,175,162,0.26);}
+  .log{background:var(--card);border-radius:14px;padding:2px 15px;border:1px solid var(--line);}
+  .log-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;
+    border-bottom:1px solid var(--line);font-size:12px;color:var(--ink2);}
+  .log-row:last-child{border-bottom:none;}
+  .log-row .id{font-family:monospace;color:var(--ink);}
+  .log-row .new{background:var(--orange100);color:var(--orange700);font-size:10px;font-weight:700;
+    padding:1px 6px;border-radius:6px;margin-left:6px;}
+
+  /* ===== 衡量機制卡片 ===== */
+  .spec{width:100%;max-width:980px;background:var(--card);border-radius:12px;padding:20px 24px;
+    font-size:13px;color:var(--ink);line-height:1.8;border:1px solid var(--line);}
+  .spec h2{font-size:16px;margin:0 0 4px;}
+  .spec h3{font-size:14px;margin:16px 0 6px;color:var(--green700);}
+  .spec code{background:#F6EDE0;padding:2px 6px;border-radius:4px;font-size:12px;}
+  .spec table{width:100%;border-collapse:collapse;font-size:12px;margin-top:6px;}
+  .spec th,.spec td{border:1px solid var(--line);padding:6px 10px;text-align:left;}
+  .spec th{background:#F9F0E3;}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute;overflow:hidden;">
+  <defs>
+    <!-- 共用剪影：可愛小狗頭（兩耳凸起＋圓潤下巴），objectBoundingBox 座標可套用到任意尺寸 -->
+    <clipPath id="dogHeadClip" clipPathUnits="objectBoundingBox">
+      <path d="M0.50,0.06 C0.42,0.07 0.36,0.12 0.33,0.20
+               C0.22,0.16 0.10,0.10 0.04,0.16 C0.02,0.22 0.06,0.32 0.14,0.36
+               C0.10,0.44 0.10,0.54 0.14,0.62 C0.18,0.78 0.32,0.92 0.50,0.94
+               C0.68,0.92 0.82,0.78 0.86,0.62 C0.90,0.54 0.90,0.44 0.86,0.36
+               C0.94,0.32 0.98,0.22 0.96,0.16 C0.90,0.10 0.78,0.16 0.67,0.20
+               C0.64,0.12 0.58,0.07 0.50,0.06 Z"/>
+    </clipPath>
+  </defs>
+</svg>
+
+<div class="note">
+  <b>這是內部審核用的 mockup，不是最終畫面。</b>D2「確認活動內容與畫面（憑發票贈炸雞球/洋蔥圈），給老闆娘過目」——
+  版型與品牌色沿用發票載具 APP 真實 design system（<code>invoicemanager-screens-dev</code>：Green #01AFA2 /
+  Orange #FF9924 / 卡片圓角），內容尚未接上任何系統。活動實際會放在 App 哪個位置仍待產品/工程確認，
+  這裡假設放在既有的「活動」分頁 →「推薦活動」區塊。
+  <br><br>
+  <b>0807 四版，針對你的五點回饋：</b>
+  <br>① <b>版面長度</b>：畫面 B 內容高度<b>實測 732px</b>（壓縮過程中量到的中間值 1,095px → 851px → 移除引用卡後 732px）——
+  hero 300→172px、店家資訊改成壓在主視覺上的浮層省掉一整塊、理念段併進主文案、
+  兌換步驟與活動須知都精簡過（須知 6 條併成 3 條）。畫面 0／A／C 三個都是 456px，一屏內看完。
+  <b>畫面 B 仍需捲動約一屏</b>，這是活動詳情頁的合理長度，沒有硬壓到不能捲。
+  <br>② <b>食物示意圖</b>：補上手繪風洋蔥圈／炸雞球插畫——線條刻意畫成不規則（半徑不等、外框粗細有變化），
+  避免上一版「幾何完美＝AI 感」的問題。實拍照 D2 跟老闆娘拿了再替換。
+  <br>③ <b>色調</b>：大面積冷灰（#F5F5F5）與純白全部換成暖奶油色（#FFF4E6 / #FFFCF6），文字由冷黑
+  #262626 改為暖黑 #3F3128，分隔線改暖色，步驟編號由品牌綠改成金黃色。品牌綠只留在 CTA 與載具識別處，
+  不再大面積用。
+  <br>④ <b>四隻毛孩貼圖</b>：從 Warm Nest 插畫裡把小米、財寶、序耶、露比媽媽的臉單獨裁成圓形貼圖，
+  貼在畫面 B 四周並加上輕微浮動動畫＋一句「快來找我玩！」對話框（已加 prefers-reduced-motion 停用支援）。
+  <br>⑤ <b>D2 理念換句話說</b>：主文案改成用他們粉專自介的理念重新講一次（不是複製貼上他們的字）。
+  <br><br>
+  <b>要給老闆娘確認：</b>①委託插畫與毛孩貼圖用於活動主視覺的授權（跟同意提供社群照片是兩回事）
+  ②洋蔥圈／炸雞球實拍照 ③毛孩名字（露比媽媽／財寶／序耶／小米，照插畫上標的）是否正確。
+  <br>（0807 移除：原本的「老闆娘的話」引用卡已依指示拿掉。）
+  <br><br>
+  <b>0807 五版，針對你最新兩點回饋：</b>
+  <br>① <b>補上顧客／商家的核銷頁面</b>——之前確實漏掉了，只做了「活動介紹頁」跟「商家看板」，
+  沒有畫「客人到底憑什麼被核銷、店員掃碼後看到什麼」這兩個真正的核銷動作本身。這次新增：
+  <b>畫面 B2（顧客核銷頁）</b>——客人在畫面 B 按「出示兌換碼給店員」後看到的畫面，QR code
+  是真的用 <code>qrcode</code> 套件產生的圖（示範用假碼 <code>NNW-DEMO-A7K2-3F2C</code>，不是能真的核銷的碼），
+  帶 5 分鐘倒數失效的概念，避免被客人截圖重複使用；
+  <b>畫面 C2（商家核銷確認）</b>——店員在畫面 C 按「掃描」後看到的畫面，顯示掃到哪個會員、
+  這桌沒核銷過、讓店員點選客人要洋蔥圈還是炸雞球後才送出核銷，不是掃了就直接算數。
+  <br>② <b>毛孩圖示改成貼在區塊角落，不再蓋住主要內容</b>——上一版四隻狗用大貼圖飄在畫面正中央，
+  會擋到活動內文，這次縮到 36px，各自貼在自己所屬區塊的角落（主視覺右下角／贈品卡片右上角／
+  兌換步驟卡右上角／須知卡右上角），角色更像「頁面裝飾角標」而不是蓋版元素。
+  <br><br>
+  <b>0808 六版，針對你最新四點回饋：</b>
+  <br>① <b>毛孩圖示不再是「臉被關在圓圈裡」</b>——改用 clip-path 剪出一個有兩個耳朵凸起、
+  下巴圓潤的「小狗頭剪影」形狀（不是正圓），尺寸也再縮小（22–26px），拿掉硬邊白框，
+  改成柔和陰影，讀起來比較像可愛小圖示，不是大頭貼卡在圓圈裡。
+  <br>② <b>贈品名稱統一為「洋蔥圈」「炸雞球」</b>——全頁 13 處「雞球」都改成「炸雞球」
+  （含通知文案、活動卡片、核銷頁、商家核銷頁、店員選項）。
+  <br>③ <b>主視覺圖片不再被裁到看不出內容</b>——原本直接放整張 1440×1440 的正方形插畫去填
+  172px 高的橫幅框，被裁掉一大半。這次從原圖裁出一張<b>專門給這個橫幅用的 2.15:1 構圖</b>
+  （掌廚老闆＋老闆娘＋毛孩小米，含 Warm Nest 淺色浮水印），跟框的比例(363:172≈2.11:1)幾乎一致，
+  裁切幅度降到最低，完整看得到主要角色。
+  <br>④ <b>活動詳情頁順序重新排過</b>——原本贈品圖片（洋蔥圈/炸雞球）放在標題跟說明「之前」，
+  客人還沒搞懂這是什麼活動就先看到食物照，容易一頭霧水。改成：主視覺 →
+  <b>🎁 用餐即贈標籤 + 標題 + 一句話說明</b>（先講清楚這是什麼）→「這次想送你（兩選一）」
+  贈品區 → 怎麼兌換 → 活動須知 → CTA，順序照「這是什麼 → 為什麼 → 送什麼 → 怎麼拿」排。
+  <br><br>
+  <b>0808 七版：實際假裝自己是收到推播的使用者，把整條鏈路走一遍，抓到一個真的邏輯漏洞。</b>
+  <br>🐛 <b>最大的問題：畫面 B 原本的 CTA 直接跳到有「5 分鐘倒數失效」的兌換碼。</b>
+  以使用者的角度重演一次：我在家收到推播、點開活動、覺得不錯，按了 CTA——結果馬上跳出一組
+  5 分鐘後失效的碼。我人根本還沒出門，等真的到店大概率已經過期，到時候店員說「這組碼失效了」，
+  我會覺得整個活動很爛。<b>根因是 CTA 的動作跟使用者當下的狀態對不上</b>——按這顆按鈕的人多半
+  是「剛看到、還沒出發」，不是「已經在店裡準備結帳」，把兩種狀態的入口合成一顆按鈕是錯的。
+  <br>✅ <b>修法</b>：畫面 B 的主要 CTA 改回「帶我去暖暖窩」（導航意圖，適合剛看到活動的人），
+  下面加一行次要連結「已經在店裡了嗎？點我出示兌換碼」給真正要結帳兌換的人，兩種狀態各自
+  有對應的按鈕，5 分鐘倒數只在使用者主動點了「已經在店裡」之後才開始，不會平白燒掉。
+  <br>🔍 <b>順便抓到兩個較小的缺口，一併補上：</b>
+  ①畫面 C2 原本「洋蔥圈」預設被選起來——店員可能手滑直接按確認，給錯品項；改成兩個都不預選，
+  按鈕文字先顯示「請先點選客人要的品項」，逼店員主動點一次。
+  ②整條鏈路測到畫面 C2（店員確認核銷）就斷了，沒有畫「客人那邊會發生什麼事」——新增
+  <b>畫面 B3</b>：店員核銷完成後，客人手上畫面 B2 應該變成的樣子（顯示已核銷、核銷了哪一款、
+  這組碼不能再用），讓整個核銷動作有始有終，不是核銷完就沒了下文。
+  <br><br>
+  <b>0808 八版：你回報「圖片沒有完整顯示、整體設計不像樣」，我原本先派 Codex 去查，
+  但等了一輪沒有可用結果，改成自己直接動手查證。</b>
+  <br>🔍 <b>先排除快取問題</b>：懷疑你截圖當下抓到的是 GitHub Pages CDN 的舊快取（這個環境部署後
+  最多要等 10 分鐘才會全部更新，這幾天已經踩過好幾次）。我用瀏覽器把 hero 圖片實際畫進一個
+  canvas 裡逐像素取樣，四個角+中心點都是真的插畫內容（湖水綠/黃色/膚色），不是空白或裁切錯位——
+  這確認<b>目前部署的版本，主視覺圖片本身是完整正確顯示的</b>。如果你現在看到的還是裁切怪異的樣子，
+  請用 <code>?fresh=1</code> 這類參數加在網址後面強制跳過快取重新整理一次。
+  <br>🐛 <b>但同一輪檢查真的挖到一個之前沒抓到的 bug</b>：畫面 B2（顧客核銷頁）的容器高度是我很早期
+  設定的固定值 376px，後來陸續加了 QR 卡片內距等調整，實際內容長到 429px——多出來的 53px
+  （剛好是最下面「兌換碼綁定你這次的到店，核銷後即失效」那行提醒文字）被手機外框的圓角
+  <code>overflow:hidden</code> 整段吃掉，畫面上完全看不到，使用者不會知道核銷碼有時效性。
+  已經改成量測過的正確高度 429px，這條文字現在會完整顯示。這個 bug 只靠肉睛看畫面截圖看不出來
+  （因為裁掉的部分根本不會出現在畫面裡），是我逐一比對每個畫面的「容器高度 vs 內容實際高度」
+  才抓到的，其他 6 個畫面都測過沒有一樣的問題。
+</div>
+
+<!-- ========== 畫面 0 ========== -->
+<div>
+  <div class="col-title">畫面 0 · 入口：首頁跳出的活動通知</div>
+  <div class="phone">
+    <div class="status"></div>
+    <div class="home-bg">
+      <div class="home-hdr"><span>/ABC1234　複製</span><span class="code">共 128 張發票</span></div>
+      <div class="tree-area">🌳</div>
+      <div class="vcard"><span>05-06月發票 <b>128 張</b></span><span>螢幕常亮</span></div>
+      <div class="notif-wrap">
+        <div class="notif">
+          <div class="ic"><img src="../assets/nnw-activity/dog-mi.png" alt="小米"></div>
+          <div class="body">
+            <div class="top"><span class="app">發票載具</span><span>剛剛</span></div>
+            <div class="ti">🐾 暖暖窩想見你和你的毛小孩</div>
+            <div class="sub">用餐即贈洋蔥圈或炸雞球一份，點開看看→</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="len">高度 456px（實測）· 一屏內</div>
+</div>
+
+<!-- ========== 畫面 A ========== -->
+<div>
+  <div class="col-title">畫面 A · 活動分頁「推薦活動」區塊</div>
+  <div class="phone">
+    <div class="status"></div>
+    <div class="nav">活動中心</div>
+    <div class="scr" style="height:376px;">
+      <div class="sec">
+        <div class="sec-h"><div class="t">推薦活動</div></div>
+        <div class="promo">
+          <div class="ph"><img src="../assets/nnw-activity/warmnest-illustration.jpg" alt="暖暖窩"></div>
+          <div class="body">
+            <span class="tag">暖暖窩限定</span>
+            <div class="ti">用餐即贈｜洋蔥圈或炸雞球</div>
+            <div class="sub">板橋・暖暖窩義式廚房 🐾 毛孩友善</div>
+          </div>
+        </div>
+        <div class="promo other">
+          <div class="ph" style="background:linear-gradient(135deg,#E6F7F6,#8ADAD4);">🎁</div>
+          <div class="body">
+            <span class="tag" style="background:var(--green100);color:var(--green700);">品牌加碼獎</span>
+            <div class="ti">（其他商家活動，示意用）</div>
+            <div class="sub">－</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="len">高度 456px（實測）· 一屏內</div>
+</div>
+
+<!-- ========== 畫面 B ========== -->
+<div class="frame">
+  <div class="col-title">畫面 B · 活動詳情頁（毛孩縮成角落小圖示，不擋內容）</div>
+  <div class="phone">
+    <div class="status"></div>
+    <div class="nav"><span class="h">‹ 返回</span>活動詳情</div>
+    <div class="scr">
+      <div class="hero">
+        <img src="../assets/nnw-activity/hero-crop.jpg"
+             alt="Warm Nest 暖暖窩插畫：掌廚老闆、老闆娘與毛孩小米">
+        <div class="badge">🐾 寵物友善</div>
+        <div class="storebar">
+          <div>
+            <div class="n">暖暖窩義式廚房</div>
+            <div class="a">板橋文化路一段286巷16號・近新埔站</div>
+          </div>
+          <div class="dogc big d-hero"><img src="../assets/nnw-activity/dog-mi.png" alt="小米"></div>
+        </div>
+      </div>
+
+      <div class="detail-body" style="padding-top:14px;">
+        <div class="offer-tag">🎁 用餐即贈・免費</div>
+        <h1 class="act-title hand">來吃飯，順便把毛小孩一起帶來</h1>
+        <svg class="squig-title" viewBox="0 0 132 8"><path d="M2 5 Q 14 1 27 5 T 53 5 T 79 4 T 105 5 T 130 3"
+          fill="none" stroke="#FF8C7A" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <p class="act-desc">
+          做菜沒有捷徑，二十多年的手藝一鍋一鍋慢慢來；連座位怎麼擺、燈開多亮都想過，
+          就為了讓你坐下來能鬆一口氣。這裡與其說是餐廳，不如說是一個家——
+          兩隻腳的、四隻腳的，都算自己人。
+        </p>
+
+        <div class="mini-label">這次想送你（兩選一）</div>
+        <div class="gift-row">
+          <div class="g">
+            <!-- 手繪風洋蔥圈：半徑刻意不等、外框粗細有變化 -->
+            <svg viewBox="0 0 62 50" role="img" aria-label="洋蔥圈">
+              <g stroke="#8A5A2B" stroke-width="2" fill="#F0A64A" fill-rule="evenodd" stroke-linejoin="round">
+                <path d="M20,10 C29,9 37,15 38,24 C39,33 32,41 22,41 C13,41 6,35 6,26 C6,17 12,11 20,10 Z
+                         M21,20 C17,20 14,23 14,26 C14,30 17,32 21,32 C25,32 29,29 29,25 C29,22 25,20 21,20 Z"/>
+                <path d="M43,6 C51,5 58,11 58,19 C58,28 51,34 43,34 C35,34 30,28 30,20 C30,12 36,7 43,6 Z
+                         M43,15 C39,15 37,18 37,20 C37,24 40,26 43,26 C47,26 50,23 50,20 C50,17 47,15 43,15 Z"
+                      stroke-width="1.8" fill="#F5B865"/>
+              </g>
+              <g fill="#C97F2E" opacity="0.55">
+                <ellipse cx="12" cy="20" rx="2.2" ry="1.5" transform="rotate(-20 12 20)"/>
+                <ellipse cx="26" cy="37" rx="2" ry="1.3" transform="rotate(15 26 37)"/>
+                <ellipse cx="52" cy="12" rx="1.8" ry="1.2" transform="rotate(30 52 12)"/>
+              </g>
+            </svg>
+            <div class="hand gname">洋蔥圈</div>
+          </div>
+          <div class="g">
+            <!-- 手繪風炸雞球：不規則球體 -->
+            <svg viewBox="0 0 62 50" role="img" aria-label="炸雞球">
+              <g stroke="#8A5A2B" stroke-width="2" stroke-linejoin="round">
+                <path d="M17,20 C23,18 29,22 30,28 C31,35 26,41 19,41 C12,41 7,36 7,30 C7,24 11,21 17,20 Z" fill="#F0A64A"/>
+                <path d="M44,18 C51,17 57,22 57,29 C57,36 51,41 44,41 C37,41 32,36 33,29 C33,23 38,19 44,18 Z" fill="#EFA042"/>
+                <path d="M31,6 C38,5 44,10 44,17 C44,24 38,29 31,29 C24,29 19,24 19,17 C19,11 25,7 31,6 Z" fill="#F5B052"/>
+              </g>
+              <g fill="#C97F2E" opacity="0.5">
+                <ellipse cx="14" cy="28" rx="2.4" ry="1.6" transform="rotate(-25 14 28)"/>
+                <ellipse cx="24" cy="35" rx="2" ry="1.4" transform="rotate(10 24 35)"/>
+                <ellipse cx="40" cy="32" rx="2.2" ry="1.5" transform="rotate(-15 40 32)"/>
+                <ellipse cx="50" cy="27" rx="1.9" ry="1.3" transform="rotate(20 50 27)"/>
+                <ellipse cx="27" cy="13" rx="2.3" ry="1.5" transform="rotate(-10 27 13)"/>
+                <ellipse cx="36" cy="21" rx="1.8" ry="1.2" transform="rotate(25 36 21)"/>
+              </g>
+            </svg>
+            <div class="hand gname">炸雞球</div>
+          </div>
+          <div class="dogc d-gift"><img src="../assets/nnw-activity/dog-caibao.png" alt="財寶"></div>
+        </div>
+
+        <div class="card">
+          <h3><span>🎯 怎麼兌換</span><div class="dogc d-step"><img src="../assets/nnw-activity/dog-xuye.png" alt="序耶"></div></h3>
+          <div class="step"><div class="n">1</div><div class="t">在暖暖窩<b>內用</b>消費</div></div>
+          <div class="step"><div class="n">2</div><div class="t">結帳時一位客人出示這個畫面就好</div></div>
+          <div class="step"><div class="n">3</div><div class="t">跟店員說想吃哪一款，現場就給你</div></div>
+        </div>
+
+        <div class="card">
+          <h3><span>📋 活動須知</span><div class="dogc d-tos"><img src="../assets/nnw-activity/dog-ruby.png" alt="露比媽媽"></div></h3>
+          <ul class="tos">
+            <li><b>僅限內用</b>，一桌一份（不論幾位同行）；兩款擇一</li>
+            <li>期間與每日名額：<span class="tbd">［待老闆娘確認］</span></li>
+            <li>不可與其他優惠券併用；實際樣式以店家提供為準</li>
+          </ul>
+        </div>
+      </div>
+      <div class="cta">
+        帶我去暖暖窩
+        <span class="s">板橋文化路一段286巷16號・近新埔站</span>
+      </div>
+      <div class="already-here">已經在店裡了嗎？<b>點我出示兌換碼 →</b></div>
+    </div>
+  </div>
+  <div class="len">內容高度 821px（實測）· 需捲動約一屏</div>
+</div>
+
+<!-- ========== 畫面 B2：顧客核銷頁 ========== -->
+<div>
+  <div class="col-title">畫面 B2 · 顧客核銷頁（出示給店員看，你之前問的「顧客核銷頁面在哪」）</div>
+  <div class="phone">
+    <div class="status"></div>
+    <div class="nav"><span class="h">‹ 返回</span>出示給店員</div>
+    <div class="scr" style="height:429px;">
+      <div class="redeem-hero">
+        <div class="rt">暖暖窩義式廚房・用餐即贈</div>
+        <div class="rn hand">洋蔥圈 或 炸雞球</div>
+      </div>
+      <div class="qr-card">
+        <img src="../assets/nnw-activity/redeem-qr.png" alt="兌換 QR code">
+        <div class="code">NNW · A7K2 · 3F2C</div>
+        <div class="hint">請把這個畫面完整拿給店員掃描</div>
+      </div>
+      <div style="text-align:center;">
+        <span class="qr-status"><span class="dot"></span>尚未核銷・5:00 後失效</span>
+      </div>
+      <p class="redeem-rule">兌換碼綁定你這次的到店，核銷後即失效；一桌只需一人出示。</p>
+    </div>
+  </div>
+  <div class="len">高度 429px（實測，0808 修正：原本固定 376px 裁掉底部 53px 的須知文字）</div>
+</div>
+
+<!-- ========== 畫面 C ========== -->
+<div>
+  <div class="col-title">畫面 C · 商家端核銷（給店員用）</div>
+  <div class="phone">
+    <div class="status"></div>
+    <div class="nav">核銷｜洋蔥圈/炸雞球活動</div>
+    <div class="scr merch-body" style="height:376px;">
+      <div class="counter">
+        <div class="num">7</div>
+        <div class="lbl">本活動累計核銷次數（≈到店桌數）</div>
+      </div>
+      <div class="redeem-btn">📷 掃描客人畫面上的兌換碼</div>
+      <div class="log">
+        <div class="log-row"><span>今天 19:42</span><span class="id">會員 …3f2c</span><span class="new">新客</span></div>
+        <div class="log-row"><span>今天 19:15</span><span class="id">會員 …8a91</span></div>
+        <div class="log-row"><span>今天 12:30</span><span class="id">會員 …c710</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="len">高度 456px（實測）· 一屏內</div>
+</div>
+
+<!-- ========== 畫面 C2：商家核銷確認 ========== -->
+<div>
+  <div class="col-title">畫面 C2 · 商家掃碼後的確認畫面（你之前問的「商家核銷頁面在哪」）</div>
+  <div class="phone">
+    <div class="status"></div>
+    <div class="nav"><span class="h">‹ 取消</span>確認核銷</div>
+    <div class="scr merch-body" style="height:376px;">
+      <div class="scan-result">
+        <div class="ok">✓</div>
+        <div class="name">會員 …3f2c</div>
+        <div class="meta">掃碼成功・這桌尚未核銷過</div>
+      </div>
+      <div class="pick-row">
+        <div class="pick">
+          <svg viewBox="0 0 62 50"><g stroke="#8A5A2B" stroke-width="2" fill="#F0A64A" fill-rule="evenodd" stroke-linejoin="round">
+            <path d="M20,10 C29,9 37,15 38,24 C39,33 32,41 22,41 C13,41 6,35 6,26 C6,17 12,11 20,10 Z
+                     M21,20 C17,20 14,23 14,26 C14,30 17,32 21,32 C25,32 29,29 29,25 C29,22 25,20 21,20 Z"/></g></svg>
+          <div class="gname">洋蔥圈</div>
+        </div>
+        <div class="pick">
+          <svg viewBox="0 0 62 50"><g stroke="#8A5A2B" stroke-width="2" stroke-linejoin="round">
+            <path d="M17,20 C23,18 29,22 30,28 C31,35 26,41 19,41 C12,41 7,36 7,30 C7,24 11,21 17,20 Z" fill="#F0A64A"/>
+            <path d="M44,18 C51,17 57,22 57,29 C57,36 51,41 44,41 C37,41 32,36 33,29 C33,23 38,19 44,18 Z" fill="#EFA042"/></g></svg>
+          <div class="gname">炸雞球</div>
+        </div>
+      </div>
+      <div class="confirm-btn disabled">請先點選客人要的品項</div>
+    </div>
+  </div>
+  <div class="len">高度 456px（實測）· 一屏內 · 兩個都不預選，逼店員主動點一次，避免手滑給錯</div>
+</div>
+
+<!-- ========== 畫面 B3：客人畫面上的核銷完成狀態 ========== -->
+<div>
+  <div class="col-title">畫面 B3 · 店員確認後，客人畫面 B2 會變成的樣子（收尾狀態）</div>
+  <div class="phone">
+    <div class="status"></div>
+    <div class="nav"><span class="h">‹ 返回</span>出示給店員</div>
+    <div class="scr" style="height:376px;">
+      <div class="redeem-hero">
+        <div class="rt">暖暖窩義式廚房・用餐即贈</div>
+        <div class="rn hand">洋蔥圈 或 炸雞球</div>
+      </div>
+      <div class="done-card">
+        <div class="done-icon">✓</div>
+        <div class="done-title">已核銷，店員馬上為你準備</div>
+        <div class="done-sub">兌換品項：洋蔥圈</div>
+      </div>
+      <div style="text-align:center;">
+        <span class="qr-status done"><span class="dot"></span>已核銷・今天 19:42</span>
+      </div>
+      <p class="redeem-rule">這組兌換碼已使用過，不能再次核銷；下次光顧會是新的一組碼。</p>
+    </div>
+  </div>
+  <div class="len">高度 456px（實測）· 一屏內 · 補上收尾畫面，讓核銷這件事有始有終</div>
+</div>
+
+<div class="spec">
+  <h2>衡量機制：核銷完之後，怎麼知道這個活動帶來多少人、值不值得推進</h2>
+  <p>對應 Sales Kit「試辦期閘門」已定義的兩個指標（核銷率 ≥15%、可歸因來客數 ≥10 位）——
+  這裡講清楚數字從哪裡來，不是核銷完就沒了。</p>
+
+  <h3>① 每次核銷要記一筆什麼</h3>
+  <p><code>{ activityId, shopId, memberId（載具唯一識別碼，不是手機或Email）, redeemedAt }</code></p>
+  <p>memberId 從客人畫面 B 的兌換碼帶出來，店員用畫面 C 掃碼核銷——不存個資，
+  跟發票載具「只產出 memberId 不含個資」的原則一致。</p>
+
+  <h3>② 由這筆紀錄可以算出的指標</h3>
+  <table>
+    <tr><th>指標</th><th>算法</th><th>看什麼</th></tr>
+    <tr><td>核銷次數</td><td>紀錄總筆數</td><td>≈到店桌數（因一桌一份）</td></tr>
+    <tr><td>去重會員數</td><td>memberId 去重後的數量</td><td>同一人不重複計算，這是「帶來多少人」的下限</td></tr>
+    <tr><td>新客占比</td><td>此 memberId 在 carrier-join 歷史資料裡是否已有暖暖窩消費紀錄</td><td>證明是活動吸引來的，不是本來就會來的人</td></tr>
+    <tr><td>核銷率</td><td>核銷次數 ÷ 活動詳情頁被打開次數</td><td>需在畫面 B 加「查看」埋點，目前還沒做</td></tr>
+  </table>
+
+  <h3>③ 老實說，這輪還沒做到的</h3>
+  <p>「新客占比」要靠 carrier-join 歷史資料（見 nest-integration 資料橋），還沒打通；
+  「核銷率」要先加曝光埋點才有分母。這兩項列進下一輪工程項目，
+  D2 這次先能拿到「核銷次數」與「去重會員數」兩個最基本的數字。</p>
+</div>
+
+</body>
+</html>

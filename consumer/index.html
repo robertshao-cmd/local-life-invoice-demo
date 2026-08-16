@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>發票載具｜餐飲小程序示範</title>
+<style>
+:root{--navy:#1F3352;--teal:#0E7C7B;--gold:#B8912F;--line:rgba(255,255,255,.14);
+  --font:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);min-height:100vh;color:#fff;background:#20304B;
+  background-image:radial-gradient(1100px 520px at 60% -10%,#2C4368 0%,#20304B 55%);
+  display:flex;align-items:center;justify-content:center;padding:28px 18px}
+.wrap{width:min(560px,100%);text-align:center}
+.eyebrow{font-size:11px;letter-spacing:.4em;color:#8FD0CB;font-weight:800}
+h1{font-size:clamp(22px,5vw,30px);margin-top:12px;font-weight:800;line-height:1.4}
+.sub{font-size:13px;color:#9FB0C8;margin-top:10px;line-height:1.8}
+.cards{display:flex;gap:14px;margin-top:30px;flex-wrap:wrap}
+a.card{flex:1;min-width:220px;text-decoration:none;color:#fff;text-align:left;
+  border:1px solid var(--line);border-radius:18px;padding:20px 18px;
+  background:rgba(255,255,255,.05);transition:transform .12s ease,background .12s ease}
+a.card:hover{transform:translateY(-3px);background:rgba(255,255,255,.09)}
+a.card:focus-visible{outline:3px solid #7FD1CC;outline-offset:3px}
+.badge{display:inline-flex;width:44px;height:44px;border-radius:12px;align-items:center;
+  justify-content:center;font-size:17px;font-weight:800;margin-bottom:14px}
+.card h2{font-size:17px;font-weight:800}
+.card p{font-size:12px;color:#B9C7DC;margin-top:7px;line-height:1.8}
+.card .go{display:inline-block;margin-top:14px;font-size:12.5px;font-weight:800;color:#8FD0CB}
+.foot{margin-top:34px;font-size:11px;color:#7E8DA6;line-height:1.9}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">發票載具 · DEMO</div>
+  <h1>餐飲小程序 示範原型</h1>
+  <div class="sub">手機直接點開體驗，或投影提案用。<br>店家與數據皆為模擬，非實際營業資訊。
+    <br><b style="color:#FFD98A">最新：官方小程序 DEMO</b>——載具首頁貨架 → 三顆獨立小程序，用 webview 開、返回回貨架，跟正式環境一樣。
+    <br>單頁版 v6.19（2026-07-26）仍保留在下方，供比較用。</div>
+  <div class="cards">
+    <a class="card" href="../mini/?v=87c57c10" style="border:2px solid #FFD98A;background:rgba(255,217,138,.08)">
+      <span class="badge" style="background:#B8912F">新</span>
+      <h2>官方小程序 DEMO <span style="font-size:11px;color:#FFD98A">最新・建議從這裡開始</span></h2>
+      <p>發票載具首頁 → 「🌱 官方小程序」貨架 → 三顆官方自營單元（🧪 解毒吧／😶 無聊快篩／💸 幾歲破產）。
+         每顆都是獨立小程序，用 webview 開啟、返回回到貨架——正式環境就是這樣運作。</p>
+      <span class="go">進入官方小程序 DEMO ›</span>
+    </a>
+    <a class="card" href="../merchant/merchant.html?v=6.19">
+      <span class="badge" style="background:var(--navy)">商</span>
+      <h2>商家工作台（聚合版）</h2>
+      <p>一個主帳號登入，底部分頁切換三個工作台：🏪 商家助手（開店／接單／會員／發券）、📊 生意參謀（發票級經營數據）、📱 用戶端預覽（你的店在顧客手機裡的樣子）——與用戶端即時聯動。示範店家：暖暖窩義式廚房。</p>
+      <span class="go">進入商家工作台 ›</span>
+    </a>
+    <a class="card" href="./user.html?v=6.19">
+      <span class="badge" style="background:var(--teal)">體</span>
+      <h2>用戶體驗版・已接第三方支付</h2>
+      <p>載具主界面內建下拉小程序中心 → 四家品牌沈浸式小程序（路易莎／暖暖窩／鼎泰豐／雅詩蘭黛）→ 預點・排隊取號・外送・宅配 → 線上付款或到店付款（線上＝付款＋開票＋對獎五合一）→ 複購與券夾。</p>
+      <span class="go">進入（已接支付）›</span>
+    </a>
+    <a class="card" href="./app.html?v=6.19" style="border-color:var(--gold)">
+      <span class="badge" style="background:var(--gold)">未</span>
+      <h2>用戶體驗版・未接第三方支付 <span style="font-size:11px;color:#B9C7DC">單頁版 v6.19</span></h2>
+      <p>同一套體驗，店家未串接支付：預點單免付款 → 到店付款＋嗶載具完成開票對獎——商家零門檻也能先上車。首頁「🌱 官方小程序」貨架可進解毒吧／無聊快篩／幾歲破產。<br><small style="color:#8FA0BA">※ 這一頁是 07-26 凍結的比較基準,裡面是<b>改版前</b>的舊版(名字沒變,但功能不是最新版)。要看最新的請走最上面那張卡。</small></p>
+      <span class="go">進入（未接支付・最新）›</span>
+    </a>
+    <a class="card" href="../_legacy/real-home-v7.html?v=6.19" style="border-color:#8FD0CB">
+      <span class="badge" style="background:#0E7C7B">實</span>
+      <h2>實驗分支 v7(真 App 首頁殼+官方小程序)</h2>
+      <p>基於 v6.0 的體驗實驗(Robert):①發票時刻・健康回饋卡;入口=真實 App 首頁素材(iOS 真色票/圖標),小程序捷徑列直達:解毒吧/無聊快篩 A/B/幾歲破產/暖暖窩點單(點到生產站)。其餘功能與 v6.0 相同。<br><small style="color:#8FA0BA">※ 同上,是<b>改版前</b>的舊版。</small></p>
+      <span class="go">進入實驗分支 ›</span>
+    </a>
+  </div>
+  <div class="foot">CMoney 消費者事業群 · 提案示範原型（H5 模擬小程序）</div>
+</div>
+</body>
+</html>

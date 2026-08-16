@@ -1,0 +1,1668 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>無聊快篩｜發票載具</title>
+<script>
+/* ══ 補結尾斜線(0731,必須放在所有 <script src> 之前)══════════════
+   App 外開單元的網址格式是 /<slug>?cid=...(沒有結尾斜線),照的是
+   check-food-safety 的慣例——它是 Next.js,吐的是絕對路徑,所以不受影響。
+   本檔的 script 用相對路徑,少一個斜線瀏覽器就會把 unit-kit.js 解析到
+   上一層 → 404 → UK undefined → 整支 JS 掛掉、GA4 也不會啟動。
+   實測:/bored 完全壞掉、/bored/ 正常。
+   判斷式刻意寫成通用的(結尾沒斜線、且最後一段沒有副檔名才補),
+   這樣它在 /fapiao-demo/mini/bored/ 與 /fapiao-demo/mini/bored/index.html
+   兩種情況都不會誤動。 */
+(function () {
+  var p = location.pathname, last = p.split('/').pop();
+  if (!/\/$/.test(p) && !/\.[a-z0-9]+$/i.test(last)) {
+    location.replace(p + '/' + location.search + location.hash);
+  }
+})();
+</script>
+<script src="visit-index-tracking.js"></script>
+<script src="qrcode.min.js?v=87c57c10"></script>
+<script src="unit-kit.js?v=87c57c10"></script>
+<script>/* 靜態發佈版:回首頁指向同層的殼 */UK.HOME = "../";</script>
+<style>
+  :root{--ink:#262626;--red:#01AFA2;--mut:#8C8C8C;--line:#F0F0F0;--bg:#F5F5F5}
+  /* touch-action:manipulation = 關掉「連點兩下放大」,但保留捏合縮放與捲動
+     (0731 Robert 回報:App 裡點兩下會整頁放大)。
+     ⚠️ 一定要下在 * 而不是 html/body:雙擊縮放看的是**被點到那個元素**的
+     touch-action,只寫 body 的話底下每個 auto 的子元素照樣會放大。
+     刻意不用 viewport 的 user-scalable=no —— 那會連捏合一起鎖掉,是無障礙退步,
+     而且 iOS 從 10 開始本來就會忽略它。 */
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;
+    touch-action:manipulation}
+  html{font-size:16px}
+  body{font-family:-apple-system,"PingFang TC","Noto Sans TC",sans-serif;background:var(--bg);color:var(--ink);min-height:100dvh}
+  button{font-family:inherit;border:none;background:none;cursor:pointer;color:inherit}
+  .top{position:sticky;top:0;z-index:9;background:var(--red);color:#fff;padding:calc(10px + env(safe-area-inset-top,0)) 8px 10px;display:flex;align-items:center;gap:4px}
+  .top b{font-size:16px;flex:1;text-align:center}
+  .top button{color:#fff;font-size:21px;font-weight:900;min-width:44px;min-height:44px}
+  .top .ttl{font-size:16px;font-weight:800;flex:1;text-align:center;min-width:0}
+  .top .off{font-size:9px;background:rgba(255,255,255,.2);padding:2px 7px;border-radius:99px;white-space:nowrap}
+  .wrap{max-width:430px;margin:0 auto;padding:16px 16px calc(28px + env(safe-area-inset-bottom,0))}
+  .hero{text-align:center;padding:22px 6px 8px}
+  .hero .big{font-size:66px;line-height:1}
+  .hero h1{font-size:21px;line-height:1.5;margin-top:10px}
+  .hero p{font-size:12.5px;color:var(--mut);margin-top:8px}
+  .hero.mini{padding:12px 6px 4px} .hero.mini .big{font-size:40px} .hero.mini h1{font-size:16px} .hero.mini p{display:none}
+  /* 戲劇化無聊臉:嘆一口氣然後往下沉(reduced-motion 會被下面的 media query 關掉) */
+  .face{display:inline-block;animation:sigh 4.4s ease-in-out infinite}
+  @keyframes sigh{0%,100%{transform:translateY(0) rotate(-3deg) scale(1)}
+    18%{transform:translateY(-3px) rotate(-1deg) scale(1.04)}
+    46%{transform:translateY(7px) rotate(3deg) scale(.98)}
+    72%{transform:translateY(4px) rotate(1deg) scale(1)}}
+  .btn{display:block;width:100%;padding:14px;border-radius:13px;font-size:16px;font-weight:800;text-align:center;margin-top:10px;min-height:50px}
+  .btn.p{background:var(--red);color:#fff;box-shadow:0 4px 14px rgba(1,175,162,.28)}
+  .btn.p:disabled{opacity:.45;box-shadow:none}
+  .card{background:#fff;border-radius:16px;padding:14px;margin-top:12px;box-shadow:0 2px 10px rgba(38,38,38,.06)}
+  .note{font-size:11px;color:var(--mut);line-height:1.7;margin-top:10px;text-align:center}
+  .sec{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px}
+  .sec button{font-size:12.5px;font-weight:800;color:#8C8C8C;text-decoration:underline;text-underline-offset:3px;padding:12px 6px;min-height:44px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+  .q{font-size:13px;font-weight:800;color:#017C73;margin-top:12px}
+  .scan{text-align:center;padding:26px 14px 20px;font-size:13.5px;font-weight:800;color:#8C8C8C}
+  /* 雷達:你在中間,圈一直往外掃 —— 掃了半天發現你就在原地 */
+  .radar{position:relative;width:132px;height:132px;margin:0 auto 14px}
+  .radar .ring{position:absolute;inset:0;border:2px solid var(--red);border-radius:50%;
+               opacity:0;animation:sweep 1.9s ease-out infinite}
+  .radar .r2{animation-delay:.95s}
+  .radar .dot{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:40px;
+              animation:jiggle 1.9s ease-in-out infinite}
+  /* 想跑的那一隻:走出去兩步就被拉回來 */
+  .radar .run{position:absolute;left:50%;top:50%;margin-left:-10px;margin-top:-12px;font-size:20px;
+              animation:tryRun 1.9s ease-in-out infinite}
+  @keyframes sweep{0%{transform:scale(.22);opacity:.9}70%{opacity:.35}100%{transform:scale(1);opacity:0}}
+  @keyframes jiggle{0%,100%{transform:translate(-50%,-50%) rotate(-4deg)}
+                    50%{transform:translate(-50%,-50%) rotate(4deg) scale(1.06)}}
+  @keyframes tryRun{0%,100%{transform:translate(0,0);opacity:0}
+                    25%{transform:translate(34px,-4px);opacity:1}
+                    55%{transform:translate(46px,0);opacity:1}
+                    75%{transform:translate(6px,2px);opacity:.6}}
+  .scanTxt{min-height:38px;line-height:1.6}
+  .scanTxt b{display:block;font-size:14.5px;color:#017C73}
+  .scanTxt small{display:block;font-size:11.5px;font-weight:700;color:var(--mut);margin-top:3px}
+  .bar{height:5px;background:#F0F0F0;border-radius:99px;overflow:hidden;margin-top:14px}
+  .bar i{display:block;height:100%;width:0;background:var(--red);border-radius:99px;transition:width .5s ease}
+  .big-score{display:flex;align-items:baseline;justify-content:center;gap:8px;margin:0 0 4px}
+  .big-score b{font-size:52px;color:var(--red)}
+  .big-score span{font-size:13px;color:var(--mut)}
+  /* 攤在沙發上的那一坨:分數越高融得越徹底(reduced-motion 會被關掉,靜態也看得出在攤) */
+  .couch{position:relative;height:48px;margin:0}
+  .couch .sofa{position:absolute;left:50%;bottom:0;transform:translateX(-50%);font-size:36px;line-height:1}
+  .couch .blob{position:absolute;left:50%;bottom:15px;font-size:17px;line-height:1;
+               transform:translateX(-50%);animation:melt 3.6s ease-in-out infinite}
+  .couch.deep .blob{animation-duration:2.6s}
+  .couch.light .blob{animation-duration:5s}
+  @keyframes melt{
+    0%,100%{transform:translateX(-50%) translateY(0)   rotate(-6deg) scaleY(1)}
+    45%    {transform:translateX(-50%) translateY(9px)  rotate(-14deg) scaleY(.82) scaleX(1.12)}
+    70%    {transform:translateX(-50%) translateY(12px) rotate(-18deg) scaleY(.74) scaleX(1.18)}}
+  /* 戳章圖示:分數旁邊那顆會刺人的臉 */
+  .stampi{font-size:40px!important;line-height:1;align-self:center}
+  .stampT{display:inline-block;font-size:12px;font-weight:900;color:#019F93;background:#E6F7F6;
+          border-radius:99px;padding:4px 12px}
+  /* 跳過訪談時的一行:分數是純發票算的,不能讓他以為那兩題有算進去 */
+  .skipnote{font-size:11px;font-weight:700;color:var(--mut);margin-top:6px}
+  /* 分數 → 行動的因果句(0729):跟半徑同一區塊,不另外佔高度 */
+  .cause{font-size:12px;font-weight:800;color:#019F93;background:#E6F7F6;border-radius:10px;
+         padding:7px 10px;margin-top:7px;line-height:1.6}
+  /* 訪談標題 */
+  .lead{font-size:15px;font-weight:900;line-height:1.6;padding:14px 4px 0}
+  .lead small{display:block;font-size:11.5px;font-weight:700;color:var(--mut);margin-top:6px}
+  /* 生活半徑:併進分數卡,不另開一張(0727 瘦身) */
+  .radl{font-size:12.5px;font-weight:800;color:#595959;margin-top:7px;padding-top:7px;border-top:1px dashed var(--line)}
+  .radl b{font-size:17px;color:#01AFA2}
+  .radl span{color:#8C8C8C}
+  /* 發票證據:讓證據自己罵人 */
+  .ev{display:flex;gap:9px;padding:7px 0;border-bottom:1px dashed var(--line)}
+  .ev:last-child{border-bottom:none;padding-bottom:2px}
+  .ev{align-items:center}
+  .ev .e{font-size:19px;line-height:1.3;flex:none}
+  .ev b{display:block;font-size:13.5px;line-height:1.5;font-weight:800}
+  /* 標題就是那句數字,不寫「發票怎麼說」這種說明語 */
+  .evh{display:block;font-size:14.5px;font-weight:900;line-height:1.5;color:#017C73;margin-bottom:2px}
+  /* 好去處列 */
+  .subh{font-size:13px;font-weight:900;color:#017C73;margin:14px 4px 0}
+  .subh small{display:block;font-size:11.5px;font-weight:700;color:var(--mut);margin-top:4px;line-height:1.6}
+  .row{display:flex;gap:10px;align-items:flex-start;background:#fff;border-radius:15px;padding:13px;margin-top:10px;box-shadow:0 2px 10px rgba(38,38,38,.06);cursor:pointer}
+  .row .re{font-size:26px;flex:none;line-height:1.2}
+  .row .rb{flex:1;min-width:0}
+  .row .rb b{font-size:14px;font-weight:900;display:block}
+  .row .rb .meta{font-size:11px;color:#8C8C8C;font-weight:700;margin-top:3px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .row .rb i{display:block;font-style:normal;font-size:12px;line-height:1.65;color:#E88B21;font-weight:800;margin-top:6px}
+  .tag{font-size:10px;font-weight:900;background:#E6F7F6;color:#01AFA2;border-radius:99px;padding:2px 7px}
+  .tag.no{background:#F5F5F5;color:#8C8C8C}
+  /* 社群搜尋列(0731):每張卡下面三顆鈕,點下去開該平台的**實際搜尋結果**。
+     用 <button> 而不是 <a>:kit 的 poi.bind 遇到 closest('button') 會 return,
+     所以按鈕不會誤觸整列的地點卡(用 <a> 就會兩個一起觸發)。 */
+  /* ── 圖示系統(0731)─────────────────────────────────────────
+     .ic  = 24x24 線條圖,吃 currentColor,跟著所在文字的顏色與字級走
+     .msc = 吉祥物,由 mascot() 產生,不吃 currentColor(它是彩色插畫) */
+  .ic{width:1.05em;height:1.05em;display:inline-block;vertical-align:-.16em;flex:none;
+      fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  .msc{display:block;margin:0 auto}
+  .tico{display:inline-block;width:20px;height:20px;vertical-align:-.3em;
+        background:#fff;border-radius:6px;position:relative}
+  .tico::after{content:'';position:absolute;inset:3px;border-radius:50%;
+               background:linear-gradient(135deg,#3EBD7A,#257349)}
+  .soc{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-top:7px}
+  .soc .sh{font-size:10.5px;font-weight:900;color:#8C8C8C}
+  .soc button .ic{width:16px;height:16px;stroke-width:2}
+  /* ── 蓋掉共用層兩個還是舊配色的控件(0731)───────────────────────
+     kit 注入的 CSS 裡 .uk-chip.on 是藍(#2B4BD7)、.uk-vf 是紅(#FFE9EB/#A50011)。
+     截圖才發現:整頁都換成品牌綠了,只有每張卡最主要的「帶你衝」還是紅的、
+     篩選條選中態還是藍的 —— 一眼就看得出不是同一套。
+     在單元裡蓋掉而不是改 kit:解毒吧與幾歲破產還在用舊配色,
+     動 kit 會把它們一起改掉,那要它們各自的 owner 同意。 */
+  .uk-chip.on{border-color:#01AFA2!important;color:#017C73!important;background:#E6F7F6!important}
+  .uk-vf{background:#E6F7F6!important;color:#017C73!important}
+  .uk-vf.done{background:#01AFA2!important;color:#fff!important}
+  /* min-height 44px 是硬要求 —— UK.selfCheck() 會擋(我第一版寫 30px,被它抓出 27 個)。
+     字小、但可按的範圍要夠拇指。用 inline-flex 讓小字在 44px 裡垂直居中,
+     視覺上不會變成一排大方塊。 */
+  .soc button{font-size:10.5px;font-weight:900;padding:0 12px;min-height:44px;border-radius:99px;
+              border:1px solid var(--line);background:#fff;color:#017C73;
+              display:inline-flex;align-items:center}
+  .soc .sn{font-size:10px;font-weight:700;color:var(--mut);width:100%;line-height:1.6}
+  /* 被拆穿那一行(只有回訪＋沒去才出現) */
+  .busted{font-size:12px;font-weight:800;color:#019F93;background:#E6F7F6;border-radius:11px;
+          padding:9px 12px;margin-top:8px;line-height:1.6}
+  .rowbtn{flex:none;align-self:center;font-size:11.5px;padding:8px 9px}
+  .spot{margin-top:10px}
+  .spot .row{margin-top:0}
+  /* 「全部」的分組標頭:來源要看得見,官方那組附可查連結 */
+  .grp{font-size:12px;font-weight:900;color:#017C73;margin:16px 4px 2px}
+  .grp small{display:block;font-size:10.5px;font-weight:700;color:var(--mut);margin-top:3px;line-height:1.6}
+  .grp a{color:#01AFA2}
+  /* 篩選條:精選 / 我的清單 / 全部 —— 釘在標題列下面,清單隨時看得到。
+     top 用 --topH(JS 量出來的標題列實高),因為那條有 safe-area,寫死會露餡。 */
+  .fbar{display:flex;gap:7px;padding:10px 2px;margin:0 -2px;
+        position:sticky;top:var(--topH,58px);z-index:8;background:var(--bg)}
+  .fbar.stuck{box-shadow:0 6px 12px -8px rgba(38,38,38,.35)}
+  .fbar .uk-chip{flex:1;text-align:center;font-size:12px;padding:9px 4px;min-height:44px}
+  .fbar .uk-chip b{color:inherit}
+  /* 出走計畫:最優順序 + 一鍵開地圖 + 到店報載具 */
+  .plan{background:#fff;border-radius:16px;padding:14px;margin-top:12px;box-shadow:0 2px 10px rgba(38,38,38,.06)}
+  .plan h3{font-size:13.5px;font-weight:900;color:#017C73}
+  .plan ol{margin:8px 0 0 18px;font-size:12.5px;line-height:2;color:#595959}
+  .plan ol b{color:var(--ink)}
+  .plan .tot{font-size:11.5px;color:var(--mut);font-weight:700;margin-top:6px}
+  .plan .chain{font-size:11.5px;line-height:1.8;color:#E88B21;font-weight:800;
+               margin-top:10px;padding-top:9px;border-top:1px dashed var(--line)}
+  /* 外層已經有自己的標題列/返回鍵時(App webview、測試殼),把本單元那條收掉,
+     不然兩條返回鍵疊在一起(0731 Robert 回報)。判斷在下面的 hostChrome()。 */
+  html.nochrome .top{display:none}
+  /* ── App 返回 banner 的讓位(0731 Robert:每一頁上方都被擋住)──────────
+     那條 banner 是**蓋在** webview 上面的,不是排在它上面 —— 所以我們自己的
+     標題列一拿掉,內容就直接被壓在它底下。原本 .top 有 env(safe-area-inset-top)
+     順便把這段撐開了,現在得自己補回來。
+
+     用一個空的 spacer 而不是 body padding,原因有兩個:
+       ① 它在 .wrap 最上面,六個 view(v0~v7)全都在 .wrap 裡面,補一次就全中,
+          不用每頁各自處理。
+       ② 它是真的元素,JS 量得到實高 → 直接餵給 --topH,篩選條(.fbar)才會
+          剛好黏在 banner 下緣,不會捲上去躲進 banner 裡面。
+
+     高度為什麼寫成 env() + 56px:這樣兩種 webview 擺法都會對。
+       · webview 貼到螢幕最上面(含狀態列)→ env 回 47~59,合計 ~103~115,
+         剛好是 狀態列 + 導覽列 的高度
+       · webview 從狀態列下面才開始 → env 回 0,合計 56,剛好是一條導覽列
+     真機上還是差幾 px 的話,用 ?top=NN 直接指定(px),不用改程式重部署。 */
+  #hostpad{height:0}
+  html.nochrome #hostpad{height:var(--hostTop, calc(env(safe-area-inset-top, 0px) + 56px))}
+  /* ── 掃完載具的打卡卡(0731)────────────────────────────────
+     整顆單元的敘事收尾:那隻在雷達裡一直被拉回沙發的人,這次真的走掉了。 */
+  .chk{position:fixed;inset:0;z-index:9500;display:none;align-items:center;justify-content:center;
+       background:rgba(38,38,38,.55);padding:20px}
+  .chk.on{display:flex}
+  .chk .box{background:#fff;border-radius:20px;padding:20px 18px 14px;width:min(340px,100%);
+            text-align:center;box-shadow:0 18px 40px rgba(38,38,38,.28)}
+  /* 舞台整組置中(0731 Robert):沙發在中間,人從沙發裡「剝」出來再走掉。
+     用 inline-block + 固定寬度讓它跟卡片一起置中,不是靠 left 定位貼邊。 */
+  .chk .stage{position:relative;height:62px;width:190px;margin:0 auto}
+  .chk .sofa2{position:absolute;left:8px;bottom:6px;font-size:32px;line-height:1}
+  /* 兩段式:🫠 黏在沙發上被拉開(squash) → 交棒給 🚶 走掉。
+     「從沙發裡剝出來」的關鍵是 scaleX 先被拉長再回彈,不是單純位移。 */
+  .chk .blob2{position:absolute;left:16px;bottom:16px;font-size:22px;line-height:1;
+              transform-origin:left center;
+              animation:peel 3.2s cubic-bezier(.34,0,.5,1) .2s infinite}
+  .chk .walk{position:absolute;left:44px;bottom:9px;font-size:28px;line-height:1;
+             animation:walkOff 3.2s cubic-bezier(.34,0,.5,1) .2s infinite}
+  /* 這兩組 keyframes 刻意跟 .radar 的 tryRun 相反:那一隻走兩步就被拉回原地,
+     這一隻真的走掉。人家出門刷了載具,動畫還把他拉回來就是在打自己的臉。 */
+  @keyframes peel{
+    0%  {transform:translateX(0) scaleX(1)   scaleY(1);   opacity:1}
+    26% {transform:translateX(10px) scaleX(1.5) scaleY(.72);opacity:1}   /* 被拉開、變扁 */
+    40% {transform:translateX(20px) scaleX(.8)  scaleY(1.1);opacity:.55} /* 彈開 */
+    50%,100%{transform:translateX(24px) scaleX(.6) scaleY(1);opacity:0}}
+  @keyframes walkOff{
+    0%,38%{transform:translateX(0);opacity:0}
+    48%   {transform:translateX(6px);opacity:1}
+    88%   {transform:translateX(118px);opacity:1}
+    100%  {transform:translateX(132px);opacity:0}}
+  .chk .chkT{font-size:14.5px;font-weight:900;color:#017C73}
+  .chk .chkU{font-size:11.5px;font-weight:700;color:var(--mut);margin-top:-3px}
+  /* 分數變化:舊值劃掉 → 新值。降多少是真的重算出來的,不是動畫效果 */
+  .chk .delta{display:flex;align-items:baseline;justify-content:center;gap:8px;margin-top:2px}
+  .chk .delta s{font-size:20px;font-weight:800;color:#BFBFBF}
+  .chk .delta i{font-style:normal;font-size:13px;font-weight:900;color:#017C73}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<!-- ══ 圖示系統的漸層定義(0731)══════════════════════════════════
+     只放一次,底下所有吉祥物 svg 都用 url(#tgrad) 引用。每個 svg 各自帶 defs
+     會產生重複 id(HTML 不合法)而且檔案肥一圈。
+     色票是從 App 真實素材 img_tree_lv5.png **逐像素取樣**出來的,不是目測:
+       樹冠亮 #3EBD7A → 暗 #257349 · 樹幹 #B99A55 · 瞳孔 #257349 -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="tgrad" x1="0" y1="0" x2=".85" y2="1">
+    <stop offset="0" stop-color="#3EBD7A"/><stop offset="1" stop-color="#257349"/></linearGradient>
+</defs></svg>
+<div class="top">
+  <button onclick="nav.back()" aria-label="返回">&lsaquo;</button>
+  <button class="ttl" onclick="goTop()" aria-label="回到第一頁"><span class="tico"></span> 無聊快篩</button>
+  <span class="off">官方自營</span>
+  <button onclick="shareNow()" aria-label="分享">&ctdot;</button>
+</div>
+<div class="wrap">
+  <!-- 給 App 返回 banner 讓位的 spacer。六個 view 都在 .wrap 裡,所以補這一個就夠。
+       沒有 .nochrome 時高度是 0(單機直開有自己的標題列,不需要讓位) -->
+  <div id="hostpad"></div>
+
+  <!-- v0 入口:一頁只有一個主 CTA。不放說明文字、不放隱私長註(0724 定調) -->
+  <div id="v0">
+    <div class="hero"><div class="big"><span class="face"></span></div>
+      <h1>你的日子，規律到可以被預測</h1><p>你的發票已經寫好答案</p></div>
+    <div id="lastBox"></div>
+    <button class="btn p" id="cta" onclick="enter()">我敢測</button>
+    <div class="sec" id="retest" style="display:none"><button onclick="retest()">重新驗一次</button></div>
+  </div>
+
+  <!-- v1 訪談:兩題都要答(落差不能靠預設值製造) -->
+  <div id="v1" style="display:none">
+    <div class="lead">先老實回答，等下發票會對答案
+      <small>兩題，10 秒。答完才有資格喊冤。</small></div>
+    <div class="card">
+      <div class="q">Q1 · 週末你通常人在哪？</div>
+      <div class="chips" data-chips="q1">
+        <button class="uk-chip" data-v="home">家裡，躺著</button>
+        <button class="uk-chip" data-v="alley">巷口那一圈</button>
+        <button class="uk-chip" data-v="district">同一個商圈</button>
+        <button class="uk-chip" data-v="roam">每週不同地方</button>
+      </div>
+      <div class="q">Q2 · 晚餐通常怎麼來？</div>
+      <div class="chips" data-chips="q2">
+        <button class="uk-chip" data-v="deliver">外送送來</button>
+        <button class="uk-chip" data-v="conv">超商微波</button>
+        <button class="uk-chip" data-v="same">巷口同一家</button>
+        <button class="uk-chip" data-v="vary">到處吃或自己煮</button>
+      </div>
+    </div>
+    <button class="btn p" id="goScan" onclick="scan()" disabled>先回答上面兩題</button>
+    <div class="sec"><button onclick="skip()">懶得選，直接看結果</button></div>
+  </div>
+
+  <!-- v2 過場(transient:不入返回堆疊、可跳過) -->
+  <div id="v2" style="display:none">
+    <div class="card scan">
+      <div class="radar">
+        <span class="ring"></span><span class="ring r2"></span>
+        <span class="dot"></span><span class="run"></span>
+      </div>
+      <div class="scanTxt" id="scanTxt"><b>翻你的發票…</b></div>
+      <div class="bar"><i id="scanBar"></i></div>
+    </div>
+    <div class="sec"><button onclick="skipScan()">跳過動畫 &rsaquo;</button></div>
+  </div>
+
+  <!-- v3 結果:一屏只給三件事——分數(帶戳章圖示)、發票證據一行一句、一顆主 CTA。
+       分項與算式已移除(Robert 0727 拍板:一頁不給太多資訊) -->
+  <div id="v3" style="display:none">
+    <div class="uk-trend" id="trend" style="display:none"></div>
+    <div class="card" style="text-align:center">
+      <div class="couch" id="couch"><span class="sofa"></span><span class="blob" id="blob"></span></div>
+      <div class="big-score"><b id="scoreN">&mdash;</b><span>/100</span></div>
+      <div class="stampT" id="stampT"></div>
+      <div class="skipnote" id="skipnote" style="display:none">你沒回答，這是純發票版</div>
+      <div class="radl">生活半徑 <b id="radN">&mdash;</b> · <span id="radTxt"></span></div>
+      <!-- 0729:分數要接上行動誘因,不然使用者不知道 93 分能幹嘛 -->
+      <div class="cause" id="cause"></div>
+    </div>
+    <div class="card">
+      <b class="evh" id="evh">&mdash;</b>
+      <div id="ev"></div>
+    </div>
+    <button class="btn p" id="rxCta" onclick="showRx()">你終於要出門了？</button>
+    <div class="sec"><button onclick="shareNow()">曬我的無聊值</button></div>
+  </div>
+
+  <!-- v4 好去處:三個模式共用一頁(精選／我的清單／全部),篩選條釘在標題列下面。
+       原本的 v5「全部好去處」併進來了——少一頁,清單永遠在同一個位置。 -->
+  <div id="v4" style="display:none">
+    <div class="subh" id="rxLead"><span id="rxLeadT">你終於要出門了？</span>
+      <small></small></div>
+    <div class="fbar" data-chips="mode">
+      <button class="uk-chip on" data-v="pick">精選</button>
+      <button class="uk-chip" data-v="mine">我的清單 <b id="mineN">0</b></button>
+      <button class="uk-chip" data-v="all">全部</button>
+    </div>
+    <div id="planBox"></div>
+    <div id="rxList"></div>
+  </div>
+
+  <!-- v7 空狀態(transient:一次性頁,有引導也有出路) -->
+  <div id="v7" style="display:none">
+    <div class="hero"><div class="big rcpt"></div>
+      <h1>你連發票都懶得存</h1><p>近 30 天只有 <b id="invN">0</b> 張&mdash;&mdash;連無聊都證明不了</p></div>
+    <div class="card"><b style="font-size:13px">怎麼讓發票自己跑進來</b>
+      <div style="font-size:12.5px;line-height:2;margin-top:6px">1️⃣ 結帳報手機條碼（載具）<br>2️⃣ 自動歸戶，不用拍不用存<br>3️⃣ 5 張就能開測</div></div>
+    <button class="btn p" onclick="demoFill()">（示範）灌入發票，直接開測</button>
+    <div class="sec"><button onclick="goCarrier()">看我的手機條碼</button></div>
+  </div>
+
+  <!-- v8 下載落地頁(?dl=1):分享文字裡的下載連結會落到這裡。
+       刻意不自動轉址 —— 自動轉的話事件只能在 onload 送,就分不出「社群預抓」
+       與「真人點擊」。多一次點擊換乾淨的數字(見上面 DL_URL 那段註解)。 -->
+  <!-- 掃完載具的打卡卡。不是 nav 的 view(它是浮層,蓋在任何一頁上),
+       所以不進 VIEWS,改用 nav 的 sheets 契約讓返回鍵先關它。 -->
+  <div class="chk" id="chk">
+    <div class="box">
+      <div class="stage"><span class="sofa2"></span>
+        <span class="blob2"></span><span class="walk"></span></div>
+      <div class="chkT">你真的出門了</div>
+      <div class="big-score" style="margin-top:4px"><b id="chkN">&mdash;</b><span>/100</span></div>
+      <div class="delta" id="chkDelta" style="display:none"><s id="chkOld"></s><i id="chkDiff"></i></div>
+      <div class="chkU">現在的無聊值</div>
+      <div class="cause" id="chkCause"></div>
+      <button class="btn p" onclick="chkNext()">再排下一站</button>
+      <div class="sec"><button onclick="closeChk()">關掉</button></div>
+    </div>
+  </div>
+
+  <div id="v8" style="display:none">
+    <div class="hero"><div class="big rcpt"></div>
+      <h1>發票載具</h1><p>結帳報手機條碼，發票自動歸戶——不用拍、不用存</p></div>
+    <div class="card"><b style="font-size:13px">裝了之後</b>
+      <div style="font-size:12.5px;line-height:2;margin-top:6px">
+        1️⃣ 結帳時報手機條碼，發票自動進來<br>
+        2️⃣ 中獎自動對獎、自動通知<br>
+        3️⃣ 官方小程序都在裡面（你朋友分享給你的就是其中一顆）</div></div>
+    <button class="btn p" id="dlBtn" onclick="dlGo()"><span class="dlic"></span> 下載發票載具</button>
+    <div class="sec"><button onclick="dlSkip()">先看看無聊快篩 &rsaquo;</button></div>
+  </div>
+
+</div>
+<script>
+/* ==============================================================
+   無聊快篩（bored）· 單元邏輯
+   共用層一律走 UK.*(unit-kit.js)。不要改 unit-kit.js,也不要複製它的功能。
+
+   這個單元的骨幹:發票 → 五個分項 → UK.data.composite() 出無聊值 →
+   同一組數字同時長出「生活半徑」「證據行」「處方推薦理由」,所以三頁講的話對得起來。
+   ============================================================== */
+var UK_SLUG = 'bored';      /* 給 UK.exitToHome 的 postMessage 帶身分,殼才知道是誰要回首頁 */
+var KEY = 'bored_state';
+var ST  = UK.state.load(KEY);
+var ANS = {};
+var score = null;
+
+/* ══ 中台連線(0730)══════════════════════════════════════════════
+   單元不可以直連 InvoiceStore.Api(那支是內部 admin API,前端不該碰得到)——
+   已經跟 Robert 對過,正式路徑是中台的 GET /features/summary,由中台去打
+   InvoiceStore.Api 做聚合再吐給我們,單元只認中台。
+   只在部署到 ailab-dev/ailab-prod 時才有 apiBase;本機開發與公開 GitHub Pages
+   demo 一律維持 UK.data 內建的示範值,不會發任何請求出去(load() 的第一行就擋掉了)。
+   ⚠️ 實測 /features/summary 需要先有 session(在真的小樹 hub 裡開才建得起來),
+   本機 curl 這支只會拿到 401 NO_SESSION——那不是壞掉,是本機沒有登入態,正常。
+   同一個 apiBase 也是 UK.track() 判斷要不要真的 POST /track 的開關,設一次兩邊生效。 */
+function platformApiBase() {
+  var h = location.hostname;
+  if (h === 'ailab-dev.cmoney.tw')  return 'https://ailab-dev.cmoney.tw/platform-api/api/v1';
+  if (h === 'ailab-prod.cmoney.tw') return 'https://ailab-prod.cmoney.tw/platform-api/api/v1';
+  return null;   /* localhost / GitHub Pages demo:UK.apiBase 留 null,行為跟現在完全一樣 */
+}
+UK.apiBase = platformApiBase();
+/* 不 await:v2 掃描過場本來就有 ~2 秒的緩衝,真資料通常來得及在 showResult() 之前到位;
+   來不及也不阻塞畫面——沒接上就是 UK.data 內建的示範值,使用者不會看到空白或轉圈。 */
+if (UK.apiBase) UK.data.load(UK.apiBase);
+
+/* ══ GA4 埋點(0730 Melon:每個可被點擊的地方都要埋)═══════════════
+   填了 GA4_ID 才會真的送;沒填就只有 console(本機開發不會亂送測試資料上去)。
+   三顆單元共用 unit-kit.js 的 UK.track,所以事件命名與參數形狀一致,
+   GA4 報表用 unit 參數就能切分單元。
+   驗收方式:網址加 ?debug=1,右下角會出現即時事件記錄,把每個可點的東西
+   點一遍,確認沒有漏埋的(見 docs/analytics-events.md)。 */
+/* 0730 已接上:InvoiceManager property(帳戶 CWInvoice 發票相關類)的
+   「官方自營小程序（H5）」網站串流,串流 ID 15352956337。
+   同一個 property 底下還有 iOS/Android 兩條 App 串流,所以報表裡要用
+   「平台」維度或 hostname 把我們的 H5 流量跟 App 原生流量分開看。 */
+var GA4_ID = 'G-MTZ5H145TC';
+/* 0731:只有真的部署到 ailab 才送 GA4。
+   之前是無條件 init,結果我在 localhost 跑的每一次自動化測試都寫進正式 property
+   ——一天下來上百筆。量小的時候被 App 的 8.7 萬事件淹沒看不出來,
+   但上架初期分母小,這些假流量會把完成率／閉環率整組灌歪。
+   不送 GA4 不影響其他兩條路:UK.track 照樣寫 console(開發時看得到)、
+   照樣打中台 /track(如果有 apiBase)。 */
+function gaShouldSend() {
+  var h = location.hostname;
+  return h === 'ailab-dev.cmoney.tw' || h === 'ailab-prod.cmoney.tw';
+}
+var GA_ON = gaShouldSend();
+if (GA_ON) UK.ga.init(GA4_ID, 'bored');
+else if (window.console) console.info('[bored] 非 ailab 環境 → GA4 不啟動(只留 console 與中台 /track)');
+
+/* ══ 外層自己有標題列時,把本單元那條收掉(0731 Robert:返回鍵重疊)═══════
+   本單元的 .top 有「‹ 返回」,App webview 外面也有一條原生返回——兩條疊在一起。
+   拿掉我們自己的那條就好:UK.nav 每切一頁都有 pushState、也聽 popstate,
+   所以 App 的原生返回鍵會照著 v0→v1→v3→v4 一層一層退,行為跟本單元的返回鍵一樣,
+   不會變成「一按就整個關掉」。
+
+   判斷順序刻意這樣排:
+     ?chrome=1 → 強制留著(要單獨除錯這條列時用)
+     ?chrome=0 → 強制收掉
+     iframe    → 測試殼,殼自己有標題列
+     有 cid    → App 外開格式一定帶 cid,帶了就一定在 App webview 裡
+     UA        → 最後一道,抓自訂 WebView 的 UA */
+function hostChrome() {
+  var q;
+  try { q = new URLSearchParams(location.search); } catch (e) { q = null; }
+  if (q && q.get('chrome') === '1') return false;
+  if (q && q.get('chrome') === '0') return true;
+  if (UK.embedded()) return true;
+  if (q && q.has('cid')) return true;
+  return /fapiao|invoice|cmoney/i.test(navigator.userAgent || '');
+}
+var HOST_CHROME = hostChrome();
+if (HOST_CHROME) {
+  document.documentElement.classList.add('nochrome');
+  /* ?top=NN 現場微調 banner 讓位高度(px)。真機上量出來差幾 px 的話用這個,
+     不用改程式重跑一次 CI。?top=0 = 完全不讓位(要看被擋成什麼樣時用)。 */
+  try {
+    var _t = new URLSearchParams(location.search).get('top');
+    if (_t !== null && _t !== '' && !isNaN(+_t))
+      document.documentElement.style.setProperty('--hostTop', Math.max(0, +_t) + 'px');
+  } catch (e) {}
+}
+
+/* ══ <span class="wr"></span> 發票 API 連線自檢(0731 Robert:要能在 TestFlight 測試機上驗)═════
+   它只回答一個問題:這台機器上,單元到底有沒有真的拿到「你的」發票?
+
+   ⚠️ 個資鐵律(CLAUDE.md:載具條碼=個資,只比對不落地、不寫 log)。所以:
+     · 手輸的條碼與 cid 解出來的條碼,只活在下面這個區域變數(記憶體)
+     · 衍生顯示一律遮罩(/KZ***KG);輸入框裡是他自己現在打的字,不遮
+     · 不進 GA4(下面每個 UK.track 都沒有條碼參數)、不寫 console、不寫 localStorage
+     · **不會把條碼送進任何 API 網址** —— 中台 /features/summary 認的是 session
+       不是條碼,把條碼塞 query 只會讓它落進中台的 access log,那就是「落地」。
+       條碼在這裡的唯一用途是**本地比對**:確認 App 帶進來的 cid 是不是你本人。 */
+var _bc = { fromCid: '' };   /* 只留 cid 解出來的條碼(給條碼浮層用) */
+function b64url(s) {                       /* Base64URL(RFC 4648):-_ 要換回 +/,還要補 padding */
+  try {
+    var t = String(s).replace(/-/g, '+').replace(/_/g, '/');
+    while (t.length % 4) t += '=';
+    return atob(t);
+  } catch (e) { return ''; }
+}
+function validBc(b) { return /^\/[0-9A-Z.+\-]{7}$/.test(b || ''); }   /* 手機條碼 = / + 7 碼,共 8 碼 */
+try {
+  var _cidQ = new URLSearchParams(location.search).get('cid');
+  /* App 深連結給的 cid 是 Base64URL 包過的條碼;但 FCM 分眾推播的 {barcode}
+     動態變數換出來的是條碼原文(/XXXXXXX),不是包過的。先檢查是不是已經是
+     合法條碼原文,是的話直接用,不然才照舊當 Base64URL 解——兩種來源都吃,
+     互不影響。 */
+  if (_cidQ) _bc.fromCid = validBc(_cidQ) ? _cidQ : b64url(_cidQ);
+} catch (e) {}
+
+/* ══ 條碼浮層出示「他自己的」載具號(0731)═════════════════════════
+   在此之前浮層一直畫 kit 的 DEMO 字串 /AB12345,並在下面標「示範條碼」——
+   不是壞掉,是單元根本拿不到載具號,所以刻意不假裝(kit 註解就是這樣寫的)。
+
+   現在拿得到了:App 外開一定帶 cid,cid 就是 Base64URL 包起來的載具條碼,
+   解出來直接餵進 kit 早就留好的 UK.carrier.setCode()。
+   同一段程式在測試(ailab-dev)與正式(ailab-prod)都成立,因為兩邊 App 用的是
+   同一種外開格式 —— 不需要為正式版再改一次。
+
+   解不出合法條碼就不設(維持 DEMO + 「示範條碼」灰字),寧可誠實標示,
+   也不要拿一個猜的字串給店員掃 —— 掃不出來比沒有更糟。
+
+   ⚠️ 個資:條碼**顯示在他自己的手機上是這個功能的目的**(要給店員掃),
+      但不可以外流。已確認:
+        · carrier_open / carrier_done 兩個事件只帶 from,沒有條碼
+        · 分享圖卡與圖內 QR 用 location.origin + pathname,不含 cid
+        · UK.ga.cleanUrl 已把 cid/phone 從 page_location 剝掉
+        · 不寫 localStorage、不寫 console */
+if (validBc(_bc.fromCid)) UK.carrier.setCode(_bc.fromCid);
+
+
+/* ══ 文案挑選盤 ══════════════════════════════════════════════
+   挑文案只改這三個數字,不用在檔案裡翻。每組的備選都在下面的陣列裡,
+   索引超出範圍會自動退回第 0 句(不會空白)。
+
+     push  出門刺激句 → v3 主 CTA + v4 標題        (PUSH,      5 句:0-4)
+     evh   證據卡標題 · 說實話時                   (EVH,       5 句:0-4)
+     liar  證據卡標題 · 被抓到說謊時               (EVH_LIAR,  3 句:0-2)
+   ═══════════════════════════════════════════════════════════ */
+var COPY = { push: 0, evh: 0 };
+
+/* ══ 發票載具下載頁(0731 Robert:分享文字要帶下載連結,而且要追得到)═════
+   ⚠️ 等 Robert 給官網下載頁網址,填進 DL_URL 就開通。
+      留空 = 分享文字**不會**出現下載那一行、v8 的鈕會 disabled ——
+      寧可少一行,也不要放一個連到不存在的頁面的連結給使用者。
+
+   為什麼不直接把官網網址貼在分享文字裡:那樣完全追不到。改成先進我們自己的
+   /bored/?dl=1 落地頁,送完事件再導出去,「有幾個人從分享連結去下載」就是
+   我們自己量的,不依賴商店後台或別人的 GA。
+
+   ⚠️ 兩個事件的意義不一樣,報表要用對:
+     bored_dl_view  = 落地頁被開啟。LINE／FB／Slack 會預抓連結產生預覽,
+                      這個數字**會被預抓灌水**,只能當上限看。
+     bored_dl_click = 使用者真的按了下載鈕 → 這才是真人。要看成效看這個。
+   所以刻意不做「自動轉址」:自動轉的話事件只能在 onload 送,就永遠分不出
+   預抓與真人。多一次點擊換到乾淨的數字,而且落地頁自己也能講清楚要下載什麼。 */
+var DL_URL = '';
+function uaPlat() {
+  var u = navigator.userAgent || '';
+  return /iPhone|iPad|iPod/i.test(u) ? 'ios' : (/Android/i.test(u) ? 'android' : 'other');
+}
+function dlSrc() {
+  try { return new URLSearchParams(location.search).get('utm_source') || 'direct'; }
+  catch (e) { return 'direct'; }
+}
+function isDlLanding() {
+  try { return new URLSearchParams(location.search).get('dl') === '1'; } catch (e) { return false; }
+}
+/* 分享文字裡放的連結:指回我們自己的落地頁,帶 utm 讓 GA4 認得來源 */
+function dlShareURL() {
+  if (!DL_URL) return '';
+  return location.origin + location.pathname
+       + '?dl=1&utm_source=bored&utm_medium=share&utm_campaign=share_card';
+}
+function dlGo() {
+  UK.track('bored_dl_click', { plat: uaPlat(), src: dlSrc() });   /* ← 真人才會有 */
+  if (!DL_URL) { UK.toast('下載頁網址還沒設定'); return; }
+  UK.openExternal(DL_URL, { kind: 'app_download' });
+}
+/* 落地頁不能是死路:讓他也能順手進來玩一下(這條也是導流,要埋) */
+function dlSkip() { UK.track('bored_dl_skip', { src: dlSrc() }); nav.reset('v0'); }
+
+/* -- 兩題的答案:每一個選項都真的改分數(不是裝飾) -- */
+var Q1 = {                                   /* 週末人在哪 → 生活半徑 */
+  home:     { label: '家裡，躺著',     radius: 300  },
+  alley:    { label: '巷口那一圈',     radius: 800  },
+  district: { label: '同一個商圈',     radius: 2200 },
+  roam:     { label: '每週不同地方',   radius: 6500 }
+};
+/* -- 出門刺激文案(Melon 0727:要帶刺激感,不是溫馨提示) --
+   換句改最上面的 COPY.push,五句都留著讓 Robert 挑。
+   用在:v3 的處方主 CTA、v4 的好去處標題(同一句,語氣才不會分岔)。 */
+var PUSH = [
+  '你終於要出門了？',                 /* 0 ← 目前用這句 */
+  '離開這張椅子，半徑就會變',         /* 1 */
+  '附近有東西，你只是沒去',           /* 2 */
+  '你的圓，今天可以作廢',             /* 3 */
+  '外送員今天不想見你'                /* 4 */
+];
+function push() { return PUSH[COPY.push] || PUSH[0]; }
+/* -- 證據卡標題:要刺、要口語、數字要在句子裡 --
+   換句改最上面的 COPY.evh / COPY.liar,其餘都留著讓 Robert 挑。
+   s.n=近 30 天張數,s.conv=其中在超商的張數(會跟著發票變,不寫死)。 */
+/* 證據卡標題。0731 大修:
+   ① 只用真的算得出來的數字(張數、店家數、平均次數),不再有 62%／全家／外送員
+   ② 語氣從「指控使用者」改成「陳述 + 把懶的角色丟給那隻樹」
+      Robert 指出原本那套是 bad intention —— 箭頭指著拿手機的人。
+      同樣的幽默感,對象換成吉祥物就不傷人,而且那才是吉祥物存在的意義。 */
+var EVH = [
+  function (s) { return s.shops + ' 家店，被你排成一張班表'; },              /* 0 ← 目前用這句 */
+  function (s) { return s.n + ' 張發票，' + s.shops + ' 家店。牠看完就躺回去了'; }, /* 1 */
+  function (s) { return '平均每家 ' + s.perShop + ' 次——熟得可以續約了'; },   /* 2 */
+  function (s) { return s.shops + ' 家店輪播中'; },                          /* 3 */
+  function (s) { return '這是你近 30 天的全部去處：' + s.shops + ' 家'; }      /* 4 */
+];
+/* -- 掃描過場的台詞:主句戳他,小字補刀。四拍,每拍 620ms。
+      要換整組就改 SCAN_SET(現在用第 0 組),不要只改一句,節奏會歪。 -- */
+var SCAN = [
+  [ ['翻你的發票…',        '47 張,翻得很快,因為都一樣'],
+    ['定位中…',            '找不到,因為你沒動'],
+    ['對你剛才的答案…',    '嗯哼'],
+    ['量你的半徑…',        '尺不用拉太長'] ],
+  [ ['吸入發票中…',        '一股超商味'],
+    ['標記你的座標…',      '標一個點就夠了'],
+    ['比對你剛才說的…',    '發票在笑'],
+    ['算你的生活半徑…',    '算完會有點痛'] ],
+  [ ['清點你的日常…',      '清單很短,別緊張'],
+    ['畫你的活動範圍…',    '一個圈,收工'],
+    ['查證你的說法…',      '查到了,不用查太久'],
+    ['結算無聊值…',        '你確定要看?'] ]
+];
+var SCAN_SET = 0;
+
+/* EVH_LIAR(被抓到說謊時的標題)整組移除 —— 見下面 mismatch() 的說明。
+   它引用的 s.conv 也一起沒了(那是常數推導出來的假數字)。 */
+
+var Q2 = {                                   /* 晚餐怎麼來 → 外送依賴 */
+  deliver: { label: '外送送來',         v: 96 },
+  conv:    { label: '超商微波',         v: 88 },
+  same:    { label: '巷口同一家',       v: 78 },
+  vary:    { label: '到處吃或自己煮',   v: 34 }
+};
+
+/* -- 示範明細:kit 的 INV 只有張數與商家數,這裡把它拆成可吐槽的結構。
+      全部以 UK.data.INV 當分母推導 → ?inv=N / 灌發票之後證據行會跟著變,不寫死 62%。 -- */
+/* ══════════════════════════════════════════════════════════════════
+   我們到底真的知道什麼(0731 大修)
+   ══════════════════════════════════════════════════════════════════
+   Robert 指出原本那些「證據」是 bad intention —— 追下去發現比 tone 更嚴重:
+   它們是**寫死的常數**,不是從任何人的發票算出來的。
+
+     convRatio .62  → 「人生的 62% 在超商結帳」  任何張數都是 62%
+     topShop '全家' → 「同一家全家連續 21 天」    指名一間他可能沒去過的店
+     delivRatio .19 → 「最常見到你的人:外送員」
+     streak         → 從**張數**推的,跟「連續」無關
+     baseRadius     → 半徑其實是他自己選的那個選項,不是量出來的
+
+   而且判斷式 convPct >= 50 恆真(因為 convPct 永遠 62),所以**任何人**
+   選「到處吃」都會被說謊。那不是根據資料的笑話,是一句寫死的台詞穿上證據的外衣。
+   同時也踩到 CLAUDE.md 的口徑鐵律:「不對任何商家貼標」。
+
+   所以這一版把算不出來的東西**刪掉**,不是改文案。剩下的是真的:
+
+     ① 張數 n、商家數 shops   ← 中台 /features/summary(接上就是真的)
+     ② 每家平均去幾次 = n/shops ← 由 ① 推導,是真實的重複度指標
+     ③ 90 天張數                ← 中台
+     ④ 兩題答案                 ← 使用者自己說的(必須標明是「你說的」)
+     ⑤ 出門次數 trips           ← 我們親眼看到他按「店員掃好了」
+
+   ⚠️ 接中台之前 ①③ 是 UK.data 的示範值(47/23/128)。示範值不會假裝是真的:
+      自檢面板的「資料來源」會顯示 demo,而且不會有任何文案說「你的」。 */
+var _forceInv = 0;                  /* （示範）灌發票之後蓋掉 ?inv= */
+function invN() { return _forceInv || UK.data.invCount(); }
+
+function stats() {
+  var n = invN(), inv = UK.data.INV, ans = curAns();
+  var shops = inv.d30.shops || 0;
+  /* 每家平均去幾次 —— 這是真的重複度:同樣 47 張,去 23 家 vs 去 5 家差很多 */
+  var perShop = shops ? Math.round(n / shops * 10) / 10 : 0;
+  return {
+    n: n,
+    shops: shops,
+    perShop: perShop,
+    d90n: inv.d90.n,
+    real: UK.data.source === 'platform',        /* 中台接上了嗎(文案要看這個) */
+    /* 出門刷了載具 = 我們觀測到的事實,可以進分項 */
+    trips: ST.trips || 0,
+    /* ⚠️ 半徑與外送依賴都是**他自己說的**,不是發票算的。
+       欄位名故意帶 said,這樣任何人在寫文案時都會看到「這是自述」。 */
+    saidRadius: ans.q1 ? Q1[ans.q1].radius : null,
+    saidDinner: ans.q2 || null,
+    answered: !!(ans.q1 || ans.q2)
+  };
+}
+function radTxt(r) { return r >= 1000 ? (Math.round(r / 100) / 10) + ' 公里' : r + ' 公尺'; }
+/* ══ 半徑的取用規則(0731)══════════════════════════════════════════
+   半徑是**他自己在 Q1 選的**,不是發票量的。跳過訪談就等於我們不知道。
+     radOf(s)   → 有答:公尺數;沒答:null。要顯示的地方一律先判 null。
+     radSort(s) → 只給「推薦排序」用的退路值。排序需要一個數字才跑得動,
+                  但那個數字不會被顯示出來,所以用中位數 2200(同一個商圈)當中性值,
+                  不會變成畫面上的假數字。 */
+function radOf(s) { return (s && typeof s.saidRadius === 'number') ? s.saidRadius : null; }
+function radSort(s) { var r = radOf(s); return r === null ? 2200 : r; }
+/* 分級表情＋戳章詞。結果頁的戳章與分享卡數字旁那顆用同一套(Robert 0731 指定),
+   所以抽成一支 —— 兩邊各寫一份遲早會分岔。 */
+/* 分享卡的退路用:圖沒載好時 kit 會 fillText 這顆 emoji。
+   畫面上的 UI 已經全部不用 emoji 了,這裡純粹是 canvas 的 fallback。 */
+var TIER_EMOJI = { melt:'🫠', sleepy:'😶', yawn:'😪', walk:'🚶' };
+function tierOf(s) {
+  return s >= 85 ? { m:'melt',   t:'和沙發長在一起' }
+       : s >= 70 ? { m:'sleepy', t:'可預測' }
+       : s >= 50 ? { m:'yawn',   t:'有點悶' }
+                 : { m:'walk',   t:'還有救' };
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   圖示系統(0731 Robert:全部 emoji 改成發票載具 App 的風格)
+   ══════════════════════════════════════════════════════════════════
+   分兩層,因為 App 自己就是分兩層的:
+
+   ① 吉祥物 mascot() —— 對照 App 的 img_tree_lv5.png:圓潤堆疊的樹冠、
+      綠色漸層、白框大眼、無描邊、卡其樹幹。色票是逐像素取樣出來的。
+      這顆單元的角色是「懶樹」,所以加了睡帽與條紋睡衣(品牌綠 #01AFA2),
+      四個表情對應四個分數級距。
+
+   ② 小圖示 ic() —— 對照 App 的 tab_icon_*.svg / icon_scan.svg:
+      24x24、單色、圓端線條。用 stroke 而不是 fill,是因為手寫 path 時
+      線條圖的一致性遠比填色圖好控制(填色差一點就會歪得很明顯)。
+      顏色吃 currentColor,所以放在哪一段文字裡就跟著那段的顏色。
+
+   ⚠️ 為什麼全部 inline 在 index.html 而不是拆成 icons.js:
+      build-public-demo.py 只複製 index.html + unit-kit.js + qrcode.min.js。
+      多一個檔案不會被複製,公開 demo 會變成一堆破圖。 */
+
+function mascot(mood, px, standalone) {
+  var s = px || 64;
+  var eyesOpen = '<circle cx="41" cy="47" r="8.5" fill="#fff"/><circle cx="59" cy="47" r="8.5" fill="#fff"/>'
+               + '<circle cx="41" cy="47" r="4.2" fill="#257349"/><circle cx="59" cy="47" r="4.2" fill="#257349"/>';
+  /* 睏眼:兩道往下的弧線。不畫白眼球 —— 閉著的眼睛看不到眼白,畫了會變成「瞇眼瞪人」 */
+  var eyesShut = '<path d="M33.5 45.5q7.5 8 15 0M51.5 45.5q7.5 8 15 0" stroke="#1C5C39" stroke-width="3.6"'
+               + ' fill="none" stroke-linecap="round"/>';
+  var mouthYawn = '<ellipse cx="50" cy="61" rx="5.2" ry="6.4" fill="#1C5C39"/>'
+                + '<ellipse cx="50" cy="64.5" rx="3" ry="2.2" fill="#E8776B"/>';
+  var mouthSmile = '<path d="M45 59q5 5 10 0" stroke="#1C5C39" stroke-width="3.2" fill="none" stroke-linecap="round"/>';
+  var mouthFlat = '<path d="M44 61q3 2.5 6 0t6 0" stroke="#1C5C39" stroke-width="3" fill="none" stroke-linecap="round"/>';
+  /* zzz 放**左側背景**上。第一版放右上角,壓在樹冠與睡帽上變成綠底綠字,看不見。 */
+  var zzz = '<g fill="#01AFA2" font-family="sans-serif" font-weight="900">'
+          + '<text x="2" y="34" font-size="14">z</text><text x="11" y="22" font-size="10">z</text></g>';
+
+  /* 樹冠:五顆圓疊出蓬鬆感(照 App 那顆的做法),再補兩片亮葉當高光 */
+  /* ⚠️ 樹冠必須明顯大過睡衣。第一版睡衣做太寬(w32),截圖起來像個行李箱不像樹。 */
+  var canopy = '<circle cx="30" cy="32" r="19" fill="url(#tgrad)"/>'
+             + '<circle cx="70" cy="32" r="19" fill="url(#tgrad)"/>'
+             + '<circle cx="21" cy="57" r="15" fill="url(#tgrad)"/>'
+             + '<circle cx="79" cy="57" r="15" fill="url(#tgrad)"/>'
+             + '<circle cx="50" cy="44" r="33" fill="url(#tgrad)"/>'
+             + '<ellipse cx="33" cy="24" rx="8" ry="4.2" fill="#5FD292" opacity=".5" transform="rotate(-28 33 24)"/>'
+             + '<ellipse cx="19" cy="54" rx="5" ry="2.8" fill="#5FD292" opacity=".45" transform="rotate(-20 19 54)"/>';
+  /* 睡衣:品牌綠 + 白條紋 + 一顆扣子。收窄成 w22,讓樹幹上緣還看得到卡其色 */
+  var trunk = '<path d="M43 70h14l3 36H40z" fill="#B99A55"/>';
+  var pj = '<path d="M40 84h20a4 4 0 014 4v14a4 4 0 01-4 4H40a4 4 0 01-4-4V88a4 4 0 014-4z" fill="#01AFA2"/>'
+         + '<g fill="#fff" opacity=".55"><rect x="36" y="90" width="28" height="3" rx="1.5"/>'
+         + '<rect x="36" y="97" width="28" height="3" rx="1.5"/></g>'
+         + '<circle cx="50" cy="87" r="1.6" fill="#E6F7F6"/>';
+  /* 睡帽:小三角錐斜掛在樹冠**右上角** + 白帽緣 + 毛球。
+     踩過兩次:第一版畫成曲線團塊 → 像一片葉子;第二版做太大(帽緣寬 52)
+     → 橫跨整個樹冠頂端,變成一條白髮帶,樹的圓形輪廓被切掉、認不出是樹。
+     現在只佔右上角,樹冠左側與頂端留白,tree-ness 才回來。 */
+  var cap = '<path d="M55 24L84 5l3 19z" fill="#01AFA2"/>'
+          + '<rect x="52" y="20" width="33" height="8" rx="4" fill="#E6F7F6" transform="rotate(-8 68 24)"/>'
+          + '<circle cx="85" cy="5" r="5" fill="#E6F7F6"/>';
+
+  var body, extra = '';
+  if (mood === 'melt') {
+    /* 融在沙發上:整組壓扁 + 往下沉。squash 用 group transform,不用改每個座標 */
+    body = '<g transform="translate(0,16) scale(1.14,.74)">' + canopy + eyesShut + mouthFlat + '</g>'
+         + '<g transform="translate(0,10)">' + trunk + pj + '</g>'
+         + '<g transform="translate(-6,14) scale(1.05,.8)">' + cap + '</g>';
+    extra = zzz;
+  } else if (mood === 'walk') {
+    /* 真的走掉:身體前傾,睡衣下面伸出兩條在跨步的腿 */
+    body = '<g transform="rotate(-5 50 60)">' + canopy + eyesOpen + mouthSmile + trunk + pj + cap + '</g>'
+         + '<g stroke="#B99A55" stroke-width="6" stroke-linecap="round">'
+         + '<path d="M44 104l-7 8"/><path d="M57 104l8 6"/></g>';
+  } else if (mood === 'yawn') {
+    body = canopy + eyesShut + mouthYawn + trunk + pj + cap;
+  } else {                                   /* sleepy(預設) */
+    body = canopy + eyesShut + mouthFlat + trunk + pj + cap;
+    extra = zzz;
+  }
+  /* standalone = 這張 svg 要被當成圖檔載入(給 canvas 用)。
+     ⚠️ 這時候**不能**引用外部的 url(#tgrad) —— 用 Image 載入的 svg 是獨立文件,
+        解析不到本文件的 <defs>,漸層會整片變黑。所以 defs 得內嵌,xmlns 也要補。
+        踩這個坑的成本很高:畫面上看起來好好的,只有分享卡是黑的。 */
+  var defs = standalone
+    ? '<defs><linearGradient id="tgrad" x1="0" y1="0" x2=".85" y2="1">'
+      + '<stop offset="0" stop-color="#3EBD7A"/><stop offset="1" stop-color="#257349"/>'
+      + '</linearGradient></defs>'
+    : '';
+  return '<svg ' + (standalone ? 'xmlns="http://www.w3.org/2000/svg" ' : '')
+       + 'class="msc" viewBox="0 0 100 118" width="' + s + '" height="' + Math.round(s * 1.18)
+       + '" role="img" aria-label="無聊快篩吉祥物">' + defs + body + extra + '</svg>';
+}
+
+/* 吉祥物 → HTMLImageElement,給分享卡的 canvas drawImage 用。
+   同一個 mood 只做一次(_mimg 當快取),不然每次開分享卡都重新解析一張 svg。
+   用 encodeURIComponent 而不是 btoa:btoa 遇到中文(aria-label)會直接丟例外。 */
+var _mimg = {};
+function mascotImg(mood) {
+  if (_mimg[mood]) return _mimg[mood];
+  var im = new Image();
+  im.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(mascot(mood, 300, true));
+  _mimg[mood] = im;
+  return im;
+}
+
+/* 小圖示:24x24 線條圖,吃 currentColor。對照 App 的 tab_icon_*.svg 風格。 */
+var ICON = {
+  shop:     '<path d="M3 10l2-5h14l2 5"/><path d="M5 10v9h14v-9"/><path d="M9 19v-5h6v5"/>',
+  repeat:   '<path d="M4 11a8 8 0 0113-4"/><path d="M20 13a8 8 0 01-13 4"/><path d="M18 3v5h-5M6 21v-5h5"/>',
+  ruler:    '<rect x="2" y="8" width="20" height="8" rx="2"/><path d="M7 8v3.5M12 8v4.5M17 8v3.5"/>',
+  scooter:  '<circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M9 17h6l-2-8h4"/><path d="M13 9l-4 5"/>',
+  sparkle:  '<path d="M12 3l2.2 6.3L20 11l-5.8 1.7L12 19l-2.2-6.3L4 11l5.8-1.7z"/>',
+  receipt:  '<path d="M6 3h12v17l-3-2-3 2-3-2-3 2z"/><path d="M9.5 8h5M9.5 12h5"/>',
+  map:      '<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
+  compass:  '<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2.2 5.3-5.3 2.2 2.2-5.3z"/>',
+  eyeoff:   '<path d="M3 12s3.6-6 9-6 9 6 9 6-3.6 6-9 6-9-6-9-6z"/><path d="M4 4l16 16"/>',
+  alert:    '<path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17h.01"/>',
+  sofa:     '<path d="M4 11V8.5a2 2 0 014 0V11"/><path d="M16 11V8.5a2 2 0 014 0V11"/>'
+          + '<rect x="2" y="11" width="20" height="7" rx="2"/><path d="M6 18v2M18 18v2"/>',
+  pin:      '<path d="M12 21s7-7 7-12a7 7 0 10-14 0c0 5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/>',
+  check:    '<path d="M5 13l4 4 10-10"/>',
+  wrench:   '<path d="M15 4.5a4 4 0 105 5l-9.5 9.5-4.5 1 1-4.5z"/>',
+  hourglass:'<path d="M7 3h10M7 21h10"/><path d="M8.5 3c0 5 3.5 6 3.5 9s-3.5 4-3.5 9M15.5 3c0 5-3.5 6-3.5 9s3.5 4 3.5 9"/>',
+  download: '<path d="M12 4v11M8 12l4 4 4-4"/><path d="M5 19h14"/>',
+  gov:      '<path d="M3 10l9-6 9 6"/><path d="M5 10v9h14v-9"/><path d="M9.5 19v-5M14.5 19v-5"/><path d="M3 21h18"/>',
+  /* 景點 */
+  tree:     '<path d="M12 3l5.5 7.5h-3l4.5 6H5l4.5-6h-3z"/><path d="M12 16.5V21"/>',
+  house:    '<path d="M3 11l9-7 9 7"/><path d="M6 10v10h12V10"/><path d="M10 20v-6h4v6"/>',
+  art:      '<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 14l3-4 3 3 2-2 2 3"/><path d="M12 18v3"/>',
+  lantern:  '<path d="M12 3v2M12 19v2"/><ellipse cx="12" cy="12" rx="6" ry="7"/><path d="M7 8.5h10M7 15.5h10"/>',
+  mountain: '<path d="M2 19l6-11 4 6 3-4 7 9z"/>',
+  palette:  '<path d="M12 3a9 9 0 100 18c1.2 0 2-.9 2-2s-1-2 .2-3 3 .2 4-1.2A9 9 0 0012 3z"/>'
+          + '<circle cx="8.5" cy="9.5" r="1.1"/><circle cx="13" cy="7.2" r="1.1"/>',
+  leaf:     '<path d="M20 4c0 9-6.5 15.5-15 16.5C5 11.5 10.5 5 20 4z"/><path d="M13.5 11c-3 2-5.2 5.2-6.5 9.5"/>',
+  boat:     '<path d="M4 15h16l-2.2 5H6.2z"/><path d="M12 15V4l7 8z"/>',
+  tram:     '<rect x="5" y="4" width="14" height="12" rx="2.5"/><path d="M9 16v3M15 16v3"/><path d="M5 10.5h14"/><path d="M12 2v2"/>',
+  /* 社群品牌(0731 Robert:只留 IG 與 Threads,各自 logo)
+     ⚠️ IG 那顆是它標準的圓角方框＋圓＋點,形狀是對的。
+        Threads 的標誌是特殊繪製的「@」勾,我用 path 近似 —— 認得出來,
+        但不是官方檔案。要 100% 精準得拿它的品牌素材。 */
+  ig:       '<rect x="3" y="3" width="18" height="18" rx="5.4"/><circle cx="12" cy="12" r="4.2"/>'
+          + '<circle cx="17.2" cy="6.8" r="1.15" fill="currentColor" stroke="none"/>',
+  threads:  '<path d="M16.8 8.4C15.9 6.2 14.1 5 11.9 5 8 5 5.6 7.8 5.6 12s2.4 7 6.3 7c2.9 0 4.7-1.6 4.7-3.5'
+          + ' 0-1.8-1.4-3-3.5-3-1.9 0-3.1 1-3.1 2.2 0 1 .7 1.7 1.7 1.7 1.4 0 2.2-1.2 2.2-3.2"/>'
+};
+function ic(name, cls) {
+  var d = ICON[name];
+  if (!d) return '';
+  return '<svg class="ic' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" aria-hidden="true">' + d + '</svg>';
+}
+/* 靜態 HTML 裡的圖示槽在 init 時填入。
+   為什麼不直接把 svg 寫進 HTML:那幾行會變成沒人看得懂的一團標記,
+   而且同一顆吉祥物出現五次就要複製五份。這裡一次填完,來源只有 mascot()。 */
+function paintIcons() {
+  function set(sel, html) {
+    var el = document.querySelector(sel);
+    if (el) el.innerHTML = html;
+  }
+  set('#v0 .hero .face',  mascot('sleepy', 104));   /* 入口主視覺 */
+  set('#v2 .radar .dot',  mascot('sleepy', 44));    /* 掃描過場:原地不動的那一隻 */
+  set('#v2 .radar .run',  mascot('walk', 26));      /* 想跑但會被拉回來的那一隻 */
+  set('#v3 .couch .sofa', ic('sofa'));
+  set('#chk .sofa2',      ic('sofa'));
+  set('#chk .blob2',      mascot('melt', 30));      /* 從沙發剝出來 */
+  set('#chk .walk',       mascot('walk', 30));      /* 走掉 */
+  set('.top .ttl .tico',  mascot('sleepy', 20));
+  set('#dlBtn .dlic',     ic('download'));
+  var b = document.querySelectorAll('.hero .big.rcpt');   /* v7 空狀態 / v8 下載落地頁 */
+  for (var i = 0; i < b.length; i++) b[i].innerHTML = ic('receipt');
+}
+
+/* -- 五個分項:寫回 UK.data.POISON,總分仍由 UK.data.composite() 算。
+      (kit 本來就設計成分項可被換掉——UK.data.load 接中台時做的是同一件事) -- */
+function applyDims() {
+  var s = stats(), ans = curAns();
+  /* 四個分項。刪掉了「超商佔比」——我們算不出那個數字(原本是常數 .62)。
+     ⚠️ 前兩項是發票算的,後兩項是他自己說的。文案上一定要分清楚,
+        不然又會變成「拿自述當證據」。 */
+  UK.data.POISON = [
+    /* ① 重複度:同樣 47 張,去 23 家 vs 去 5 家差很多。這是真的。
+          每家平均 1 次 → 幾乎不重複(低分);每家平均 5 次以上 → 很重複(高分) */
+    { k: 'focus',  nm: '重複度(發票)', w: .35,
+      v: clamp(Math.round(30 + Math.min(60, (s.perShop - 1) * 22))) },
+    /* ② 店家數的絕對量:去的地方少本身就是一種無聊,跟張數無關 */
+    { k: 'spread', nm: '去過幾家(發票)', w: .25,
+      v: clamp(Math.round(95 - Math.min(75, s.shops * 2.6))) },
+    /* ③④ 自述,不是發票 */
+    { k: 'radius', nm: '週末半徑(你說的)', w: .25,
+      v: s.saidRadius === null ? 50 : clamp(Math.round(100 - Math.min(93, s.saidRadius / 70))) },
+    { k: 'fresh',  nm: '新地方(觀測到的)', w: .15, v: clamp(95 - s.trips * 18) }
+  ];
+  return s;
+}
+function clamp(v) { return Math.max(2, Math.min(98, v || 0)); }
+function curAns() { return Object.keys(ANS).length ? ANS : (ST.ans || {}); }
+
+/* ══ 沒去偵測 ══════════════════════════════════════════════
+   上次按了「帶你衝」,這次回來發票張數一張都沒多 → 他沒去。
+   兩個都是事實(存的 pick + 發票數),所以不用寫「你很懶」,把兩件事並排就夠痛。
+   只在「上一個 session 排的」才算 —— 剛按下去馬上罵人會像壞掉。 */
+var _sessionStart = Date.now();
+function placeName(k) {
+  var sp = SPOTS.filter(function (p) { return p.k === k; })[0];
+  return sp ? sp.name : k;
+}
+function noShow() {
+  var picks = ST.picks || {}, keys = Object.keys(picks);
+  if (!keys.length) return null;
+  if (typeof ST.pickAt !== 'number' || ST.pickAt >= _sessionStart) return null;  /* 同一次造訪不算 */
+  if (ST.pickInv !== invN()) return null;                                        /* 發票有多 → 可能真的去了 */
+  /* 0731:排完之後有刷過載具 = 我們親眼看到他去了。發票還沒歸戶不代表他沒去
+     (中間有幾小時到幾天的落差)。少了這一行,打卡完下次進來會被自己的產品冤枉。 */
+  if (typeof ST.wentAt === 'number' && ST.wentAt >= ST.pickAt) return null;
+  return { k: keys[keys.length - 1], name: placeName(keys[keys.length - 1]), n: keys.length };
+}
+
+/* 返回堆疊:v2 過場、v7 空狀態不入堆疊(這是 kit 幫你處理好的坑) */
+/* 原 v5「全部好去處」已併進 v4 的篩選條;v8 = 分享連結的下載落地頁 */
+var VIEWS = ['v0','v1','v2','v3','v4','v7','v8'];
+var nav = UK.nav.create({
+  views: VIEWS,
+  transient: ['v2','v7'],
+  render: function (v) {
+    VIEWS.forEach(function (id) {
+      document.getElementById(id).style.display = (id === v) ? '' : 'none';
+    });
+    window.scrollTo(0, 0);
+  },
+  /* 不傳 onHome:嵌在殼/App 裡 kit 會 postMessage 關 webview,單機直開會導回載具首頁。
+     這裡寫 toast 反而會把閉環變成死路。 */
+  /* 打卡卡排在 kit 的浮層前面:它會蓋在條碼浮層上(掃完才出現),
+     所以返回鍵要先關它。back() 依序呼叫、第一個回 truthy 就停。 */
+  sheets: function () { return [function () { return closeChk(); },
+                               function () { return UK.closeTopSheet(); }]; }
+});
+
+/* 回訪者直接看上次的結果(沒有重新測)。
+   0730 埋點稽核抓到的漏洞:這條路原本完全沒有埋點——回訪者點進來看結果,
+   在資料上是完全隱形的。三個入口都會走到這裡:回訪盒的「看上次結果」、
+   回訪態的主 CTA、以及「沒去偵測」時次要鈕的「看上次的結果」。
+
+   為什麼不直接在 showResult() 裡埋:finish()(測完那條路)也會呼叫
+   showResult(),然後自己送 bored_result。在 showResult() 裡加埋點會讓
+   「測完」被算兩次,把完成率灌水。所以獨立一個事件,語意也才對——
+   「回來看上次的」跟「剛測完」是兩種不同行為。 */
+function openLastResult() {
+  UK.track('bored_result_revisit', {
+    score: (typeof ST.n === 'number') ? ST.n : null,
+    days:  ST.mat ? Math.round((Date.now() - ST.mat) / 86400000) : null
+  });
+  showResult();
+}
+
+/* -- 入口:回訪態 + 空狀態門檻 -- */
+function entryRender() {
+  var box = document.getElementById('lastBox'), cta = document.getElementById('cta'),
+      re = document.getElementById('retest'), hero = document.querySelector('#v0 .hero');
+  if (typeof ST.n === 'number') {
+    var ns = noShow();
+    box.innerHTML = UK.state.lastBox({ label:'上次無聊值', n:ST.n, unit:'/100', at:ST.mat, prev:ST.prev, onclick:"openLastResult()" })
+      /* 回訪才有的一行。新用戶的入口仍然只有臉＋一句＋一顆鈕(0724 定調) */
+      /* 只講事實(發票沒多),不替他下結論——「不明說」比「說你沒去」更刺,也不會講得比資料多 */
+      + (ns ? '<div class="busted">上次你說要衝「' + ns.name + '」。發票一張都沒多。</div>' : '');
+    cta.textContent = ns ? '那再測一次好了' : '看我的結果';
+    cta.setAttribute('onclick', ns ? 'retest()' : 'openLastResult()');
+    re.style.display = ''; hero.classList.add('mini');
+    document.querySelector('#retest button').textContent = ns ? '看上次的結果' : '重新驗一次';
+    document.querySelector('#retest button').setAttribute('onclick', ns ? 'openLastResult()' : 'retest()');
+  } else {
+    box.innerHTML = ''; cta.textContent = '我敢測'; cta.setAttribute('onclick', 'enter()');
+    re.style.display = 'none'; hero.classList.remove('mini');
+  }
+}
+function enter() {
+  if (invN() < UK.data.MIN_INV) {
+    document.getElementById('invN').textContent = invN();
+    nav.show('v7'); return;
+  }
+  resetAns(); nav.show('v1'); UK.track('bored_start');
+}
+/* 重測的嘲諷會累加:同一組發票按第 N 次,話越難聽(數字本來就不會變) */
+var RETEST = [
+  '同一組發票，你想要什麼不一樣的答案？',
+  '第 3 次了。多按幾次不會變低。',
+  '你在等奇蹟嗎',
+  '你這樣按，比出門還久'
+];
+function retest() {
+  ST.retests = (ST.retests || 0) + 1; ST = UK.state.save(KEY, ST);
+  UK.toast(ST.retests <= 1 ? '你的發票這 30 天沒有新增，數字不會變'
+                           : (RETEST[Math.min(ST.retests - 2, RETEST.length - 1)]));
+  resetAns(); nav.show('v1'); UK.track('bored_retest', { times: ST.retests });
+}
+/* 灌發票要蓋掉 ?inv=（不然證據行還在用 2 張算,說「已灌入」就是騙人） */
+function demoFill() {
+  UK.track('bored_demo_fill');                       /* 空狀態的示範出路被按了 */
+  UK.data.INV.d30.n = 47; _forceInv = 47;
+  UK.toast('（示範）已灌入發票'); resetAns(); nav.show('v1');
+}
+/* 條碼不用把人踢回首頁了:kit 的 UK.carrier 會畫真的 Code 39(掃得出來)。
+   店員掃完 → 發票進來 → 就能開測,示範時這條迴圈是閉的。 */
+function goCarrier() {
+  UK.carrier.open({ from: 'empty', onDone: function () { demoFill(); } });
+}
+/* 點標題上的吉祥物 = 回第一頁,並清掉堆疊(不是往回一層) */
+function goTop() {
+  if (nav.current() === 'v0') { window.scrollTo(0, 0); return; }
+  UK.closeTopSheet(); nav.reset('v0'); UK.track('go_top');
+}
+/* 分享出去的連結不帶 ?inv= / ?demo= 這些開發參數 */
+function shareLink() { return location.origin + location.pathname; }
+/* ⋯ = 直接分享,不走選單。
+   為什麼不用 UK.menu:它的「📤 分享」是純文字連結分享(navigator.share 的 title/text/url),
+   在不支援的環境會靜默掉回「複製連結」——使用者按了分享卻只拿到一段網址。
+   這顆單元有更好的東西:UK.share 的 4:5 圖卡(圖內有 QR),share 失敗會退成下載圖檔,
+   兩條路都是「真的分享出去」。測過還沒測的都不會變成複製連結。 */
+function shareNow() {
+  if (typeof score !== 'number') {
+    /* 0730 稽核補:按了分享卻還沒有結果可分享。這是真實的點擊行為,
+       原本只彈 toast 就 return、什麼都不記——看不到有多少人想分享卻被擋。 */
+    UK.track('bored_share_blocked', { from: nav.current() });
+    UK.toast('先測一次,才有東西可以曬'); return;
+  }
+  UK.track('bored_share_click', { score:score, radius:radOf(stats()), from:nav.current() });
+  UK.share.open(card);
+}
+/* 原生分享面板的文字(UK.share.send 會用 card().text,這支留給需要純文字時用) */
+function shareMeta() {
+  var s = stats();
+  return { title: '無聊快篩',
+           text: (typeof score === 'number' ? '我的無聊值 ' + score + '。' : '')
+                 + (EVH[COPY.evh] || EVH[0])(s) + dlLine() };
+}
+
+/* -- 訪談:兩題都要答才能往下 -- */
+function resetAns() {
+  ANS = {};
+  /* 只清訪談那兩組——不要連篩選條的選中態一起清掉(它不是答案) */
+  document.querySelectorAll('[data-chips="q1"] [data-v],[data-chips="q2"] [data-v]')
+    .forEach(function (c) { c.classList.remove('on'); });
+  gate();
+}
+function gate() {
+  var need = 2 - Object.keys(ANS).length, b = document.getElementById('goScan');
+  b.disabled = need > 0;
+  b.textContent = need >= 2 ? '先回答上面兩題' : (need === 1 ? '還有 1 題' : '好了，驗我的發票');
+}
+UK.chips.bind(document, { onPick: function (k, v, cleared) {
+  /* 篩選條跟訪談共用 kit 的 chips,要先攔下來——不然它會被當成第三個答案,把門檻算壞 */
+  if (k === 'mode') {
+    RXMODE = cleared ? 'pick' : v;                 /* 再點一次同一顆 = 回精選 */
+    markMode(RXMODE);
+    renderRx();
+    UK.track('rx_mode', { mode:RXMODE, n:pickedSpots().length });
+    return;
+  }
+  if (cleared) delete ANS[k]; else ANS[k] = v;
+  /* 0730 Melon:每個可點的地方都要埋。訪談 chip 也是點擊,而且它回答的是
+     「兩題到底有沒有人真的答」——跳過率是這條漏斗最重要的分母之一。 */
+  UK.track('bored_answer', { q:k, v:v, cleared:!!cleared, answered:Object.keys(ANS).length });
+  gate();
+} });
+/* 篩選條的選中態:離開「我的清單」時要把亮起來的那顆收回 */
+function markMode(v) {
+  document.querySelectorAll('[data-chips="mode"] [data-v]').forEach(function (c) {
+    c.classList.toggle('on', c.getAttribute('data-v') === v);
+  });
+}
+function skip() {
+  UK.track('bored_skip_quiz', { answered:Object.keys(ANS).length });   /* 懶得選,直接看結果 */
+  ANS = {}; ST.ans = {}; scanRun(true);
+}
+
+/* -- 掃描過場(可跳過;timer 會清掉,不會晚一步又跳) -- */
+var _t = [];
+function scan() {
+  UK.track('bored_quiz_submit', { answered:Object.keys(ANS).length });  /* 兩題答完,按下驗發票 */
+  scanRun(false);
+}
+function scanRun(skipped) {
+  nav.show('v2');
+  var steps = SCAN[SCAN_SET] || SCAN[0], i = 0;
+  var el = document.getElementById('scanTxt'), bar = document.getElementById('scanBar');
+  var s = stats();
+  function paint(n) {
+    var line = steps[n];
+    /* 第一句把張數帶進去(數字要是他自己的,不然只是裝飾) */
+    var sub = (n === 0) ? (s.n + ' 張,翻得很快,因為都一樣') : line[1];
+    el.innerHTML = '<b>' + line[0] + '</b><small>' + sub + '</small>';
+    bar.style.width = Math.round((n + 1) / steps.length * 100) + '%';
+  }
+  paint(0);
+  _t = [];
+  var h = setInterval(function () {
+    i++;
+    if (i < steps.length) paint(i);
+    else { clearInterval(h); finish(skipped); }
+  }, 620);
+  _t.push(function () { clearInterval(h); });
+  _skipped = skipped;
+}
+var _skipped = false;
+function skipScan() {
+  UK.track('bored_skip_scan');                       /* 跳過掃描動畫:過場太長的訊號 */
+  _t.forEach(function (f) { f(); }); _t = []; finish(_skipped);
+}
+
+function finish(skipped) {
+  applyDims();
+  var next = UK.data.composite();                 /* 分數由分項算出來,不寫死 */
+  var prev = (typeof ST.n === 'number' && ST.n !== next) ? ST.n : ST.prev;
+  score = next;
+  ST.n = score; ST.prev = prev; ST.ans = ANS; ST.skipped = !!skipped;
+  ST.inv = invN(); ST.mat = Date.now();
+  ST = UK.state.save(KEY, ST);
+  entryRender(); showResult();
+  UK.track('bored_result', { score: score, radius: radOf(stats()), skipped: !!skipped });
+}
+
+function showResult() {
+  var s = applyDims(), live = UK.data.composite(), ans = curAns();
+  /* 發票變了(?inv= / 灌發票)就以新算的為準,並把舊值留成趨勢——不要讓兩頁的數字打架 */
+  if (typeof ST.n === 'number' && ST.n !== live) {
+    ST.prev = ST.n; ST.n = live; ST.inv = invN(); ST = UK.state.save(KEY, ST); entryRender();
+  }
+  score = live;
+  document.getElementById('scoreN').textContent = score;
+  var t = document.getElementById('trend'), html = UK.state.trendHTML(score, ST.prev);
+  t.innerHTML = html; t.style.display = html ? '' : 'none';
+  /* 分數旁邊那顆圖示 + 一個戳章詞:越無聊越像家具 */
+  var tier = tierOf(score);
+  /* 戳章只留文字 —— 18px 的吉祥物看不出是什麼,而且正上方的沙發區已經有一隻大的了 */
+  document.getElementById('stampT').textContent = tier.t;
+  /* 沙發上那一坨:分數越高融得越快、越扁 */
+  var couch = document.getElementById('couch');
+  couch.className = 'couch ' + (score >= 85 ? 'deep' : (score >= 70 ? '' : 'light'));
+  document.getElementById('blob').innerHTML =
+    mascot(score >= 85 ? 'melt' : (score >= 50 ? 'yawn' : 'sleepy'), 38);
+  document.getElementById('skipnote').style.display = ST.skipped ? '' : 'none';
+  /* 0729:講清楚這個數字能幹嘛 —— 出門一趟、發票進來,分項就會動,數字自己會掉。
+     不承諾具體掉幾分(那要真發票回來才算得出來),只講因果方向。 */
+  document.getElementById('cause').textContent = '出門刷一次載具，這個數字就會往下掉';
+
+  /* 生活半徑(併在分數卡裡,一行講完) */
+  /* 沒回答 Q1 → 我們不知道他的半徑,整行藏起來(不要印 undefined,也不要編一個) */
+  var rr = radOf(s), radl = document.querySelector('#v3 .radl');
+  if (rr === null) { if (radl) radl.style.display = 'none'; }
+  else {
+    if (radl) radl.style.display = '';
+    document.getElementById('radN').textContent = radTxt(rr);
+    document.getElementById('radTxt').textContent = radLine(s);
+  }
+  document.getElementById('rxCta').textContent = push();
+
+  /* 標題:被抓到說謊換另一組,其餘用刺人那句(數字都在句子裡) */
+  /* 0731:原本這裡會在 mismatch() 命中時換成「你嘴上這樣講,發票不是這樣寫」。
+     那條路已經移除(見 mismatch() 的說明),所以永遠走 EVH。 */
+  document.getElementById('evh').textContent = (EVH[COPY.evh] || EVH[0])(s);
+
+  /* 證據:一行一句,不再帶灰色小字(一句話罵完) */
+  document.getElementById('ev').innerHTML = evidence(s, ans).map(function (l) {
+    return '<div class="ev"><span class="e">' + l.e + '</span><div><b>' + l.t + '</b></div></div>';
+  }).join('');
+  nav.show('v3');
+}
+/* 分項與算式頁已移除(Robert 0727 拍板)。分數本身還是 UK.data.composite() 算出來的,
+   要復原的話:v6 一頁 + 一顆文字連結,算式取 UK.data.formula() 的 total/max/avg。 */
+
+function radLine(s) {                        /* 一句話,不解釋(0727 瘦身) */
+  var r = radOf(s);
+  if (r === null)  return '';
+  if (r < 500)  return '外送員的機車比你有見識';
+  if (r < 1000) return '樓下就是你的遠方';
+  if (r < 3000) return '一個商圈就是你的國境';
+  return '會動，但去的還是那幾家';
+}
+/* ══ 「說謊偵測」已移除(0731)══════════════════════════════════
+   原本:mismatch() 命中就換一組「你嘴上這樣講,發票不是這樣寫」的標題。
+   移除的原因不是不好笑,是**它不可能是對的**:判斷式吃 convPct,
+   而 convPct 是常數 62,所以 >= 50 恆真 —— 任何人選「到處吃」都會被判說謊,
+   跟他的發票完全無關。用編出來的數字指控使用者說謊,是這顆單元最不該做的事。
+   要復活的話,前提是中台真的給得出消費結構,而且措辭要從「你錯了」
+   改成把兩個事實並排、結論留給他自己下。 */
+function mismatch() { return false; }
+/* 證據行:一行一句,句子裡自己帶數字。不寫「你很無聊」,也不再補灰色說明。
+   固定最多 5 行 —— 行數會變的話,主 CTA 就會被擠出首屏(說謊時本來會變 7 行)。
+   排序就是優先序:被抓到說謊的那兩行最好笑,所以排在前面,擠掉後面比較弱的。 */
+/* 0729:分數卡多了因果句,證據行從 5 收到 4,主 CTA 才留在首屏。
+   排序本來就是優先序,被擠掉的是最弱的那一行(通常是 🆕 或 🛵)。 */
+var EV_MAX = 4;
+function evidence(s, ans) {
+  var L = [];
+  /* 沒去的那行是真的(存的 pick + 發票數),留著。它講的是事實不是指控。 */
+  var ns = noShow();
+  if (ns) L.push({ e:ic('eyeoff'), t:'你說要衝「' + ns.name + '」，之後 0 張新發票' });
+  /* 以下每一行都只用真的算得出來的數字 —— 張數、商家數、由兩者推導的平均次數。
+     刪掉的:超商佔比%(常數)、指名商家+連續天數(常數+推導錯)、外送員(常數)。 */
+  if (s.n && s.shops) {
+    L.push({ e:ic('shop'), t:'近 30 天 ' + s.n + ' 張發票，只出現在 ' + s.shops + ' 家店' });
+    if (s.perShop >= 1.5)
+      L.push({ e:ic('repeat'), t:'平均每家去 ' + s.perShop + ' 次——同一批店在輪班' });
+  }
+  /* 自述的東西一定要標「你說的」,不能混進「發票證據」 */
+  if (s.saidRadius !== null)
+    L.push({ e:ic('ruler'), t:'你說週末的活動範圍大約 ' + radTxt(s.saidRadius) + '（這是你說的，不是發票量的）' });
+  L.push({ e:ic('sparkle'), t: s.trips
+    ? '刷載具去過 ' + s.trips + ' 個新地方——這個有算進分數'
+    : '還沒用載具在新地方留下一張發票' });
+  return L.slice(0, EV_MAX);
+}
+
+/* ── 好去處:只有景點,一列一個(0728 拍板砍掉餐廳那段) ──
+   推薦理由(why)綁回發票證據,所以會隨半徑/連續天數變動;不做 LBS 排序(只用靜態距離)。
+   註:合作商家導流(UK.shops + 「這附近可以吃」展開區)整段移除。要接回來的話,
+   kit 的 UK.shops 還在:列上加 data-shop,地點卡的 CTA 會自動變成「看菜單」直達點餐頁。 */
+/* 來源註冊表:每個景點都要說得出「憑什麼推薦你去」。
+   官方那組是真的可查(2026-07 查證);在地／社群那組是示範資料,不冒充官方——
+   口徑鐵律的同一個原則:要標來源就標得出來,標不出來就說是示範。 */
+var SOURCES = {
+  gov:   { tag:'100 亮點', name:'2026-2027 台灣觀光100亮點', by:'交通部觀光署',
+           note:'中央與地方推薦＋百萬民眾票選',
+           url:'https://spotlightaward.taiwan.net.tw/spotlight_n.php', at:'2026-07 查證' },
+  /* 0731:原本這一組寫「示範資料 · 正式版接社群熱度與縣市觀光局清單」。
+     Robert 要求改成真的。改法是給**真的可以點的搜尋連結**,不是假的熱度數字。
+     ⚠️ 我們沒有搜尋量數據 —— 關鍵字表(見 TW-SOCIAL-KEYWORDS.json)自己就標了
+        confidence: MEDIUM、NOT validated against live search-volume data。
+        所以文案只敢說「開搜尋結果」,不敢說「熱門排名」。
+        把未驗證的 saturation/trend 畫成熱度條,只是把示範資料包裝得更像真的。 */
+  local: { tag:'', name:'', by:'', note:'', url:'', at:'' }   /* 0731:標頭文字整段移除,來源改由每張卡的 IG/Threads 鈕自己講 */
+};
+
+/* ══ 社群搜尋(0731)═══════════════════════════════════════════
+   平台選擇依據 Robert 提供的台灣旅遊關鍵字表(TW-SOCIAL-KEYWORDS.json)裡
+   每個詞的 platforms 欄位。**刻意沒有放 X**:那份表裡 29 個詞,沒有任何一個
+   把 X/Twitter 列為有份量的平台 —— 台灣的旅遊發現不在 X 上發生。
+   放一顆點下去沒東西的鈕,比不放更糟。
+
+   查詢字串照那份表的 _patterns.modifier_stacking 疊:{地點} + {詞},
+   因為「單一關鍵字會高報,疊起來的長尾才是使用者真的打的字」。
+   IG 例外 —— hashtag 不能有空格,所以 IG 直接開該地點的 hashtag。 */
+var SOCIAL = {
+  ig:      { nm:'IG',      url:function (q) {
+               return 'https://www.instagram.com/explore/tags/'
+                    + encodeURIComponent(String(q).replace(/[\s·・、,，.。]/g, '')) + '/'; } },
+  threads: { nm:'Threads', url:function (q, t) {
+               return 'https://www.threads.net/search?q=' + encodeURIComponent(q + ' ' + t); } }
+};
+/* 只留這顆單元用得到的詞。plats 順序 = 那個詞在哪個平台最有份量(照關鍵字表)。
+   ⚠️ 刻意不用「秘境」:那份表的 scarcity_proof 明確寫了
+      「'秘境' with a paved carpark」已經不管用,而這幾個地點都有鋪好的停車場。
+      硬掛「秘境」就是它警告的那種 unearned tag —— 在台灣讀起來就是標題殺人。 */
+var TAGS = {
+  '私房景點': { plats:['ig','threads'] },
+  '慢旅':     { plats:['ig','threads'] },
+  '老屋咖啡': { plats:['ig','threads'] },
+  '打卡景點': { plats:['ig','threads'] },
+  '網美景點': { plats:['ig','threads'] },
+  '山系生活': { plats:['ig','threads'] },
+  '免費景點': { plats:['ig','threads'] },
+  '一日遊':   { plats:['ig','threads'] },
+  '野溪溫泉': { plats:['ig','threads'], season:'10–3 月枯水期水位低才進得去' }
+};
+function socialClick(plat, tag, poi, q) {
+  var p = SOCIAL[plat]; if (!p) return;
+  UK.track('bored_social_click', { plat:plat, tag:tag, poi:poi });
+  UK.openExternal(p.url(q, tag), { kind:'social' });
+}
+/* 一張卡一列:兩個詞當標籤 + 三顆平台鈕(用第一個詞去搜,不然一排六顆太擠) */
+function socRow(p) {
+  var tags = p.tags || [];
+  if (!tags.length) return '';
+  var q = p.sq || p.q, main = tags[0], meta = TAGS[main] || { plats:['ig','threads'] };
+  return '<div class="soc">'
+    + tags.map(function (t) { return '<span class="sh">#' + t + '</span>'; }).join('')
+    /* 鈕上放各自的品牌 logo,不是文字(Robert 0731)。
+       aria-label 留平台名字 —— 圖示對用讀螢幕的人沒有意義。 */
+    + meta.plats.map(function (pl) {
+        return '<button aria-label="' + SOCIAL[pl].nm + '" onclick="socialClick(\'' + pl
+             + '\',\'' + main + '\',\'' + p.k + '\',\'' + q + '\')">' + ic(pl) + '</button>';
+      }).join('')
+    + (meta.season ? '<span class="sn">' + ic('hourglass') + ' ' + meta.season + '</span>' : '')
+    + '</div>';
+}
+/* 距離是從板橋府中一帶抓的直線距離,示範用。正式版用中台給的座標算。 */
+var SPOTS = [
+  { k:'linpark',  src:'local', emoji:'🌳', icon:'tree', name:'府中商圈 · 林本源園邸', km:1.3, q:'林本源園邸',
+    tags:['私房景點','慢旅'],
+    why:function(s){ return radOf(s) === null ? '1.3 公里——最近的那個，今天先破這個'
+      : '1.3 公里，比你說的 ' + radTxt(radOf(s)) + '多一點——今天先破這個'; } },
+  { k:'nancun',   src:'local', emoji:'🏘️', icon:'house', name:'四四南村',             km:7.6, q:'四四南村',
+    tags:['老屋咖啡','打卡景點'],
+    why:function(s){ return '走完等於你這個月的移動總量'; } },
+  { k:'ntcart',   src:'gov',   emoji:'🖼️', icon:'art', name:'新北市美術館（鶯歌）', km:8.0, q:'新北市美術館',
+    tags:['網美景點','打卡景點'],
+    why:function(s){ return '你的清單裡沒有美術館。這裡連館都是新的'; } },
+  { k:'dadaocheng',src:'gov',  emoji:'🏮', icon:'lantern', name:'大稻埕',               km:8.5, q:'大稻埕',
+    tags:['老屋咖啡','慢旅'],
+    why:function(s){ return '官方票選出來的地方,你 90 天內一張發票都沒留在那'; } },
+  { k:'hushan',   src:'local', emoji:'⛰️', icon:'mountain', name:'虎山親山步道',         km:9.5, q:'虎山親山步道',
+    tags:['山系生活','免費景點'],
+    why:function(s){ return '你的 ' + s.shops + ' 家店裡沒有一座山'; } },
+  { k:'songshan', src:'gov',   emoji:'🎨', icon:'palette', name:'松山文創園區',         km:12.0, q:'松山文創園區',
+    tags:['打卡景點','老屋咖啡'],
+    why:function(s){ return '12 公里，捷運就到'; } },
+  { k:'maokong',  src:'gov',   emoji:'🍃', icon:'leaf', name:'貓空',                 km:16.0, q:'貓空纜車', sq:'貓空',
+    tags:['慢旅','私房景點'],
+    why:function(s){ return '纜車上去,連走路都不用——你連這樣都不去?'; } },
+  { k:'tamsui',   src:'gov',   emoji:'⛵', icon:'boat', name:'淡水漁人碼頭',         km:24.0, q:'淡水漁人碼頭',
+    tags:['一日遊','打卡景點'],
+    why:function(s){ return '24 公里。你這個月的移動總量還不到它的一半'; } },
+  { k:'wulai',    src:'gov',   emoji:'🚞', icon:'tram', name:'烏來台車',             km:28.0, q:'烏來台車', sq:'烏來',
+    tags:['野溪溫泉','慢旅'],
+    why:function(s){ return '28 公里。你的 ' + s.shops + ' 家店都在市區'; } }
+];
+
+/* 傳給 UK.poi 的字典(kit 的 bind 介面不動,只在 init 呼叫一次) */
+var POI = {};
+SPOTS.forEach(function (p) {
+  POI[p.k] = { emoji:ic(p.icon || 'pin'), name:p.name, q:p.q, why:'', info:'',
+    addLabel:'發票載具帶你衝', onAdd:function (vf, row) { togglePick(vf, row); } };
+});
+
+function spotsSorted() { return SPOTS.slice().sort(function (a, b) { return a.km - b.km; }); }
+
+/* 精選:挑「在你的圓外面」的,近的先 —— 0729 Rebecca 走查修正。
+   原本固定給 3 個最近的,對半徑大的人(=無聊值低=機動性高)等於推薦他早就去過的範圍,
+   而且還標「這 3 個都在圓外」——半徑 6.5 公里的人看到 1.3 公里的景點,那句是假的。
+   低分的人最該被推薦驅動(想出門、只缺新地點),所以要給他圓外的。
+   圓外不足 3 個才用圓內的補(遠的先),沒有人會被擋掉。 */
+function featured(s) {
+  var all = spotsSorted();
+  var rs = radSort(s);
+  var out = all.filter(function (p) { return p.km * 1000 > rs; });
+  if (out.length >= 3) return out.slice(0, 3);
+  var inside = all.filter(function (p) { return p.km * 1000 <= rs; })
+                  .sort(function (a, b) { return b.km - a.km; });   /* 圓內的話,遠的先 */
+  return out.concat(inside).slice(0, 3);
+}
+
+/* 景點卡:一列 = emoji + 名字 + 距離 + 一句理由 + 一顆「帶你衝」 */
+function spotHTML(p, s) {
+  var why = p.why(s);
+  var src = SOURCES[p.src] || SOURCES.local;
+  POI[p.k].why = why;
+  /* 地點卡把來源講完:名稱、誰推的、什麼時候查的。標不出來的就不標。 */
+  POI[p.k].info = '距離 ' + p.km + ' 公里　·　' + src.name
+                + '（' + src.by + (src.at ? '，' + src.at : '') + '）';
+  var picked = (ST.picks || {})[p.k];
+  var ns = noShow();
+  var busted = ns && ns.k === p.k;                     /* 上次排的就是這個景點 */
+  return '<div class="spot">'
+    + '<div class="row" data-poi="' + p.k + '" role="button" tabindex="0">'
+    + '<span class="re">' + ic(p.icon || 'pin') + '</span>'
+    + '<div class="rb"><b>' + p.name + '</b>'
+    + '<div class="meta"><span>' + p.km + ' 公里</span>'
+    + (src.tag ? '<span class="tag">' + ic('gov') + ' ' + src.tag + '</span>' : '')
+    + (busted ? '<span class="tag no">上次你說要來</span>' : '') + '</div>'
+    + '<i>' + why + '</i>' + socRow(p) + '</div>'
+    + '<button class="uk-vf rowbtn' + (picked ? ' done' : '') + '" data-label="帶你衝">'
+    + (picked ? ic('check') + ' 已排入' : '帶你衝') + '</button>'
+    + '</div></div>';
+}
+function togglePick(vf, row) {
+  if (!vf) return;
+  var k = row.getAttribute('data-poi'), picks = ST.picks || {};
+  var label = vf.getAttribute('data-label') || '帶你衝';
+  if (picks[k]) { delete picks[k]; vf.classList.remove('done'); vf.innerHTML = label; }
+  else { picks[k] = 1; vf.classList.add('done'); vf.innerHTML = ic('check') + ' 已排入';
+         UK.toast('排進出走清單了——別又滑掉'); }
+  /* 記下「什麼時候排的」與「當時幾張發票」——下次回來就是用這兩個數字拆穿他 */
+  ST.picks = picks; ST.pickAt = Date.now(); ST.pickInv = invN();
+  ST = UK.state.save(KEY, ST);
+  UK.track('rx_pick', { poi:k, on:!!picks[k] });
+  /* 0729 主訊號:加入收藏／行程(只在「加入」時送,取消不算) */
+  if (picks[k]) {
+    var sp = SPOTS.filter(function (x) { return x.k === k; })[0] || {};
+    UK.track('bored_save_click', { poi:k, src:sp.src || '', km:sp.km || 0,
+                                   total:Object.keys(picks).length, score:score });
+  }
+  /* 清單數字與「我的清單」內容要當場跟著動(在 v4 才需要重畫) */
+  if (nav.current() === 'v4') renderRx();
+}
+/* ══ 出走計畫(我的清單)═════════════════════════════════════
+   排入 → 看得到清單 → 由近到遠的順序 → 一鍵開 Google 地圖 → 到店報載具 → 發票回來。
+   路線順序用距離排(由近到遠),不假裝是 Google 的最佳化演算法——Maps 的 URL API
+   沒有 optimize 參數,講「最優」就是騙人。地圖那一鍵是真的帶著全部站點開出去。 */
+var RXMODE = 'pick';                              /* pick | mine */
+function pickedSpots() {
+  var picks = ST.picks || {};
+  return spotsSorted().filter(function (p) { return picks[p.k]; });
+}
+function mapsRouteURL(list) {
+  if (!list.length) return null;
+  var qs = list.map(function (p) { return encodeURIComponent(p.q); });
+  var dest = qs.pop();
+  var u = 'https://www.google.com/maps/dir/?api=1&destination=' + dest + '&travelmode=driving';
+  if (qs.length) u += '&waypoints=' + qs.join('%7C');
+  return u;
+}
+function openRoute() {
+  var list = pickedSpots(); if (!list.length) return;
+  UK.track('plan_route', { n:list.length });
+  /* 0729 主訊號:真的點了導航。刷載具只是輔助(發票有時間落差,不能當即時或必要條件) */
+  UK.track('bored_map_click', { n:list.length, km:Math.round(list.reduce(function (a, p) { return a + p.km; }, 0) * 10) / 10,
+                                radius:radOf(stats()), score:score });
+  /* 0731:原本是 window.open(...,'_blank'),在發票載具 TestFlight 的 WKWebView 裡
+     回 null 並且完全靜默——按了什麼都不會發生(Robert 回報)。改走 UK.openExternal,
+     開不了新視窗就退成同視窗導航,App 原生返回鍵可以回來。 */
+  UK.openExternal(mapsRouteURL(list), { kind:'map_route', n:list.length });
+}
+function planCarrier() {
+  UK.carrier.open({ from:'plan', onDone: function () {
+    /* 有分數就給打卡卡(帶數字);還沒測過就退回原本那句 toast */
+    if (!showChk()) UK.toast('這筆會進你的載具——下次進來無聊值就會動');
+  } });
+}
+/* ══ 掃完載具的打卡卡(0731 Robert)═══════════════════════════════
+   原本掃完只有一句 toast「這筆會進你的載具——下次進來無聊值就會動」。
+   Robert 要在掃完當下就看到無聊值,配上那隻走掉的人。
+
+   ⚠️ 只顯示**現在**的無聊值,不顯示「掃完之後的新分數」。
+      發票從結帳到歸戶有幾小時到幾天的落差,掃完那一刻中台根本還沒有新資料。
+      0729 已經拍板過同一件事:「不承諾具體掉幾分(那要真發票回來才算得出來),
+      只講因果方向」。編一個「掉了 3 分」給他看,下次回來發現數字沒動,
+      這個分數就再也不可信 —— 一次性的爽感換掉整個產品的可信度,不划算。
+
+   為什麼不做成 view:它要能蓋在 v3(結果)或 v4(好去處)任何一頁上,
+   關掉之後回到原本那一頁。做成 view 會把使用者原本的位置弄丟。 */
+function showChk() {
+  if (typeof score !== 'number') return false;      /* 還沒測過,沒有數字可給 */
+  var before = score;
+
+  /* 分數真的重算一次 —— 不是動畫,也不是寫死的 -3。
+     ST.trips 進 stats().newShops → 🆕 新店嘗試那一項的值真的變了 →
+     UK.data.composite() 用同一條算式吐出新分數。使用者按「算式」追得出來。
+     0731 Robert 明確要求「掃完數字要真的往下掉」;我原本主張不能顯示新分數,
+     他重申之後改成這個做法 —— 讓真實觀測到的行為去驅動真實的重算,
+     而不是編一個假的降幅。兩者的差別是:這個數字下次回來還會站得住。 */
+  ST.trips  = (ST.trips || 0) + 1;
+  ST.wentAt = Date.now();                           /* 給 noShow() 用,免得下次冤枉他 */
+  applyDims();
+  var after = UK.data.composite();
+  ST.prev = before; ST.n = after;
+  ST = UK.state.save(KEY, ST);
+  score = after;
+  entryRender();                                    /* 入口的「上次無聊值」跟著更新 */
+
+  document.getElementById('chkN').textContent = after;
+  var d = document.getElementById('chkDelta');
+  if (after < before) {
+    document.getElementById('chkOld').textContent = before;
+    document.getElementById('chkDiff').textContent = '↓ ' + (before - after);
+    d.style.display = '';
+  } else {
+    d.style.display = 'none';                        /* 沒降就不假裝有降 */
+  }
+  /* 講清楚降的是哪一部分 —— 不要讓他以為消費內容已經算進去了 */
+  document.getElementById('chkCause').textContent = (after < before)
+    ? '去了一個新地方,「新店嘗試」那一項動了。這筆消費的內容要等發票歸戶才會再掉。'
+    : '出門記錄下來了。這筆消費的內容要等發票歸戶才會反映到分數上。';
+
+  document.getElementById('chk').classList.add('on');
+  try { history.pushState({ uk: 1 }, ''); } catch (e) {}
+  UK.track('bored_checkin_view', { score:after, prev:before, drop:before - after,
+                                   trips:ST.trips, radius:radOf(stats()) });
+  return true;
+}
+function closeChk() {
+  var m = document.getElementById('chk');
+  if (!m || !m.classList.contains('on')) return false;   /* 回 false 才不會吃掉真正的返回 */
+  m.classList.remove('on');
+  UK.track('sheet_close', { sheet:'checkin' });
+  return true;
+}
+function chkNext() {
+  UK.track('bored_checkin_next', { score:score });
+  closeChk(); RXMODE = 'mine'; markMode('mine'); showRx();
+}
+function planHTML(s) {
+  var list = pickedSpots();
+  if (!list.length) {
+    return '<div class="plan"><h3>清單是空的</h3>'
+      + '<div class="chain" style="border:none;padding:0;margin-top:6px">'
+      + '你連想去哪都還沒決定。回「精選」按一下「帶你衝」。</div></div>';
+  }
+  var tot = list.reduce(function (a, p) { return a + p.km; }, 0);
+  return '<div class="plan">'
+    + '<h3>' + ic('map') + ' 由近到遠,這樣走</h3>'
+    + '<ol>' + list.map(function (p) {
+        return '<li><b>' + p.name + '</b>　' + p.km + ' 公里</li>'; }).join('') + '</ol>'
+    + '<div class="tot">' + list.length + ' 站 · 直線距離合計 ' + (Math.round(tot * 10) / 10)
+    + (radOf(s) === null ? '' : ' · 你說的半徑是 ' + radTxt(radOf(s))) + '</div>'
+    + '<div class="chain">到了之後:結帳報手機條碼 → 發票自動歸戶 → 下次進來這裡的數字會動。'
+    + '<br>這就是我們要的那條鏈:出門 → 消費 → 發票 → 再被戳一次。</div>'
+    + '</div>'
+    + '<button class="btn p" onclick="openRoute()">' + ic('compass') + ' Google map 帶你去</button>'
+    /* 反諷版:不講功能(降低無聊值),講他不做的後果——沒刷就等於沒去過 */
+    + '<div class="sec"><button onclick="planCarrier()">刷載具，不然誰知道你去過？</button></div>';
+}
+
+function renderRx(s) {
+  s = s || applyDims();
+  var mine = pickedSpots(), all = spotsSorted();
+  document.getElementById('mineN').textContent = mine.length;
+  var list = RXMODE === 'mine' ? mine : (RXMODE === 'all' ? all : featured(s));
+  document.getElementById('planBox').innerHTML = (RXMODE === 'mine') ? planHTML(s) : '';
+  /* 「全部」按來源分組,官方那組附可查的連結;其他模式不分組(混著看比較像處方) */
+  document.getElementById('rxList').innerHTML = (RXMODE === 'all')
+    ? ['gov', 'local'].map(function (key) {
+        var g = list.filter(function (p) { return (p.src || 'local') === key; });
+        if (!g.length) return '';
+        var src = SOURCES[key];
+        if (!src.name) return g.map(function (p) { return spotHTML(p, s); }).join('');
+        return '<div class="grp">' + src.tag + ' ' + src.name
+             + '<small>' + src.by + ' · ' + src.note + (src.at ? ' · ' + src.at : '')
+             + (src.url ? ' · <a href="' + src.url + '" target="_blank" rel="noopener">看名單</a>' : '')
+             + '</small></div>'
+             + g.map(function (p) { return spotHTML(p, s); }).join('');
+      }).join('')
+    : list.map(function (p) { return spotHTML(p, s); }).join('');
+  /* 圓外幾個就講幾個,不要一律說「都在圓外」——半徑大的人會抓到這句是假的 */
+  var outN = list.filter(function (p) { return p.km * 1000 > radSort(s); }).length;
+  document.querySelector('#rxLead small').textContent =
+      RXMODE === 'mine' ? (mine.length ? '排了 ' + mine.length + ' 個地方。走不走是你的事。' : '還沒排任何地方')
+    : RXMODE === 'all'  ? all.length + ' 個地方,自己挑'
+    : (radOf(s) === null ? '' : '你說的半徑 ' + radTxt(radOf(s)) + ' · ') + (outN === list.length
+        ? '這 ' + list.length + ' 個都在圓外' : outN + ' 個在圓外');
+}
+function showRx() {
+  var s = applyDims();
+  document.getElementById('rxLeadT').textContent = push();
+  renderRx(s);
+  nav.show('v4'); UK.track('rx_view', { radius:radOf(s), mode:RXMODE });
+  /* 0729 成功訊號:看到推薦清單(主訊號是 map/save,這個是分母) */
+  UK.track('bored_reco_view', { mode:RXMODE, n:document.querySelectorAll('#rxList .spot').length,
+                                radius:radOf(s), score:score });
+}
+/* 「全部」不再是獨立頁,是 v4 的一個模式(留這支是為了外部呼叫不斷掉) */
+function showAll() { RXMODE = 'all'; markMode('all'); showRx(); }
+
+/* -- 分享卡:一張圖 + 圖內 QR(kit 負責畫) -- */
+function card() {
+  var s = stats();
+  return {
+    theme: 'bored', emoji: '😶', sub: '無聊值 ' + score + '／100', tint: radOf(s) === null ? (s.shops + ' 家店') : ('你說的半徑 ' + radTxt(radOf(s))),
+    score: score, unitTxt: '/100',
+    /* 0731 Robert:數字旁邊並排一顆同樣大的分級表情,/100 後面掛小字「無聊值」。
+       tierIcon 用 tierOf() —— 跟結果頁的戳章同一套,兩邊講的話才對得上。
+       注意 70~84 分那一段 tierOf 回的是 😶,跟下緣的裁切角色(emoji)同一個圖案,
+       同一張卡上會出現兩次。要避開就把這裡改成 blob 那組(🫠/😪/🙂)。 */
+    /* 0731:分享卡改用吉祥物圖(canvas 畫不了 svg,所以傳已載好的 Image)。
+       tierIcon/emoji 留著當退路 —— 圖沒載好時 kit 會退回文字路徑,不會整塊空掉。
+       ⚠️ 上一輪我把 tierOf() 從 {i,t} 改成 {m,t},卻忘了這裡還在讀 .i,
+          結果 tierIcon 變 undefined、數字旁的圖整個消失(截圖比對才發現)。
+          現在兩條路都給:tierImg 走圖、tierIcon 走 emoji。 */
+    tierImg: mascotImg(tierOf(score).m), heroImg: mascotImg('sleepy'),
+    tierIcon: TIER_EMOJI[tierOf(score).m], unitLabel: '無聊值',
+    head: '無聊快篩',
+    /* 圖上那句用「照你這個X法,你很快就要Y了」的句型(Robert 0728 指定的形狀)。
+       主題要對得上這顆單元——這裡量的是無聊,不是花錢,所以不寫「照你這個花法」。 */
+    /* 0731:原本三句都是「照你這個活法…」——箭頭指著使用者。
+       改成講那隻樹,笑點一樣但不傷人(Robert:bad intention joke)。 */
+    punch: score >= 85 ? '牠已經跟沙發長在一起了'
+         : score >= 70 ? '牠今天也沒打算出門'
+         :               '牠好像真的站起來了',
+    stamp: score >= 85 ? '可預測' : (score >= 70 ? '超穩定' : (score >= 50 ? '有點悶' : '還有救')),
+    qrHint: '掃碼，驗你自己的圓',
+    title: '我的無聊快篩',
+    text: '我的無聊值 ' + score + '。'
+          + (EVH[COPY.evh] || EVH[0])(s) + ' 你呢？' + dlLine(),
+    url: location.origin + location.pathname
+  };
+}
+/* 分享文字最下面那一行下載連結。DL_URL 沒設就回空字串 —— 不放死連結。
+   連結指回 /bored/?dl=1(我們的落地頁),不是直接指官網,這樣才追得到。 */
+function dlLine() {
+  var u = dlShareURL();
+  return u ? '\n\n還沒裝發票載具？從這裡下載 → ' + u : '';
+}
+
+/* -- init -- */
+UK.poi.bind(POI);                    /* 整列可點 → 地點卡;按鈕區不觸發 */
+document.addEventListener('click', function (e) {     /* 列上的按鈕自己接(kit 只管開地點卡) */
+  if (!e.target.closest) return;
+  var btn = e.target.closest('.uk-vf');
+  if (!btn) return;
+  var row = btn.closest('[data-poi]');
+  if (row) togglePick(btn, row);
+});
+document.addEventListener('keydown', function (e) {   /* 列是 role=button,鍵盤也要能開 */
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  var row = e.target.closest && e.target.closest('[data-poi]');
+  if (!row || e.target.tagName === 'BUTTON') return;
+  e.preventDefault(); UK.poi.open(row, POI);
+});
+/* 篩選條要黏在標題列正下方。標題列有 safe-area,高度會變,所以量出來寫進 --topH;
+   轉向或字級變化時重量一次。 */
+function syncTopH() {
+  var t = document.querySelector('.top');
+  /* 有自己的標題列 → 黏在它下面;標題列被收掉(App webview)→ 黏在讓位 spacer 下緣,
+     也就是 App 返回 banner 的下緣。用實測高度,不用寫死。 */
+  var h = (t && getComputedStyle(t).display !== 'none') ? t.getBoundingClientRect().height : 0;
+  if (!h) {
+    var p = document.getElementById('hostpad');
+    if (p) h = p.getBoundingClientRect().height;
+  }
+  document.documentElement.style.setProperty('--topH', Math.round(h) + 'px');
+}
+syncTopH();
+window.addEventListener('resize', syncTopH);
+window.addEventListener('orientationchange', syncTopH);
+/* 黏住的時候補一道陰影,讓下面的卡看起來是從它底下滑過去 */
+window.addEventListener('scroll', function () {
+  var f = document.querySelector('.fbar');
+  if (!f) return;
+  var top = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--topH')) || 58;
+  f.classList.toggle('stuck', f.getBoundingClientRect().top <= top + 1);
+}, { passive: true });
+
+/* 頁面上寫死的 <a target="_blank">(「看名單」那些官方來源連結)在 App webview 裡
+   跟 window.open 是同一個毛病,委派給 UK.openExternal 統一處理 */
+paintIcons();
+/* 預載四張吉祥物圖 —— 分享卡是同步 render 的,等到按下分享才開始載會來不及,
+   第一次開會退成 emoji。 */
+['melt','sleepy','yawn','walk'].forEach(mascotImg);
+UK.bindExternalLinks(document);
+applyDims();
+entryRender();
+/* ?dl=1 → 落地頁當根,不是 v0。用 nav.reset 而不是 nav.show,這樣返回鍵
+   不會退到一個他沒看過的入口頁。 */
+if (isDlLanding()) {
+  var _dlB = document.getElementById('dlBtn');
+  if (!DL_URL) { _dlB.textContent = ic('download') + ' 下載發票載具（網址待設定）'; _dlB.disabled = true; }
+  nav.reset('v8');
+  UK.track('bored_dl_view', { plat: uaPlat(), src: dlSrc() });   /* ⚠️ 含社群預抓,只能當上限 */
+} else nav.reset('v0');
+UK.applyDemoMode(document.body);
+/* 「從發票載具首頁進入」只對單機直開的人有意義。在 App webview 裡他人已經在
+   載具裡了,再掛一條回首頁的橫幅是第三條 chrome,跟這次要修的重疊問題同一類。
+   (UK.homeHint 自己只擋 iframe,擋不到 App webview——所以這裡多一道 HOST_CHROME) */
+if (!HOST_CHROME) UK.homeHint();
+UK.track('bored_view');
+/* 開發時在 console 打 UK.selfCheck() 做機械自檢 */
+</script>
+</body>
+</html>

@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#2FA98C">
+<title>發票載具｜暖暖窩 到店實測版（0814）</title>
+<style>
+:root{
+  --navy:#1F3352; --teal:#0E7C7B; --gold-bg:#FAF3DF;
+  --ink:#1F2430; --muted:#7A8494; --line:#E6EAF0; --bg:#F5F6F8;
+  --nn-olive:#55613C; --nn-deep:#3A452A; --nn-ivory:#EFEDE1; --nn-line:#D9D6C2;
+  --radius:14px;
+  --app:#2FA98C; --app-deep:#1F8A72; --sky:#C7E6F6; --shelf:#DCF2D6; --hill:#6FC26B; --new:#FF6B5A;
+  --font:"PingFang TC","Noto Sans TC","Microsoft JhengHei","Heiti TC",sans-serif;
+  --mono:"SF Mono",ui-monospace,"JetBrains Mono",Menlo,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{font-size:16px}
+body{font-family:var(--font);background:#20304B;color:var(--ink);min-height:100vh;
+  background-image:radial-gradient(1100px 500px at 70% -10%, #2C4368 0%, #20304B 55%);}
+button{font-family:inherit;border:none;background:none;cursor:pointer;color:inherit}
+
+/* ===== phone shell ===== */
+.stage{display:flex;justify-content:center;padding:24px 12px}
+.phone{width:min(400px,100%);background:#000;border-radius:44px;padding:10px;
+  box-shadow:0 30px 80px rgba(0,0,0,.5),0 4px 14px rgba(0,0,0,.4)}
+.screen-wrap{position:relative;background:var(--bg);border-radius:36px;overflow:hidden;height:min(790px,88vh);min-height:620px;display:flex;flex-direction:column}
+.statusbar{height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:12.5px;font-weight:600;position:relative;z-index:30}
+.app{flex:1;overflow-y:auto;overflow-x:hidden;position:relative;scrollbar-width:none}
+.app::-webkit-scrollbar{display:none}
+.scene{display:none;min-height:100%;flex-direction:column}
+.scene.on{display:flex}
+/* 手機滿版沈浸式（真機測試時整個螢幕就是 App） */
+@media (max-width:560px){
+  .stage{padding:0}
+  .phone{width:100%;border-radius:0;padding:0;box-shadow:none}
+  .screen-wrap{border-radius:0;height:100dvh;min-height:100dvh}
+  .statusbar{padding-top:env(safe-area-inset-top,0);height:calc(34px + env(safe-area-inset-top,0))}
+}
+
+/* ===== tabbar ===== */
+.tabbar{display:flex;background:#fff;border-top:1px solid var(--line);padding:8px 6px calc(10px + env(safe-area-inset-bottom))}
+.tab{flex:1;text-align:center;font-size:9.5px;color:#4A5560;font-weight:600;white-space:nowrap}
+.tab .ic{display:block;font-size:19px;margin-bottom:2px;filter:grayscale(1);opacity:.55}
+.tab.on{color:var(--app)}
+.tab.on .ic{filter:none;opacity:1}
+
+/* ===== shared ===== */
+.card{background:#fff;border-radius:var(--radius);box-shadow:0 1px 3px rgba(31,51,82,.07)}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px}
+.chip.gold{background:var(--gold-bg);color:#8A6A1B}
+.chip.line{border:1px solid var(--line);color:var(--muted);background:#fff}
+.rate{font-size:11px;color:#B8912F;font-weight:700}
+.sec-label{font-size:12px;font-weight:800;color:var(--navy);letter-spacing:.14em;display:flex;align-items:center;gap:7px}
+.sec-label::before{content:"";width:4px;height:13px;background:var(--app);border-radius:2px}
+
+/* ===== HOME（沿用 user.html 天空藍首頁，精簡） ===== */
+#home{background:var(--sky)}
+.testtag{position:relative;z-index:6;margin:0 14px;background:#FFF6DC;border:1.5px solid #F2DD9C;border-radius:10px;padding:8px 12px;font-size:11.5px;font-weight:700;color:#7A5B12;line-height:1.6}
+.sky{position:relative;padding:16px 14px 0;overflow:hidden}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-top:10px;position:relative;z-index:4}
+.pill{background:#fff;border-radius:99px;padding:7px 13px;font-size:13.5px;font-weight:800;box-shadow:0 2px 8px rgba(60,110,140,.15);display:flex;align-items:center;gap:6px}
+.cloud{position:absolute;background:#fff;border-radius:99px;opacity:.95}
+.cloud::before{content:"";position:absolute;background:#fff;border-radius:50%}
+.c1{width:64px;height:20px;left:8%;top:76px}.c1::before{width:26px;height:26px;left:10px;top:-12px}
+.c2{width:46px;height:16px;right:10%;top:58px}.c2::before{width:20px;height:20px;left:8px;top:-9px}
+.hill{position:relative;height:80px;margin:26px -24px 0;background:radial-gradient(120% 150% at 50% 100%, var(--hill) 0%, #8FD08A 62%, transparent 63%);display:flex;align-items:flex-start;justify-content:center}
+.sprout{font-size:34px;margin-top:2px;filter:drop-shadow(0 3px 3px rgba(30,80,40,.25))}
+.shelf{position:relative;z-index:3;margin:-26px 10px 0;background:linear-gradient(180deg,#E7F7E2,var(--shelf));border-radius:18px 18px 14px 14px;padding:12px 8px 10px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.shelf::-webkit-scrollbar{display:none}
+.tile{position:relative;flex:0 0 76px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;font-weight:700;color:#3E4A44}
+.tile .tic{width:52px;height:52px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 2px 6px rgba(80,130,90,.18)}
+.tile .new{position:absolute;top:-6px;right:8px;font-size:9px;font-weight:800;color:#fff;background:var(--new);border-radius:99px;padding:2px 7px}
+.home-body{padding:12px 14px 18px;display:flex;flex-direction:column;gap:13px}
+.bccard{padding:13px 16px 12px}
+.bch{display:flex;align-items:center;gap:6px;font-size:15px;font-weight:800;width:100%;text-align:left}
+.barcode{margin-top:10px;height:56px;border-radius:4px;background:repeating-linear-gradient(90deg,#1F2430 0 2px,transparent 2px 5px,#1F2430 5px 6px,transparent 6px 11px,#1F2430 11px 14px,transparent 14px 17px)}
+.bcf{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:13px;font-weight:700}
+.code{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:14.5px;font-weight:700}
+.store{display:flex;gap:12px;padding:13px;align-items:center;width:100%;text-align:left}
+.store .logo{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;flex-shrink:0}
+.store .info{flex:1;min-width:0}
+.store .name{font-size:14.5px;font-weight:700}
+.store .tags{display:flex;gap:5px;margin-top:5px;flex-wrap:wrap}
+.store .go{color:var(--app-deep);font-size:12px;font-weight:700;white-space:nowrap}
+
+/* ===== 暖暖窩品牌頁（沿用 v5.6 氛圍風 hero） ===== */
+#nuan{background:var(--nn-ivory)}
+.nn-hero{position:relative;height:232px;flex:none;overflow:hidden;background:
+  radial-gradient(120% 90% at 30% 0%,#1B2412 0%,#10140C 58%,#0B0E08 100%)}
+.nn-back{position:absolute;left:6px;top:8px;font-size:22px;color:#fff;z-index:9;padding:4px 12px}
+.nn-hero .wall{position:absolute;right:0;top:20px;bottom:30px;width:60%;opacity:.95;
+  background:
+    repeating-linear-gradient(90deg,rgba(9,11,6,.92) 0 3px,transparent 3px 52px),
+    repeating-linear-gradient(0deg,rgba(9,11,6,.92) 0 3px,transparent 3px 56px),
+    linear-gradient(160deg,#F3CC85 0%,#E2A857 46%,#C4863C 100%);
+  border-left:3px solid rgba(8,10,6,.92);
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 14%);mask-image:linear-gradient(90deg,transparent 0,#000 14%)}
+.nn-hero .glow{position:absolute;right:9%;top:24%;width:120px;height:120px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,226,166,.5),transparent 62%);filter:blur(5px)}
+.nn-hero .lamp{position:absolute;left:57%;top:0;z-index:4}
+.nn-hero .lamp .cord{display:block;width:2px;height:62px;background:#171C10;margin:0 auto}
+.nn-hero .lamp .shade{display:block;width:30px;height:15px;background:#14180E;border-radius:4px 4px 9px 9px;box-shadow:0 12px 18px -4px rgba(255,214,146,.55)}
+.nn-hero .lamp .bulb{display:block;width:8px;height:8px;border-radius:50%;background:#FFE2A6;margin:-3px auto 0;box-shadow:0 0 16px 5px rgba(255,222,158,.85)}
+.nn-hero .tblrow{position:absolute;left:0;right:0;bottom:0;height:32px;background:#080B05;z-index:2}
+.nn-hero .set{position:absolute;bottom:12px;width:26px;height:7px;border-radius:99px;background:#E9E4D2;opacity:.85}
+.nn-hero .s1{right:14%}
+.nn-hero .s2{right:34%;width:20px;opacity:.65}
+.nn-sign{position:absolute;left:18px;top:36px;z-index:5}
+.nn-sign .mark{display:inline-flex;width:44px;height:44px;border:1.5px solid rgba(255,244,220,.92);border-radius:7px;align-items:center;justify-content:center;font-size:23px;color:#FFF6E4;text-shadow:0 0 12px rgba(255,214,150,.95)}
+.nn-sign b{display:block;margin-top:11px;font-size:16.5px;letter-spacing:.32em;color:#FFF9EF;font-weight:600;text-shadow:0 0 14px rgba(255,220,160,.8)}
+.nn-sign small{display:block;margin-top:6px;font-size:8.5px;letter-spacing:.24em;color:#D8CBA8;font-weight:700}
+.nn-meta{position:absolute;left:18px;right:12px;bottom:9px;z-index:6;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:10.5px;color:#E7E0CC;font-weight:700}
+.nn-hello{display:flex;align-items:flex-start;gap:10px;padding:18px 18px 0}
+.nn-hello .hl{flex:1;min-width:0}
+.nn-hello .hl b{font-size:24px;color:var(--nn-olive);letter-spacing:.04em;font-weight:800}
+.nn-hello .hl small{display:block;font-size:11.5px;color:#6E7457;margin-top:6px;line-height:1.6}
+.nn-div{height:1px;background:var(--nn-line);margin:15px 18px 0}
+/* 到店主 CTA */
+.nn-cta{margin:18px 16px 0;background:var(--nn-olive);color:#F3F1E4;border-radius:16px;padding:18px 16px;font-size:17px;font-weight:800;width:calc(100% - 32px);display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 8px 20px rgba(62,74,43,.35)}
+.nn-cta:active{background:var(--nn-deep)}
+.nn-cta .ic{font-size:22px}
+.nn-note{margin:12px 20px 0;font-size:11.5px;color:#8A8F74;line-height:1.8;text-align:center}
+.nn-manual{margin:14px 16px 0;background:#fff;border:1px solid var(--nn-line);border-radius:12px;padding:12px}
+.nn-manual label{font-size:11px;color:#8A8F74;display:block;margin-bottom:6px}
+.nn-manual .row{display:flex;gap:8px}
+.nn-manual input{flex:1;border:1px solid var(--nn-line);border-radius:8px;padding:9px;font-size:12.5px;min-width:0}
+.nn-manual button{background:var(--nn-ivory);color:var(--nn-deep);border-radius:8px;padding:0 13px;font-size:12.5px;font-weight:700}
+
+/* ===== 品牌小程序底部 tab（暖暖窩橄欖＋中央掃碼浮起鍵） ===== */
+.minitab{position:absolute;left:0;right:0;bottom:0;display:none;z-index:22;padding:6px 4px calc(7px + env(safe-area-inset-bottom,0px));background:#F2F0E4;border-top:1px solid var(--nn-line)}
+.minitab.show{display:flex}
+.minitab .mt{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:#8F947A;font-weight:700}
+.minitab .mt.on{color:var(--nn-deep)}
+.mt .mi{display:flex;align-items:center;justify-content:center;height:22px}
+.mt .mi svg{width:21px;height:21px}
+.mt .mk{width:22px;height:22px;border:1.5px solid currentColor;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:600}
+.scanmt{color:var(--nn-deep)!important;font-weight:800}
+.scanmt .ring{width:47px;height:47px;margin:-27px auto 2px;border-radius:50%;background:var(--nn-olive);color:#F5F3E6;display:flex;align-items:center;justify-content:center;border:3px solid #F2F0E4;box-shadow:0 7px 15px rgba(62,74,43,.42)}
+.scanmt .ring svg{width:20px;height:20px}
+#nuan{padding-bottom:120px}
+
+/* ===== 小程序開屏動畫 ===== */
+.launch{position:absolute;top:0;right:0;bottom:0;left:0;z-index:28;display:none;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;background:linear-gradient(160deg,#55613C,#2E3620)}
+.launch.show{display:flex}
+.launch .lg{width:88px;height:88px;border-radius:50%;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;border:2px solid rgba(255,255,255,.35)}
+.launch .nm{font-size:16px;font-weight:800;margin-top:14px}
+.launch .tag{font-size:10.5px;opacity:.85;margin-top:6px;letter-spacing:.18em;font-weight:700}
+.launch .dots{margin-top:18px;display:flex;gap:6px}
+.launch .dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.85);animation:blink 1s infinite}
+.launch .dots i:nth-child(2){animation-delay:.2s}
+.launch .dots i:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,100%{opacity:.25}50%{opacity:1}}
+
+/* ===== 掃碼面板（user.html 同款視覺，接真相機） ===== */
+.scan-mask{position:absolute;top:0;right:0;bottom:0;left:0;background:#0B1220;display:none;z-index:70;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center}
+.scan-mask.show{display:flex}
+#scan-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.scan-title{font-size:13px;font-weight:800;margin-bottom:20px;position:relative;z-index:2;text-shadow:0 1px 4px #000}
+.scan-frame{position:relative;z-index:2;width:214px;height:214px;border-radius:18px;box-shadow:0 0 0 2000px rgba(6,12,24,.55)}
+.scan-frame i{position:absolute;width:26px;height:26px;border:3px solid #35E0B8}
+.scan-frame i:nth-child(1){left:-2px;top:-2px;border-right:none;border-bottom:none;border-radius:7px 0 0 0}
+.scan-frame i:nth-child(2){right:-2px;top:-2px;border-left:none;border-bottom:none;border-radius:0 7px 0 0}
+.scan-frame i:nth-child(3){left:-2px;bottom:-2px;border-right:none;border-top:none;border-radius:0 0 0 7px}
+.scan-frame i:nth-child(4){right:-2px;bottom:-2px;border-left:none;border-top:none;border-radius:0 0 7px 0}
+.scan-line{position:absolute;left:10px;right:10px;top:12px;height:2px;background:linear-gradient(90deg,transparent,#35E0B8,transparent);animation:scanmv 1.15s linear infinite}
+@keyframes scanmv{0%{top:12px}100%{top:196px}}
+.scan-tip{margin-top:22px;font-size:13px;font-weight:800;position:relative;z-index:2;text-shadow:0 1px 4px #000}
+.scan-sub{margin-top:6px;font-size:11px;color:#C9D6E8;line-height:1.7;position:relative;z-index:2;text-shadow:0 1px 4px #000}
+.scan-cancel{margin-top:26px;padding:9px 28px;border-radius:99px;border:1px solid rgba(255,255,255,.35);color:#fff;font-size:12.5px;font-weight:700;position:relative;z-index:2}
+
+/* ===== 掃碼結果卡（真跳轉前的確認） ===== */
+.res-mask{position:absolute;top:0;right:0;bottom:0;left:0;background:rgba(15,25,45,.5);display:none;z-index:75;align-items:flex-end}
+.res-mask.show{display:flex}
+.res{background:#fff;border-radius:20px 20px 0 0;width:100%;padding:18px 18px calc(22px + env(safe-area-inset-bottom));animation:up .22s ease}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.res .tag{display:inline-block;font-size:12px;font-weight:800;border-radius:6px;padding:3px 9px;margin-bottom:10px}
+.res .tag.ok{background:#E2F5EE;color:#1F8A72}
+.res .tag.bad{background:#FDECEC;color:#E5484D}
+.res .kv{font-size:13px;line-height:2;word-break:break-all}
+.res .kv code{background:#F4F4F4;border-radius:4px;padding:1px 6px;font-size:12px;font-family:var(--mono)}
+.res .acts{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.res .acts button{border-radius:11px;padding:13px 12px;font-size:14px;font-weight:800;flex:1;min-width:110px}
+.res .go2{background:var(--nn-olive);color:#fff;box-shadow:0 6px 14px rgba(62,74,43,.35)}
+.res .cp{background:#E2F5EE;color:#1F8A72}
+.res .cl{background:#F1F3F6;color:#5A6472}
+
+/* ===== 測試記錄浮鈕＋面板 ===== */
+.logbtn{position:absolute;left:10px;top:44px;z-index:40;background:rgba(0,0,0,.35);color:#fff;border-radius:99px;font-size:11px;font-weight:700;padding:6px 12px;backdrop-filter:blur(3px)}
+.log-mask{position:absolute;top:0;right:0;bottom:0;left:0;background:rgba(15,25,45,.5);display:none;z-index:76;align-items:flex-end}
+.log-mask.show{display:flex}
+.logp{background:#fff;border-radius:20px 20px 0 0;width:100%;max-height:70%;padding:16px 16px calc(20px + env(safe-area-inset-bottom));display:flex;flex-direction:column;animation:up .22s ease}
+.logp h3{font-size:14px;font-weight:800;display:flex;justify-content:space-between;align-items:center}
+.logp h3 .a{display:flex;gap:8px}
+.logp h3 button{font-size:12px;font-weight:700;border:1px solid var(--line);border-radius:8px;padding:5px 12px;color:#5A6472}
+.logp ul{list-style:none;margin-top:10px;overflow-y:auto;font-size:12px;color:var(--muted);line-height:1.7}
+.logp li{border-bottom:1px dashed var(--line);padding:6px 0;word-break:break-all}
+.logp li b{color:var(--ink)}
+
+.toast{position:absolute;bottom:100px;left:50%;transform:translateX(-50%);background:rgba(38,38,38,.92);color:#fff;font-size:13px;border-radius:20px;padding:9px 18px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:99;max-width:86%;text-align:center}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="phone">
+    <div class="screen-wrap">
+      <div class="statusbar"><span class="t" id="clock">9:41</span><span>📶 ᯤ 🔋</span></div>
+      <button class="logbtn" onclick="openLog()">🧪 測試記錄</button>
+
+      <div class="app" id="app">
+
+        <!-- HOME：發票載具首頁（精簡） -->
+        <section class="scene on" id="home">
+          <div class="testtag">🧪 到店實測版（0814）——只有「暖暖窩 → 掃桌碼」是真的：掃店裡的桌卡會直接前往<b>正式點餐頁</b>下單。其他格子都是畫面示意。無發票/載具功能（店家未開通電子發票）。</div>
+          <div class="sky">
+            <div class="topbar">
+              <button class="pill" onclick="toast('示意畫面，本實測版未含')">🪙 對獎</button>
+              <button class="pill" onclick="toast('示意畫面，本實測版未含')">🔔</button>
+            </div>
+            <div class="cloud c1"></div><div class="cloud c2"></div>
+            <div class="hill"><span class="sprout">🌱</span></div>
+          </div>
+          <div class="shelf">
+            <button class="tile" onclick="toast('示意畫面，本實測版未含')"><span class="tic" style="background:#E9FBF4">🧩</span>小程序<span class="new">NEW</span></button>
+            <button class="tile" onclick="toast('示意畫面，本實測版未含')"><span class="tic">📊</span>消費分析</button>
+            <button class="tile" onclick="toast('示意畫面，本實測版未含')"><span class="tic">🔍</span>食安快篩</button>
+            <button class="tile" onclick="toast('示意畫面，本實測版未含')"><span class="tic">🎁</span>我的獎勵</button>
+            <button class="tile" onclick="toast('示意畫面，本實測版未含')"><span class="tic">🎨</span>造型條碼</button>
+          </div>
+          <div class="home-body">
+            <div class="card bccard">
+              <button class="bch" onclick="toast('示意畫面，本實測版未含')">07-08月發票 <span style="color:#9AA5B1">›</span></button>
+              <div class="barcode" role="img" aria-label="載具條碼示意"></div>
+              <div class="bcf"><span style="color:var(--muted);font-size:11.5px">示意條碼 · 實測版不含載具功能</span><span class="code">/DEMO123</span></div>
+            </div>
+            <div class="sec-label">附近店家 · 小程序點餐</div>
+            <button class="card store" onclick="launchNuan()">
+              <span class="logo" style="background:var(--nn-olive)">暖</span>
+              <span class="info">
+                <span class="name">暖暖窩義式廚房 板橋店</span>
+                <span class="tags"><span class="rate">★ 4.9</span><span class="chip gold">到店實測 · 真點餐</span><span class="chip line">內用 掃桌碼</span></span>
+              </span>
+              <span class="go">進店 ›</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- NUAN：暖暖窩品牌頁 -->
+        <section class="scene" id="nuan">
+          <div class="nn-hero">
+            <button class="nn-back" onclick="go('home')" aria-label="返回">‹</button>
+            <span class="wall"></span><span class="glow"></span>
+            <span class="lamp"><i class="cord"></i><i class="shade"></i><i class="bulb"></i></span>
+            <span class="tblrow"><i class="set s1"></i><i class="set s2"></i></span>
+            <div class="nn-sign"><span class="mark">暖</span><b>NUAN NUAN WO</b><small>RESTAURANT &amp; KITCHEN — 板橋</small></div>
+            <div class="nn-meta"><span>★ 4.9</span><span>寵物友善</span><span class="chip" style="background:rgba(255,249,235,.16);color:#F3EEDC">到店實測版</span></div>
+          </div>
+          <div class="nn-hello">
+            <div class="hl"><b>HELLO~</b><small>人在店裡了嗎？掃桌上的 QR Code 直接點餐</small></div>
+          </div>
+          <div class="nn-div"></div>
+
+          <button class="nn-cta" onclick="openScanner()"><span class="ic">📷</span>掃桌碼點餐（真）</button>
+          <div class="nn-note">掃到桌卡後會顯示桌號確認，按「前往點餐」就進<b>正式點餐頁</b>——<br>送單會真的出現在店家出單機上。</div>
+
+          <div class="nn-manual">
+            <label>相機不能用時的備援：貼上桌卡網址</label>
+            <div class="row">
+              <input id="manual-url" placeholder="https://dotdao-eat.cmoney.tw/…" inputmode="url" autocapitalize="off">
+              <button onclick="manualParse()">解析</button>
+            </div>
+          </div>
+        </section>
+
+      </div><!-- /app -->
+
+      <!-- 發票載具主 tabbar（home 才顯示） -->
+      <div class="tabbar" id="tabbar">
+        <button class="tab on"><span class="ic">🏠</span>首頁</button>
+        <button class="tab" onclick="toast('示意畫面，本實測版未含')"><span class="ic">🎁</span>活動</button>
+        <button class="tab" onclick="toast('示意畫面，本實測版未含')"><span class="ic">👛</span>載具管理</button>
+        <button class="tab" onclick="toast('示意畫面，本實測版未含')"><span class="ic">🧾</span>我的發票</button>
+        <button class="tab" onclick="toast('示意畫面，本實測版未含')"><span class="ic">👤</span>個人</button>
+      </div>
+
+      <!-- 暖暖窩小程序 tab（進店才顯示；中央掃碼＝真） -->
+      <div class="minitab" id="minitab">
+        <button class="mt on"><span class="mi"><span class="mk">暖</span></span>點餐</button>
+        <button class="mt" onclick="toast('示意畫面，本實測版未含')"><span class="mi"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 22c1.8 0 3.2 1.5 3.2 3.2s-1.4 3.3-3.2 3.3v5h29v-5c-1.8 0-3.2-1.5-3.2-3.3s1.4-3.2 3.2-3.2v-5h-29z"/><path d="M24 17v16.5" stroke-dasharray="2.5 3.5"/></svg></span>折扣券</button>
+        <button class="mt scanmt" onclick="openScanner()"><span class="ring"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 16v-4.5A2.5 2.5 0 0 1 11.5 9H16M32 9h4.5A2.5 2.5 0 0 1 39 11.5V16M39 32v4.5a2.5 2.5 0 0 1-2.5 2.5H32M16 39h-4.5A2.5 2.5 0 0 1 9 36.5V32"/><path d="M10.5 24h27"/></svg></span>掃碼</button>
+        <button class="mt" onclick="toast('示意畫面，本實測版未含')"><span class="mi"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 8.5h20V38l-3.3-2.2-3.4 2.2-3.3-2.2-3.4 2.2-3.3-2.2L14 38z"/><path d="M18.5 15.5h11M18.5 21h11M18.5 26.5h7"/></svg></span>訂單</button>
+        <button class="mt" onclick="toast('示意畫面，本實測版未含')"><span class="mi"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="16.5" r="6.5"/><path d="M11.5 38c1.5-7.5 6.5-11 12.5-11s11 3.5 12.5 11"/></svg></span>我的</button>
+      </div>
+
+      <!-- 小程序開屏動畫 -->
+      <div class="launch" id="launch" aria-hidden="true">
+        <div class="lg">暖</div>
+        <div class="nm">暖暖窩義式廚房</div>
+        <div class="tag">發票載具 小程序 · 到店實測</div>
+        <div class="dots"><i></i><i></i><i></i></div>
+      </div>
+
+      <!-- 掃碼面板（真相機） -->
+      <div class="scan-mask" id="scan-mask">
+        <video id="scan-video" playsinline muted></video>
+        <canvas id="scan-canvas" hidden></canvas>
+        <div class="scan-title">暖暖窩義式廚房 · 掃描桌碼</div>
+        <div class="scan-frame"><i></i><i></i><i></i><i></i><div class="scan-line"></div></div>
+        <div class="scan-tip">將框對準桌上的 QR Code</div>
+        <div class="scan-sub">認出點到桌卡後會先顯示桌號讓你確認<br>按「前往點餐」才會離開這頁</div>
+        <button class="scan-cancel" onclick="closeScanner()">取消</button>
+      </div>
+
+      <!-- 掃碼結果確認卡 -->
+      <div class="res-mask" id="res-mask">
+        <div class="res" id="res-body"></div>
+      </div>
+
+      <!-- 測試記錄 -->
+      <div class="log-mask" id="log-mask">
+        <div class="logp">
+          <h3>🧪 測試記錄（重新整理清空）<span class="a"><button onclick="copyLog()">複製全部</button><button onclick="closeLog()">關閉</button></span></h3>
+          <ul id="log-list"><li style="color:#BBB">還沒有掃描記錄</li></ul>
+        </div>
+      </div>
+
+      <div class="toast" id="toast"></div>
+    </div>
+  </div>
+</div>
+
+<script src="../jsQR.js"></script>
+<script>
+/* ============================================================
+   到店實測版（基於 user.html?store=nuan 的體驗外殼）
+   真的部分：相機掃碼(jsQR) → 解析點到桌卡 → 前往正式點餐頁
+   假的部分：首頁/品牌頁其他格子（全部 toast 標示「示意」）
+   刻意不含：載具/發票（暖暖窩未開通電子發票）、假結帳、假購物車
+   ============================================================ */
+var $ = function(id){ return document.getElementById(id); };
+var _stream = null, _raf = null, _toastT = null, LOGS = [];
+
+var DOTDAO_HOSTS = ["dotdao-eat.cmoney.tw", "ailab-test.cmoney.tw"];
+var UUID_RE = /([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i;
+var _lastUrl = null;
+
+function toast(msg){
+  var t = $("toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(_toastT); _toastT = setTimeout(function(){ t.classList.remove("show"); }, 2400);
+}
+
+/* ---------- 導覽 ---------- */
+function go(scene){
+  document.querySelectorAll(".scene").forEach(function(s){ s.classList.remove("on"); });
+  $(scene).classList.add("on");
+  $("tabbar").style.display = scene === "home" ? "flex" : "none";
+  $("minitab").classList.toggle("show", scene === "nuan");
+  $("app").scrollTop = 0;
+}
+function launchNuan(){
+  $("launch").classList.add("show");
+  setTimeout(function(){
+    $("launch").classList.remove("show");
+    go("nuan");
+  }, 900);
+}
+
+/* ---------- 解析點到桌卡 ---------- */
+function parseDotdao(text){
+  var raw = String(text || "").trim();
+  var host = null;
+  try { host = new URL(raw).hostname.toLowerCase(); } catch(e){ return { valid:false, raw:raw, reason:"不是網址" }; }
+  if (DOTDAO_HOSTS.indexOf(host) < 0) return { valid:false, raw:raw, reason:"不是點到的網域（" + host + "）" };
+  var mu = raw.match(UUID_RE);
+  var mt = raw.match(/[?&]table=([^&]+)/i);
+  return { valid:true, raw:raw, env: host === "dotdao-eat.cmoney.tw" ? "正式" : "測試(dev)",
+           shopId: mu ? mu[1].toLowerCase() : null, table: mt ? decodeURIComponent(mt[1]) : null };
+}
+function handleDecoded(text){
+  var p = parseDotdao(text);
+  _lastUrl = p.valid ? p.raw : null;
+  addLog(p.valid ? ("✅ 桌卡 shopId=" + (p.shopId||"?") + " 桌=" + (p.table||"?") + " [" + p.env + "]") : "✕ 非桌碼（" + p.reason + "）", text);
+  showResult(p);
+}
+function showResult(p){
+  var h = "";
+  if (p.valid){
+    h += '<span class="tag ok">✅ 點到桌卡 · ' + p.env + '環境</span>';
+    h += '<div class="kv"><b>桌號</b>：<code>' + (p.table || "沒有桌號——可能是店家通用連結") + '</code><br>';
+    h += '<b>shopId</b>：<code>' + (p.shopId || "？") + '</code></div>';
+    h += '<div class="acts">';
+    if (p.shopId) h += '<button class="cp" onclick="copyText(\'' + p.shopId + '\',\'shopId 已複製，傳給 Claude\')">複製 shopId</button>';
+    h += '<button class="go2" onclick="goOrder()">前往點餐（真）→</button>';
+    h += '<button class="cl" onclick="closeResult()">先不去</button></div>';
+  } else {
+    h += '<span class="tag bad">✕ 不是點到桌碼</span>';
+    h += '<div class="kv"><b>原因</b>：' + escapeHtml(p.reason) + '<br><b>內容</b>：<code>' + escapeHtml(p.raw.slice(0,100)) + (p.raw.length > 100 ? "…" : "") + '</code></div>';
+    h += '<div class="acts"><button class="go2" onclick="closeResult();openScanner()">再掃一次</button><button class="cl" onclick="closeResult()">關閉</button></div>';
+  }
+  $("res-body").innerHTML = h;
+  $("res-mask").classList.add("show");
+}
+function closeResult(){ $("res-mask").classList.remove("show"); }
+function goOrder(){
+  if (!_lastUrl) return;
+  addLog("➡️ 前往點餐", _lastUrl);
+  window.location.href = _lastUrl; /* 原封不動開啟——桌號在 query string 裡自己會跟著走 */
+}
+function manualParse(){
+  var v = $("manual-url").value.trim();
+  if (!v) return toast("先貼上網址");
+  handleDecoded(v);
+}
+
+/* ---------- 真相機掃描（同 user.html jsQR 機制） ---------- */
+function openScanner(){
+  if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) || typeof jsQR !== "function"){
+    return toast("此瀏覽器不支援相機掃碼，用品牌頁的備援欄");
+  }
+  $("scan-mask").classList.add("show");
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment", width: { ideal: 1920 }, height: { ideal: 1080 } } }).then(function(stream){
+    _stream = stream;
+    var v = $("scan-video");
+    v.srcObject = stream;
+    v.play().catch(function(){});
+    scanLoop();
+  }).catch(function(err){
+    closeScanner();
+    toast("📷 無法使用相機（" + ((err && err.name) || "拒絕授權") + "），用備援欄");
+  });
+}
+function scanLoop(){
+  if (!$("scan-mask").classList.contains("show")) return;
+  var v = $("scan-video"), c = $("scan-canvas");
+  if (v.readyState !== v.HAVE_ENOUGH_DATA){ _raf = requestAnimationFrame(scanLoop); return; }
+  c.width = v.videoWidth; c.height = v.videoHeight;
+  var ctx = c.getContext("2d");
+  ctx.drawImage(v, 0, 0, c.width, c.height);
+  var img;
+  try { img = ctx.getImageData(0, 0, c.width, c.height); } catch(e){ _raf = requestAnimationFrame(scanLoop); return; }
+  var code = jsQR(img.data, img.width, img.height, { inversionAttempts: "dontInvert" });
+  if (code && code.data){ closeScanner(); handleDecoded(code.data); return; }
+  _raf = requestAnimationFrame(scanLoop);
+}
+function closeScanner(){
+  $("scan-mask").classList.remove("show");
+  cancelAnimationFrame(_raf);
+  if (_stream){ _stream.getTracks().forEach(function(t){ t.stop(); }); _stream = null; }
+  $("scan-video").srcObject = null;
+}
+
+/* ---------- 測試記錄 ---------- */
+function addLog(label, detail){
+  var ts = new Date().toTimeString().slice(0,8);
+  LOGS.push(ts + " " + label + " | " + detail);
+  var ul = $("log-list");
+  if (LOGS.length === 1) ul.innerHTML = "";
+  var li = document.createElement("li");
+  li.innerHTML = "<b>" + ts + "</b> " + escapeHtml(label) + "<br>" + escapeHtml(String(detail).slice(0,150));
+  ul.insertBefore(li, ul.firstChild);
+}
+function openLog(){ $("log-mask").classList.add("show"); }
+function closeLog(){ $("log-mask").classList.remove("show"); }
+function copyLog(){
+  if (!LOGS.length) return toast("還沒有記錄");
+  copyText(LOGS.join("\n"), "記錄已複製");
+}
+function copyText(text, okMsg){
+  (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(
+    function(){ toast(okMsg || "已複製"); },
+    function(){
+      var ta = document.createElement("textarea");
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); toast(okMsg || "已複製"); } catch(e){ toast("複製失敗"); }
+      document.body.removeChild(ta);
+    }
+  );
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, function(c){
+    return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c];
+  });
+}
+
+/* ---------- init ---------- */
+(function(){
+  var d = new Date();
+  $("clock").textContent = d.getHours() + ":" + String(d.getMinutes()).padStart(2,"0");
+  /* ?store=nuan 直達品牌頁（沿用 user.html 的參數習慣） */
+  if (/[?&]store=nuan/i.test(location.search)) launchNuan();
+})();
+</script>
+</body>
+</html>

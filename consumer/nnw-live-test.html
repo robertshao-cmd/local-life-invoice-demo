@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>發票載具｜掃碼點餐 到店實測版（0814 暖暖窩）</title>
+<style>
+  :root{
+    --green600:#01AFA2; --green700:#019F93; --green100:#E6F7F6;
+    --orange600:#FF9924; --ink:#262626; --ink2:#7A7A7A; --line:#EEEEEE;
+    --bg:#F5F7F7; --card:#FFFFFF; --red:#E5484D;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{font-family:-apple-system,"PingFang TC","Noto Sans TC",sans-serif;background:var(--bg);color:var(--ink);min-height:100dvh;}
+  .wrap{max-width:430px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;background:var(--bg);}
+
+  .top{background:var(--green600);color:#fff;padding:calc(14px + env(safe-area-inset-top,0)) 16px 14px;}
+  .top h1{font-size:17px;font-weight:700;}
+  .top p{font-size:12px;opacity:.85;margin-top:2px;}
+
+  .body{flex:1;padding:16px;display:flex;flex-direction:column;gap:14px;}
+
+  .note{background:#FFF8E8;border:1px solid #F2E3B8;border-radius:10px;padding:10px 12px;font-size:12.5px;line-height:1.7;color:#7A6428;}
+
+  .scan-btn{background:var(--green600);color:#fff;border:none;border-radius:14px;padding:20px;font-size:18px;font-weight:700;width:100%;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 14px rgba(1,175,162,.3);}
+  .scan-btn:active{background:var(--green700);}
+  .scan-btn .ico{font-size:24px;}
+
+  .manual{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;}
+  .manual label{font-size:12px;color:var(--ink2);display:block;margin-bottom:6px;}
+  .manual .row{display:flex;gap:8px;}
+  .manual input{flex:1;border:1px solid var(--line);border-radius:8px;padding:10px;font-size:13px;min-width:0;}
+  .manual button{background:var(--green100);color:var(--green700);border:none;border-radius:8px;padding:0 14px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;}
+
+  /* 解析結果卡 */
+  .result{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;display:none;}
+  .result.show{display:block;}
+  .result .tag{display:inline-block;font-size:12px;font-weight:700;border-radius:6px;padding:3px 8px;margin-bottom:8px;}
+  .result .tag.ok{background:var(--green100);color:var(--green700);}
+  .result .tag.bad{background:#FDECEC;color:var(--red);}
+  .result .kv{font-size:13px;line-height:1.9;word-break:break-all;}
+  .result .kv b{color:var(--ink);}
+  .result .kv code{background:#F4F4F4;border-radius:4px;padding:1px 5px;font-size:12px;}
+  .result .acts{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+  .result .acts button{border:none;border-radius:10px;padding:12px 14px;font-size:14px;font-weight:700;cursor:pointer;flex:1;min-width:120px;}
+  .go{background:var(--orange600);color:#fff;}
+  .copy{background:var(--green100);color:var(--green700);}
+
+  /* 測試記錄 */
+  .log{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;}
+  .log h3{font-size:13px;color:var(--ink2);font-weight:600;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
+  .log h3 button{background:none;border:1px solid var(--line);border-radius:6px;padding:3px 10px;font-size:12px;color:var(--ink2);cursor:pointer;}
+  .log ul{list-style:none;font-size:12px;line-height:1.8;color:var(--ink2);max-height:180px;overflow-y:auto;}
+  .log li{border-bottom:1px dashed var(--line);padding:4px 0;word-break:break-all;}
+  .log li b{color:var(--ink);}
+
+  /* 掃描面板 */
+  .mask{position:fixed;inset:0;background:#000;z-index:50;display:none;flex-direction:column;}
+  .mask.show{display:flex;}
+  .mask video{flex:1;object-fit:cover;width:100%;}
+  .mask .frame{position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);width:240px;height:240px;border:3px solid var(--green600);border-radius:16px;box-shadow:0 0 0 2000px rgba(0,0,0,.45);}
+  .mask .hint{position:absolute;left:0;right:0;top:calc(50% + 90px);text-align:center;color:#fff;font-size:14px;text-shadow:0 1px 4px #000;}
+  .mask .close{position:absolute;top:calc(16px + env(safe-area-inset-top,0));right:16px;background:rgba(0,0,0,.5);color:#fff;border:none;border-radius:50%;width:40px;height:40px;font-size:18px;cursor:pointer;z-index:2;}
+
+  .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);background:rgba(38,38,38,.92);color:#fff;font-size:13px;border-radius:20px;padding:9px 18px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:99;max-width:86vw;text-align:center;}
+  .toast.show{opacity:1;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <h1>📷 掃碼點餐 · 到店實測版</h1>
+    <p>0814 暖暖窩實測專用 · 無發票/載具功能（店家尚未開通電子發票）</p>
+  </div>
+
+  <div class="body">
+    <div class="note">
+      這一版只做一件事：<b>掃店家桌卡 → 認出點到網址 → 帶桌號前往真點餐頁</b>。
+      掃到之後「前往點餐」開的是<b>正式環境真頁面</b>，送單會真的跳到店家出單機。
+    </div>
+
+    <button class="scan-btn" onclick="openScanner()"><span class="ico">📷</span>掃描店家桌卡</button>
+
+    <div class="manual">
+      <label>相機不能用時的備援：貼上桌卡網址測解析</label>
+      <div class="row">
+        <input id="manual-url" placeholder="https://dotdao-eat.cmoney.tw/…" inputmode="url" autocapitalize="off">
+        <button onclick="manualParse()">解析</button>
+      </div>
+    </div>
+
+    <div class="result" id="result"></div>
+
+    <div class="log">
+      <h3>測試記錄（本機，重新整理就清空）<button onclick="copyLog()">複製全部</button></h3>
+      <ul id="log-list"><li style="color:#BBB;">還沒有掃描記錄</li></ul>
+    </div>
+  </div>
+</div>
+
+<div class="mask" id="mask">
+  <button class="close" onclick="closeScanner()">✕</button>
+  <video id="video" playsinline muted></video>
+  <div class="frame"></div>
+  <div class="hint">將框對準桌上的 QR Code</div>
+</div>
+<canvas id="canvas" hidden></canvas>
+<div class="toast" id="toast"></div>
+
+<script src="../jsQR.js"></script>
+<script>
+/* ============================================================
+   到店實測版核心：掃碼 → 解析點到桌卡 → 前往真點餐頁
+   刻意不含：發票/載具、demo 店家、假資料、購物車——那些留在 user.html。
+   ============================================================ */
+var $ = function(id){ return document.getElementById(id); };
+var _stream = null, _raf = null, _toastT = null;
+var LOGS = [];
+
+/* 點到的合法網域（prod + dev）。只認這兩個，其他網址一律標記為「不是點到桌碼」。 */
+var DOTDAO_HOSTS = ["dotdao-eat.cmoney.tw", "ailab-test.cmoney.tw"];
+var UUID_RE = /([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i;
+
+function toast(msg){
+  var t = $("toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(_toastT); _toastT = setTimeout(function(){ t.classList.remove("show"); }, 2600);
+}
+
+/* ---------- 解析 ---------- */
+function parseDotdao(text){
+  var raw = String(text || "").trim();
+  var host = null;
+  try { host = new URL(raw).hostname.toLowerCase(); } catch(e){ return { valid:false, raw:raw, reason:"不是網址" }; }
+  if (DOTDAO_HOSTS.indexOf(host) < 0) return { valid:false, raw:raw, reason:"不是點到的網域（" + host + "）" };
+  var mu = raw.match(UUID_RE);
+  var mt = raw.match(/[?&]table=([^&]+)/i);
+  return {
+    valid: true,
+    raw: raw,
+    host: host,
+    env: host === "dotdao-eat.cmoney.tw" ? "正式" : "測試(dev)",
+    shopId: mu ? mu[1].toLowerCase() : null,
+    table: mt ? decodeURIComponent(mt[1]) : null
+  };
+}
+
+function showResult(p){
+  var el = $("result"), h = "";
+  if (p.valid){
+    h += '<span class="tag ok">✅ 點到桌卡 · ' + p.env + '環境</span>';
+    h += '<div class="kv">';
+    h += '<b>shopId</b>：<code>' + (p.shopId || "（網址裡沒有 UUID？截圖回報）") + '</code><br>';
+    h += '<b>桌號</b>：<code>' + (p.table || "（沒有 table 參數——這可能不是桌卡，是店家通用連結）") + '</code>';
+    h += '</div>';
+    h += '<div class="acts">';
+    if (p.shopId) h += '<button class="copy" onclick="copyText(\'' + p.shopId + '\',\'shopId 已複製\')">複製 shopId</button>';
+    h += '<button class="go" onclick="goOrder()">前往點餐（真）→</button>';
+    h += '</div>';
+  } else {
+    h += '<span class="tag bad">✕ 不是點到桌碼</span>';
+    h += '<div class="kv"><b>原因</b>：' + p.reason + '<br><b>內容</b>：<code>' + escapeHtml(p.raw.slice(0,120)) + (p.raw.length > 120 ? "…" : "") + '</code></div>';
+  }
+  el.innerHTML = h;
+  el.classList.add("show");
+}
+var _lastUrl = null;
+function goOrder(){
+  if (!_lastUrl) return;
+  addLog("➡️ 前往點餐", _lastUrl);
+  /* 原封不動開啟掃到的網址——桌號在 query string 裡自己會跟著走（ORDER-1521 同一原則） */
+  window.location.href = _lastUrl;
+}
+function handleDecoded(text){
+  var p = parseDotdao(text);
+  _lastUrl = p.valid ? p.raw : null;
+  showResult(p);
+  addLog(p.valid ? ("✅ 桌卡 shopId=" + (p.shopId||"?") + " 桌=" + (p.table||"?")) : "✕ 非桌碼", text);
+  if (p.valid) toast("🍽️ 認出點到桌卡" + (p.table ? "・桌號 " + p.table : ""));
+  else toast("這不是店家桌碼");
+}
+function manualParse(){
+  var v = $("manual-url").value.trim();
+  if (!v) return toast("先貼上網址");
+  handleDecoded(v);
+}
+
+/* ---------- 相機掃描（同 user.html 的 jsQR 機制，高解析度對印刷品較穩） ---------- */
+function openScanner(){
+  if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) || typeof jsQR !== "function"){
+    return toast("此瀏覽器不支援相機掃碼，用下面的備援欄");
+  }
+  $("mask").classList.add("show");
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment", width: { ideal: 1920 }, height: { ideal: 1080 } } }).then(function(stream){
+    _stream = stream;
+    var v = $("video");
+    v.srcObject = stream;
+    v.play().catch(function(){});
+    scanLoop();
+  }).catch(function(err){
+    closeScanner();
+    toast("📷 無法使用相機（" + ((err && err.name) || "拒絕授權") + "），用下面的備援欄");
+  });
+}
+function scanLoop(){
+  if (!$("mask").classList.contains("show")) return;
+  var v = $("video"), c = $("canvas");
+  if (v.readyState !== v.HAVE_ENOUGH_DATA){ _raf = requestAnimationFrame(scanLoop); return; }
+  c.width = v.videoWidth; c.height = v.videoHeight;
+  var ctx = c.getContext("2d");
+  ctx.drawImage(v, 0, 0, c.width, c.height);
+  var img;
+  try { img = ctx.getImageData(0, 0, c.width, c.height); } catch(e){ _raf = requestAnimationFrame(scanLoop); return; }
+  var code = jsQR(img.data, img.width, img.height, { inversionAttempts: "dontInvert" });
+  if (code && code.data){ closeScanner(); handleDecoded(code.data); return; }
+  _raf = requestAnimationFrame(scanLoop);
+}
+function closeScanner(){
+  $("mask").classList.remove("show");
+  cancelAnimationFrame(_raf);
+  if (_stream){ _stream.getTracks().forEach(function(t){ t.stop(); }); _stream = null; }
+  $("video").srcObject = null;
+}
+
+/* ---------- 測試記錄 ---------- */
+function addLog(label, detail){
+  var ts = new Date().toTimeString().slice(0,8);
+  LOGS.push(ts + " " + label + " | " + detail);
+  var ul = $("log-list");
+  if (LOGS.length === 1) ul.innerHTML = "";
+  var li = document.createElement("li");
+  li.innerHTML = "<b>" + ts + "</b> " + escapeHtml(label) + "<br>" + escapeHtml(String(detail).slice(0,160));
+  ul.insertBefore(li, ul.firstChild);
+}
+function copyLog(){
+  if (!LOGS.length) return toast("還沒有記錄");
+  copyText(LOGS.join("\n"), "記錄已複製，貼給 Claude 或存進 e2e-record");
+}
+function copyText(text, okMsg){
+  (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(
+    function(){ toast(okMsg || "已複製"); },
+    function(){
+      var ta = document.createElement("textarea");
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); toast(okMsg || "已複製"); } catch(e){ toast("複製失敗，手動選取吧"); }
+      document.body.removeChild(ta);
+    }
+  );
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, function(c){
+    return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c];
+  });
+}
+</script>
+</body>
+</html>
