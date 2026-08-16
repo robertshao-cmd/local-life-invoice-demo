@@ -1822,5 +1822,27 @@
   })();
 </script>
 
+<div id="ver-badge" style="position:fixed;right:8px;top:8px;z-index:99999;
+  background:rgba(1,128,92,.92);color:#fff;font:700 10.5px/1.5 -apple-system,'PingFang TC',sans-serif;
+  border-radius:99px;padding:5px 11px;pointer-events:auto;cursor:pointer;
+  box-shadow:0 2px 8px rgba(0,0,0,.28);max-width:78vw"
+  title="點我看與官方站的差異"
+  onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'">v27 · 最新版 ⓘ</div>
+<div style="display:none;position:fixed;right:8px;top:40px;z-index:99999;max-width:min(340px,86vw);
+  background:#fff;border:1px solid #E6EAF0;border-radius:12px;padding:12px 14px;
+  font:400 12px/1.8 -apple-system,'PingFang TC',sans-serif;color:#3F3128;
+  box-shadow:0 8px 24px rgba(0,0,0,.18)">
+  <b style="color:#01805C">這一份是 v27（最新）</b><br>
+  官方 Cloudflare 站
+  <a href="https://nnw-warmnest-owner-demo.pages.dev/" target="_blank" rel="noopener noreferrer"
+     style="color:#0B72B5">nnw-warmnest-owner-demo</a>
+  目前是 <b style="color:#B0742A">v24</b>，落後三版。<br><br>
+  <b>官方站缺：</b><br>
+  ・v25 核心閉環：售罄標記、售罄原品不可核銷、替代品必填品名＋同價確認、
+  核銷前強制確認限內用／本桌未領取／未併用優惠<br>
+  ・v26–v27：toast 遮住核銷鈕、標題焦點黑框 兩個修正<br><br>
+  <span style="color:#7C6553">v27 的 UAT 12 項全 PASS、bundle audit GO；
+  卡的是 Cloudflare 裝置授權未完成，不是品質問題。</span>
+</div>
 </body>
 </html>

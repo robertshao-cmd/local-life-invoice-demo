@@ -43,15 +43,39 @@
       <span class="tag t-live">可實測</span>
     </a>
     <a class="card" href="./consumer/activity-nnw-gift.html">
-      <b>🎁 暖暖窩活動頁</b>
-      <small>憑發票贈品活動全鏈路 7 個畫面</small>
-      <span class="tag t-demo">Demo</span>
+      <b>🎁 暖暖窩活動頁 <span style="font-size:11px;color:#01805C">v27</span></b>
+      <small>顧客「我的獎勵」6 位碼 → 店員核銷 → 售罄同價替代 → 收據</small>
+      <span class="tag t-live">最新版</span>
+    </a>
+    <a class="card" href="https://nnw-warmnest-owner-demo.pages.dev/" target="_blank" rel="noopener noreferrer">
+      <b>🎁 暖暖窩活動頁 <span style="font-size:11px;color:#B0742A">v24</span></b>
+      <small>官方 Cloudflare 站。<b>目前落後三版</b>，缺售罄替代機制</small>
+      <span class="tag t-old">官方·舊版</span>
     </a>
     <a class="card" href="./merchant/merchant.html">
       <b>🏪 商家工作台</b>
       <small>助手／生意參謀／用戶端預覽／載具首頁</small>
       <span class="tag t-demo">Demo</span>
     </a>
+  </div>
+  <div style="background:#FFF8E8;border:1px solid #F2E3B8;border-radius:10px;padding:12px 14px;font-size:12.5px;line-height:1.85;color:#7A6428;margin-top:4px">
+    ⚠️ <b>兩個活動頁版本不同，發連結前先確認你要給的是哪一個</b>（2026-08-16 實測，逐位元組比對）
+    <table style="width:100%;border-collapse:collapse;margin:8px 0 6px;font-size:12px">
+      <tr style="text-align:left;color:#8A6A1B">
+        <th style="padding:3px 6px 3px 0">　</th><th style="padding:3px 6px">版本</th>
+        <th style="padding:3px 6px">大小</th><th style="padding:3px 6px">SHA-256</th>
+      </tr>
+      <tr><td style="padding:3px 6px 3px 0">本站（GitHub）</td><td style="padding:3px 6px"><b>v27</b></td>
+          <td style="padding:3px 6px">104,186</td><td style="padding:3px 6px"><code style="font-size:11px">8523b21d…</code></td></tr>
+      <tr><td style="padding:3px 6px 3px 0">官方（Cloudflare）</td><td style="padding:3px 6px"><b>v24</b></td>
+          <td style="padding:3px 6px">89,892</td><td style="padding:3px 6px"><code style="font-size:11px">87a12505…</code></td></tr>
+    </table>
+    <b>官方站缺的東西：</b><br>
+    ・<b>v25 核心閉環</b>（最大一塊，體積差 14KB）——店員標記售罄、售罄原品不可直接核銷、
+    替代品必填品名並勾選「已確認同價」、核銷前強制確認限內用／本桌未領取／未併用優惠<br>
+    ・<b>v26–v27 兩個 UX 修正</b>——toast 遮住核銷按鈕、程式焦點造成標題黑框<br>
+    <b>為什麼還沒更新：</b>v27 的 UAT 12 項全 PASS、bundle audit 判定 GO，
+    卡的是 <b>Cloudflare 裝置授權尚未完成</b>，不是品質問題。授權完成部署後兩邊就會一致。
   </div>
 
   <h2>商家核銷場測 · 外部站</h2>
