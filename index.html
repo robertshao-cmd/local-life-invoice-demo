@@ -73,17 +73,40 @@
     顧客不掃碼，只出示 QR；掃描的是店員。
   </p>
 
-  <h2>自營小程序</h2>
+  <h2>自營小程序 · 已上線正式站</h2>
   <div class="grid">
+    <a class="card" href="https://ailab-dev.cmoney.tw/bored/" target="_blank" rel="noopener noreferrer">
+      <b>😶 無聊快篩</b>
+      <small>3 題測驗 → 推薦 → 可叫出載具條碼。<b>正式站，永遠最新</b></small>
+      <span class="tag t-live">已上線</span>
+    </a>
+    <a class="card" href="https://ailab-dev.cmoney.tw/wealth/" target="_blank" rel="noopener noreferrer">
+      <b>💸 幾歲破產</b>
+      <small>帶 cid 進來會查本人發票、換成真實金額。<b>正式站，永遠最新</b></small>
+      <span class="tag t-live">已上線</span>
+    </a>
+  </div>
+  <p style="font-size:12px;color:#8A8F98;margin-top:-4px;line-height:1.8">
+    ✅ 這兩個連的是<b>正式部署</b>（GitLab CI → Cloud Run），不是本 repo 的靜態鏡像——
+    所以你看到的永遠是最新版，個人化與埋點也都是真的在運作。
+  </p>
+
+  <h2>自營小程序 · 原型（尚未上線）</h2>
+  <div class="grid">
+    <a class="card" href="./mini/detox/">
+      <b>🧪 解毒吧</b>
+      <small>食安品項快篩。<b>尚未上線</b>，這是靜態原型</small>
+      <span class="tag t-demo">原型</span>
+    </a>
     <a class="card" href="./mini/">
-      <b>🧩 小程序架</b>
-      <small>解毒吧 · 幾歲破產 · 無聊快篩（模組化版）</small>
-      <span class="tag t-live">可實測</span>
+      <b>🧩 小程序架（殼）</b>
+      <small>三顆並排時的貨架長相示意</small>
+      <span class="tag t-demo">原型</span>
     </a>
     <a class="card" href="./consumer/app.html?v=6.19">
       <b>📱 用戶體驗版</b>
       <small>消費者主線：對獎、掃碼、結帳折抵</small>
-      <span class="tag t-demo">Demo</span>
+      <span class="tag t-demo">原型</span>
     </a>
     <a class="card" href="./_legacy/real-home-v7.html">
       <b>🏠 真實首頁殼</b>
@@ -91,6 +114,10 @@
       <span class="tag t-old">Legacy</span>
     </a>
   </div>
+  <p style="font-size:12px;color:#8A8F98;margin-top:-4px;line-height:1.8">
+    ⚠️ 這一區是<b>靜態快照，沒有後端</b>：只能看 UI，個人化資料、分類 API、埋點都不會運作，
+    而且不會跟著正式版更新。要看真實行為請用上面那區。
+  </p>
 
   <h2>文件入口</h2>
   <div class="grid">
