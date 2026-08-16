@@ -1,12 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>D2 活動頁面 mockup｜憑發票贈炸雞球/洋蔥圈（暖暖窩）</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC&display=swap" rel="stylesheet">
+<title>暖暖窩活動｜發票載具 App 互動 Demo</title>
 <style>
   :root{
     /* 發票載具 design system（保留品牌識別） */
@@ -44,26 +41,6 @@
     font-size:17px;font-weight:600;color:var(--ink);position:relative;border-bottom:1px solid var(--line);}
   .nav .h{position:absolute;left:14px;font-size:13px;color:var(--green700);}
   .scr{background:var(--cream);}
-
-  /* ===== 畫面 0：首頁通知 ===== */
-  .home-bg{background:linear-gradient(180deg,#D8F0EE 0%,var(--cream) 200px);height:420px;position:relative;}
-  .home-hdr{padding:14px 16px 0;display:flex;justify-content:space-between;font-size:12px;color:var(--ink2);}
-  .home-hdr .code{color:var(--green700);font-weight:700;}
-  .tree-area{height:104px;display:flex;align-items:flex-end;justify-content:center;font-size:52px;}
-  .vcard{margin:8px 16px 0;background:#fff;border-radius:16px;padding:13px 16px;
-    box-shadow:0 2px 8px rgba(120,80,40,0.08);display:flex;justify-content:space-between;
-    align-items:center;font-size:13px;color:var(--ink2);}
-  .vcard b{color:var(--ink);font-size:15px;}
-  .notif-wrap{position:absolute;top:14px;left:10px;right:10px;}
-  .notif{background:rgba(255,255,255,0.99);border-radius:16px;padding:11px 13px;display:flex;gap:10px;
-    box-shadow:0 8px 22px rgba(90,60,30,0.20);border:1px solid var(--line);}
-  .notif .ic{width:38px;height:38px;border-radius:10px;flex-shrink:0;overflow:hidden;background:var(--teal);}
-  .notif .ic img{width:100%;height:100%;object-fit:cover;}
-  .notif .body{flex:1;min-width:0;}
-  .notif .top{display:flex;justify-content:space-between;font-size:11px;color:var(--ink2);margin-bottom:1px;}
-  .notif .app{font-weight:700;color:var(--ink);}
-  .notif .ti{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:1px;}
-  .notif .sub{font-size:12px;color:var(--ink2);line-height:1.4;}
 
   /* ===== 畫面 A：推薦活動卡 ===== */
   .sec{padding:16px 16px 0;}
@@ -117,27 +94,11 @@
   .step .t{font-size:12.5px;color:var(--ink);line-height:1.5;}
   .tos{font-size:11.5px;color:var(--ink2);line-height:1.65;margin:0;padding-left:14px;}
   .tos .tbd{color:var(--orange700);font-weight:700;background:var(--orange100);padding:0 4px;border-radius:4px;}
-  .cta{margin:2px 14px 14px;background:var(--green600);color:#fff;text-align:center;padding:12px;
+  .cta{display:block;text-decoration:none;margin:2px 14px 14px;background:var(--green600);color:#fff;text-align:center;padding:12px;
     border-radius:13px;font-size:15px;font-weight:700;box-shadow:0 4px 12px rgba(1,175,162,0.28);}
   .cta .s{display:block;font-size:11px;font-weight:400;opacity:0.9;margin-top:2px;}
-  .already-here{text-align:center;font-size:12px;color:var(--ink2);margin:-6px 14px 16px;}
+  .already-here{display:block;text-decoration:none;text-align:center;font-size:12px;color:var(--ink2);margin:-6px 14px 16px;}
   .already-here b{color:var(--green700);font-weight:700;}
-
-  /* ===== 四隻毛孩：可愛「小狗頭」剪影小圖示（不是圓形大頭貼），跟文字並排不覆蓋 =====
-     剪影用 clip-path 剪出兩個耳朵凸起＋圓潤下巴，讀起來像一隻可愛小狗，不是被關在圓圈裡的大頭照 */
-  .dogc{width:22px;height:22px;flex-shrink:0;display:inline-block;
-    filter:drop-shadow(0 2px 4px rgba(90,60,30,0.35));}
-  .dogc.big{width:26px;height:26px;}
-  .dogc img{width:100%;height:100%;display:block;object-fit:cover;
-    clip-path:url(#dogHeadClip);-webkit-clip-path:url(#dogHeadClip);}
-  .d-hero,.d-gift,.d-step,.d-tos{animation:bob 3.6s ease-in-out infinite;}
-  .d-gift{animation-delay:0.3s;}
-  .d-step{animation-delay:0.6s;}
-  .d-tos{animation-delay:0.9s;}
-  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
-  @media (prefers-reduced-motion:reduce){
-    .dogc{animation:none;}
-  }
 
   /* ===== 畫面 B2：顧客核銷頁（出示給店員看） ===== */
   .redeem-hero{padding:28px 20px 8px;text-align:center;}
@@ -187,7 +148,7 @@
     border:1px solid var(--line);}
   .counter .num{font-size:34px;font-weight:700;color:var(--green700);line-height:1;}
   .counter .lbl{font-size:12px;color:var(--ink2);margin-top:4px;}
-  .redeem-btn{background:var(--green600);color:#fff;text-align:center;padding:15px;border-radius:14px;
+  .redeem-btn{display:block;text-decoration:none;background:var(--green600);color:#fff;text-align:center;padding:15px;border-radius:14px;
     font-size:15px;font-weight:700;margin-bottom:12px;box-shadow:0 4px 12px rgba(1,175,162,0.26);}
   .log{background:var(--card);border-radius:14px;padding:2px 15px;border:1px solid var(--line);}
   .log-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;
@@ -206,389 +167,1660 @@
   .spec table{width:100%;border-collapse:collapse;font-size:12px;margin-top:6px;}
   .spec th,.spec td{border:1px solid var(--line);padding:6px 10px;text-align:left;}
   .spec th{background:#F9F0E3;}
+
+  /* ===== 窄螢幕（390×844 等手機 viewport）：避免整頁水平溢位 ===== */
+  @media (max-width:560px){
+    body{padding:12px 6px; gap:40px 12px;}
+    .frame{margin:0;}
+    .phone{width:100%; max-width:375px;}
+    /* B2：窄螢幕下捲軸使手機框縮到 363px，.redeem-rule 換成兩行；
+       改為內容驅動高度，從結構上杜絕靜默裁切（min-height 保留原設計外觀） */
+    #screen-b2 .scr{height:auto !important; min-height:429px;}
+  }
+
+  /* ===== NNW 活動小程式模擬器 ===== */
+  :root{
+    --sim-scale:1;
+    --sim-side-pad:12px;
+    --sim-pad-top:24px;
+    --sim-pad-bottom:40px;
+    --sim-green:#01AFA2;
+    --sim-green-soft:#E6F7F6;
+    --sim-orange:#FF9924;
+    --sim-orange-soft:#FFF5E9;
+    --sim-bg:#F5F5F5;
+    --sim-surface:#FFFFFF;
+    --sim-text:#262626;
+    --sim-hint:#8C8C8C;
+    --sim-error:#E83F19;
+    --sim-error-soft:#FFECE8;
+  }
+  @supports (transform:scale(calc(1px / 1px))){
+    :root{--sim-scale:min(1,calc((100vw - var(--sim-side-pad) * 2) / 390px),
+      calc((100dvh - var(--sim-pad-top) - var(--sim-pad-bottom)) / 844px));}
+  }
+  html{background:#ECE9E4;}
+  body{min-height:100vh;margin:0;padding:var(--sim-pad-top) var(--sim-side-pad) var(--sim-pad-bottom);display:block;
+    background:#ECE9E4;color:var(--sim-text);overflow-x:hidden;
+    font-family:"PingFang TC","Noto Sans TC","SF Pro",-apple-system,BlinkMacSystemFont,sans-serif;}
+  html.mode-default,html.mode-default body{height:100dvh;min-height:0;overflow:hidden;}
+  html.mode-compare,html.mode-qa{height:auto;overflow-x:hidden;overflow-y:auto;}
+  html.mode-compare body,html.mode-qa body{height:auto;min-height:100vh;overflow-y:visible;}
+  button,a{font:inherit;}
+  button{border:0;}
+  .sim-app{width:100%;}
+  .single-host{display:flex;justify-content:center;width:100%;}
+  .compare-grid{display:none;flex-wrap:wrap;gap:32px 24px;justify-content:center;align-items:flex-start;}
+  html.mode-compare .single-host,
+  html.mode-qa .single-host{display:none;}
+  html.mode-compare .compare-grid,
+  html.mode-qa .compare-grid{display:flex;}
+  .compare-card{margin:0;}
+  .compare-label{margin:0 0 8px;font-size:13px;font-weight:700;color:var(--sim-text);text-align:center;}
+
+  .sim-wrap{width:calc(390px * var(--sim-scale));height:calc(844px * var(--sim-scale));}
+  .sim-shell{position:relative;width:390px;height:844px;transform:scale(var(--sim-scale));transform-origin:top left;
+    display:grid;grid-template-rows:44px 44px minmax(0,1fr) 64px;background:var(--sim-bg);
+    border:1px solid #D5D5D5;border-radius:44px;overflow:hidden;
+    box-shadow:0 16px 40px rgba(38,38,38,.18);}
+  .sim-shell[data-state="home"]{grid-template-rows:44px 0 minmax(0,1fr) 64px;}
+  .sim-shell[data-state="detail"],.sim-shell[data-state="redeem"]{
+    grid-template-rows:44px 44px minmax(0,1fr) 0;}
+  .sim-shell[data-state="home"] .sim-topbar{visibility:hidden;pointer-events:none;overflow:hidden;}
+  .sim-shell[data-state="detail"] .sim-tabbar,
+  .sim-shell[data-state="redeem"] .sim-tabbar,
+  .sim-shell[data-state="scan"] .sim-tabbar,
+  .sim-shell[data-state="confirm"] .sim-tabbar,
+  .sim-shell[data-state="success"] .sim-tabbar{display:none;}
+  .sim-statusbar{display:flex;align-items:center;justify-content:space-between;padding:0 24px;
+    background:var(--sim-surface);font-size:14px;font-weight:600;color:var(--sim-text);}
+  .sim-shell[data-state="home"] .sim-statusbar{background:#DDF4FA;}
+  .status-signals{display:flex;align-items:center;gap:5px;}
+  .signal-bars{width:16px;height:10px;display:flex;align-items:flex-end;gap:2px;}
+  .signal-bars i{display:block;width:2px;background:var(--sim-text);border-radius:2px;}
+  .signal-bars i:nth-child(1){height:4px}.signal-bars i:nth-child(2){height:6px}
+  .signal-bars i:nth-child(3){height:8px}.signal-bars i:nth-child(4){height:10px}
+  .battery{width:20px;height:10px;border:1.5px solid var(--sim-text);border-radius:2px;position:relative;}
+  .battery::before{content:"";position:absolute;inset:2px;background:var(--sim-text);border-radius:1px;}
+  .battery::after{content:"";position:absolute;right:-4px;top:2px;width:2px;height:4px;background:var(--sim-text);}
+
+  .sim-topbar{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;
+    height:44px;padding:0;background:var(--sim-surface);border-bottom:1px solid #F0F0F0;}
+  .sim-title{margin:0;padding:0 4px;font-size:17px;font-weight:600;text-align:center;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .sim-title:focus{outline:none;}
+  .top-actions{display:flex;align-items:center;justify-content:flex-end;gap:4px;}
+  .icon-button,.role-switch{min-width:44px;min-height:44px;border-radius:10px;background:transparent;
+    color:var(--sim-text);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;}
+  .icon-button img{width:24px;height:24px;display:block;}
+  .role-switch{padding:0 8px;font-size:12px;font-weight:700;color:var(--sim-green);}
+  .top-actions{visibility:hidden;pointer-events:none;}
+  .icon-button:disabled{opacity:0;pointer-events:none;}
+
+  .sim-scroll{min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;
+    scrollbar-width:none;background:var(--sim-bg);}
+  .sim-scroll::-webkit-scrollbar{display:none;}
+  .screen{min-height:100%;padding:16px;}
+  .screen.flush{padding:0;}
+  .section-pad{padding:16px;}
+  .surface-card{background:var(--sim-surface);border:1px solid #E8E8E8;border-radius:16px;
+    box-shadow:0 3px 12px rgba(38,38,38,.06);}
+  .eyebrow{font-size:12px;font-weight:700;color:var(--sim-green);letter-spacing:.5px;}
+  .screen h2{margin:6px 0 8px;font-size:22px;line-height:1.35;color:var(--sim-text);}
+  .screen h3{margin:0 0 10px;font-size:15px;color:var(--sim-text);}
+  .muted{color:var(--sim-hint);font-size:13px;line-height:1.65;}
+  .demo-badge,.honesty-banner{display:inline-flex;align-items:center;min-height:28px;padding:4px 10px;
+    border-radius:8px;font-size:12px;font-weight:700;}
+  .demo-badge{color:var(--sim-orange);background:var(--sim-orange-soft);}
+  .honesty-banner{display:flex;margin-bottom:12px;color:var(--sim-error);background:var(--sim-error-soft);}
+
+  .official-home{min-height:100%;background:var(--sim-bg);}
+  .official-home-scene{position:relative;height:330px;overflow:hidden;background-color:#DDF4FA;
+    background-image:url("../assets/nnw-activity/app-ui/bg_default_floor.webp"),url("../assets/nnw-activity/app-ui/bg_default_sky.webp");
+    background-repeat:no-repeat;background-position:center bottom,center top;
+    background-size:100% 47%,100% 100%;}
+  .home-nav{position:relative;z-index:2;height:44px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;}
+  .home-nav strong{font-size:17px;font-weight:600;}
+  .home-nav .home-points{padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.88);
+    color:var(--sim-orange);font-size:12px;font-weight:700;}
+  .home-tree{position:absolute;z-index:0;top:84px;left:50%;width:138px;height:auto;display:block;
+    transform:translateX(-50%);object-fit:contain;}
+  .shortcut-tray{position:absolute;z-index:1;left:16px;right:16px;bottom:8px;padding:12px 8px 10px;
+    display:grid;grid-template-columns:repeat(5,1fr);gap:2px;background:rgba(255,255,255,.96);
+    border:1px solid var(--sim-outline,#F0F0F0);border-radius:16px;box-shadow:0 4px 14px rgba(38,38,38,.10);}
+  .shortcut-item{min-width:0;display:flex;flex-direction:column;align-items:center;gap:5px;
+    color:var(--sim-text);font-size:10px;white-space:nowrap;}
+  .shortcut-item img{width:38px;height:38px;object-fit:contain;}
+  .shortcut-button{padding:0;background:transparent;cursor:pointer;}
+  .shortcut-button:focus-visible{outline:3px solid rgba(1,175,162,.32);outline-offset:3px;border-radius:9px;}
+  .home-content{padding:14px 16px 24px;}
+  .carrier-card{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  .carrier-card strong{display:block;margin-bottom:4px;font-size:16px;}
+  .carrier-bars{display:flex;align-items:flex-end;gap:2px;height:40px;padding:7px 9px;border-radius:8px;background:#fff;}
+  .carrier-bars i{display:block;width:2px;background:var(--sim-text);}
+  .carrier-bars i:nth-child(odd){height:24px}.carrier-bars i:nth-child(even){height:31px}
+  .home-section-title,.activity-section-title{display:flex;align-items:center;justify-content:space-between;margin:18px 0 10px;}
+  .home-section-title h3,.activity-section-title h3{margin:0;font-size:16px;}
+  .home-section-title span,.activity-section-title span{font-size:12px;color:var(--sim-green);}
+  .activity-card{width:100%;margin-top:14px;padding:12px;text-align:left;cursor:pointer;
+    display:flex;gap:12px;align-items:center;color:var(--sim-text);}
+  .activity-card.surface-card{
+    background:linear-gradient(135deg,var(--sim-orange-soft) 0%,var(--sim-orange-soft) 62%,var(--sim-green-soft) 100%);
+    border-color:#FFD8AC;box-shadow:0 4px 14px rgba(107,64,15,.10);}
+  .activity-card .card-thumb{width:76px;height:76px;aspect-ratio:1;object-fit:contain;
+    object-position:center;padding:4px;border:1px solid #FFD8AC;border-radius:12px;flex:0 0 76px;
+    background:rgba(255,255,255,.82);}
+  .activity-copy{min-width:0;flex:1;}
+  .activity-copy strong{display:block;margin:4px 0;font-size:15px;line-height:1.4;}
+  .activity-copy span{display:block;color:var(--sim-hint);font-size:12px;line-height:1.5;}
+
+  .activities-list{padding:16px 16px 28px;}
+  .task-scroll{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding:1px 1px 5px;}
+  .task-scroll::-webkit-scrollbar{display:none;}
+  .official-task-card{min-width:164px;height:66px;padding:0 12px;display:flex;align-items:center;gap:8px;
+    border:1px solid #FFD09A;border-radius:9px;background:#fff;color:var(--sim-text);text-align:left;}
+  .official-task-card img{width:36px;height:36px;object-fit:contain;}
+  .official-task-card strong{display:block;font-size:13px;line-height:1.35;}
+  .official-task-card span{display:block;margin-top:2px;font-size:11px;color:var(--sim-hint);}
+  .section-link{min-width:44px;min-height:44px;margin:-12px -10px -12px 0;padding:0 10px;
+    display:inline-flex;align-items:center;justify-content:center;background:transparent;
+    color:#019F93;font-size:13px;cursor:pointer;}
+  .reward-empty{min-height:124px;padding:20px;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;text-align:center;border-radius:12px;background:#fff;}
+  .reward-empty img{width:80px;height:80px;margin-bottom:8px;object-fit:contain;}
+  .reward-empty span{font-size:14px;color:var(--sim-hint);}
+  .reward-active,.reward-used{position:relative;width:100%;min-height:104px;padding:12px 16px;
+    display:grid;grid-template-columns:56px minmax(0,1fr);align-items:center;gap:12px;
+    border-radius:12px;background:#fff;color:var(--sim-text);text-align:left;}
+  .reward-active{cursor:pointer;}
+  .reward-active:focus-visible{outline:3px solid rgba(1,175,162,.30);outline-offset:2px;}
+  .reward-icon{width:56px;height:56px;object-fit:contain;}
+  .reward-copy{min-width:0;padding-right:58px;}
+  .reward-copy small,.reward-copy strong,.reward-copy span{display:block;}
+  .reward-copy small{color:#E88B21;font-size:12px;font-weight:600;}
+  .reward-copy strong{margin:3px 0;font-size:14px;line-height:1.35;}
+  .reward-copy span{font-size:12px;line-height:1.45;color:var(--sim-hint);}
+  .reward-status{position:absolute;right:12px;top:12px;padding:4px 7px;border-radius:6px;
+    background:var(--sim-green-soft);color:#019F93;font-size:12px;font-weight:700;}
+  .reward-qualification{display:inline-flex!important;width:max-content;max-width:100%;margin-top:5px;
+    padding:3px 7px;border-radius:6px;background:#FFF5E9;color:#6B400F!important;font-size:11px!important;}
+  .reward-used{background:#FAFAFA;border:1px solid #E8E8E8;}
+  .reward-used .reward-status{background:#EEEEEE;color:#666;}
+
+  .detail-hero{height:auto;background:var(--sim-green-soft);overflow:hidden;}
+  .detail-hero>img{width:100%;height:auto;display:block;object-fit:contain;}
+  .detail-store{padding:10px 16px 12px;background:#6B400F;color:#fff;}
+  .detail-store strong{display:block;font-size:16px;}
+.store-location{display:flex;align-items:center;gap:6px;min-height:48px;margin-top:2px;padding:4px 2px;
+    border-radius:9px;color:#fff;text-decoration:none;font-size:12px;line-height:1.45;}
+  .store-location:hover{background:rgba(255,255,255,.10);}
+  .location-pin{width:18px;height:18px;flex:0 0 18px;fill:var(--sim-orange);}
+  .store-location .location-copy{min-width:0;flex:1;}
+  .store-location .map-label{display:inline-flex;align-items:center;flex:0 0 auto;padding:2px 7px;
+    border:1px solid rgba(255,255,255,.55);border-radius:999px;font-size:11px;white-space:nowrap;}
+  .screen[data-screen="detail"]>.section-pad,
+  .screen[data-screen="scan"],
+  .screen[data-screen="confirm"]{
+    background:linear-gradient(180deg,var(--sim-orange-soft) 0%,var(--sim-bg) 78%);}
+  .screen[data-screen="detail"]>.section-pad{
+    padding-bottom:max(24px,calc(16px + env(safe-area-inset-bottom,0px)));}
+  .sim-shell[data-state="detail"] .sim-scroll{
+    scroll-padding-bottom:max(24px,calc(16px + env(safe-area-inset-bottom,0px)));}
+  .hand-line{width:132px;height:7px;margin:8px 0 12px;border-top:3px solid var(--sim-orange);
+    border-radius:50%;transform:rotate(-1deg);}
+  .detail-copy{margin:0 0 14px;font-size:14px;line-height:1.75;color:var(--sim-text);}
+  .gift-panel{padding:14px;background:var(--sim-orange-soft);border:1px solid #FFD8AC;border-radius:16px;}
+  .gift-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .photo-slot{position:relative;overflow:hidden;border:1px solid #FFD8AC;border-radius:12px;
+    background:rgba(255,255,255,.82);text-align:center;}
+  .food-media{position:relative;aspect-ratio:4/3;overflow:hidden;background:#FFF8ED;}
+  .food-art{display:block;width:100%;height:100%;object-fit:cover;}
+  .food-label{padding:8px 6px 10px;}
+  .food-label strong{display:block;font-size:15px;color:var(--sim-text);}
+  .info-card{margin-top:12px;padding:14px 16px;}
+  .number-list{list-style:none;margin:0;padding:0;counter-reset:steps;}
+  .number-list li{counter-increment:steps;display:flex;gap:10px;margin-top:9px;font-size:13px;line-height:1.55;}
+  .number-list li::before{content:counter(steps);width:22px;height:22px;border-radius:50%;flex:0 0 auto;
+    display:flex;align-items:center;justify-content:center;background:var(--sim-green);color:#fff;font-size:12px;font-weight:700;}
+  .terms{margin:0;padding-left:20px;color:var(--sim-hint);font-size:13px;line-height:1.7;}
+  .cta-stack{display:grid;gap:10px;margin-top:14px;}
+
+  .primary-button,.secondary-button{width:100%;min-height:48px;border-radius:12px;padding:11px 16px;
+    display:flex;align-items:center;justify-content:center;text-align:center;font-weight:700;text-decoration:none;cursor:pointer;}
+  .primary-button{background:var(--sim-green);color:#fff;}
+  .secondary-button{background:var(--sim-surface);color:var(--sim-green);border:1px solid var(--sim-green);}
+  .primary-button:disabled{background:#D5D5D5;color:var(--sim-hint);cursor:not-allowed;}
+  .primary-button.is-loading{position:relative;background:#6BCFC8;color:#fff;}
+  .primary-button.is-loading::after{content:"";width:16px;height:16px;margin-left:10px;border:2px solid #fff;
+    border-right-color:transparent;border-radius:50%;animation:spin .8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .redeem-layout,.scan-layout,.confirm-layout,.success-layout{padding-top:24px;text-align:center;}
+  .redeem-layout{background:linear-gradient(180deg,#FFF5E9 0%,#F5F5F5 72%);}
+  .present-card{margin:16px auto 12px;padding:18px;max-width:330px;border:2px solid #FFD09A;
+    background:linear-gradient(150deg,#FFF,#FFF8ED);box-shadow:0 8px 22px rgba(107,64,15,.10);}
+  .present-store{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-bottom:12px;
+    border-bottom:1px dashed #FFD09A;text-align:left;}
+  .present-store strong{display:block;font-size:15px;}
+  .present-store small{display:block;margin-top:2px;font-size:11px;color:var(--sim-hint);}
+  .present-state{display:inline-flex;align-items:center;gap:6px;margin:14px 0 5px;padding:5px 9px;
+    border-radius:999px;background:var(--sim-green-soft);color:#019F93;font-size:12px;font-weight:700;}
+  .present-state::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--sim-green);box-shadow:0 0 0 4px rgba(1,175,162,.12);}
+  .present-state[data-state="used"],.present-state[data-state="expired"]{background:#EEE;color:#666;}
+  .present-state[data-state="used"]::before,.present-state[data-state="expired"]::before{background:#8C8C8C;box-shadow:none;}
+  .present-code-label{margin-top:8px;font-size:12px;color:var(--sim-hint);}
+  .present-code{margin:4px 0 8px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:34px;font-weight:800;letter-spacing:5px;color:#6B400F;}
+  .present-reward{padding:10px;border-radius:10px;background:#FFF5E9;color:#6B400F;font-size:13px;font-weight:700;}
+  .present-instruction{margin:12px 0;padding:12px 14px;text-align:left;}
+  .present-instruction strong{display:block;margin-bottom:4px;font-size:14px;}
+  .demo-boundary{margin-top:12px;padding:9px 11px;border-radius:10px;background:#FFF0ED;
+    color:#B7351B;font-size:11px;line-height:1.5;text-align:left;}
+  .countdown{display:inline-flex;min-height:34px;align-items:center;padding:6px 12px;border-radius:10px;
+    background:var(--sim-error-soft);color:var(--sim-error);font-weight:700;font-variant-numeric:tabular-nums;}
+  .screen[data-screen="scan"]{min-height:100%;background:#F5F5F5;color:var(--sim-text);}
+  .merchant-layout{text-align:left;}
+  .merchant-brand{margin:-24px -16px 16px;padding:14px 16px;display:flex;align-items:center;gap:10px;
+    background:#2F241E;color:#fff;}
+  .merchant-logo{display:inline-flex;align-items:center;justify-content:center;width:50px;height:32px;
+    border-radius:8px;background:var(--sim-orange);color:#fff;font-size:18px;font-weight:900;}
+  .merchant-brand-copy{min-width:0;flex:1;}
+  .merchant-brand-copy strong,.merchant-brand-copy small{display:block;}
+  .merchant-brand-copy strong{font-size:14px;}
+  .merchant-brand-copy small{margin-top:2px;color:#E9D9CC;font-size:11px;}
+  .merchant-session{padding:4px 7px;border-radius:999px;background:rgba(1,175,162,.22);color:#BDF6F1;font-size:11px;font-weight:700;}
+  .merchant-metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+  .merchant-metric{padding:12px 14px;}
+  .merchant-metric span,.merchant-metric strong{display:block;}
+  .merchant-metric span{font-size:11px;color:var(--sim-hint);}
+  .merchant-metric strong{margin-top:3px;font-size:22px;color:#6B400F;}
+  .lookup-card{padding:16px;}
+  .lookup-card h2{margin:0 0 4px;font-size:20px;}
+  .merchant-code-label{display:block;margin:14px 0 7px;font-size:13px;font-weight:700;}
+  .merchant-code-input{width:100%;height:58px;padding:8px 12px;border:2px solid #D5D5D5;border-radius:12px;
+    background:#fff;color:var(--sim-text);font:800 26px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+    letter-spacing:6px;text-transform:uppercase;text-align:center;}
+  .merchant-code-input:focus{border-color:var(--sim-green);outline:3px solid rgba(1,175,162,.14);}
+  .lookup-status{min-height:36px;margin:8px 0;padding:7px 9px;border-radius:8px;background:#F5F5F5;
+    color:var(--sim-hint);font-size:12px;line-height:1.5;}
+  .lookup-status[data-state="error"]{background:var(--sim-error-soft);color:var(--sim-error);}
+  .lookup-status[data-state="success"]{background:var(--sim-green-soft);color:#019F93;}
+  .merchant-note{margin-top:14px;padding:12px 14px;}
+  .merchant-note strong{display:block;margin-bottom:4px;font-size:13px;}
+  .merchant-note p{margin:0;}
+  .scan-inner{padding:16px 16px 24px;}
+  .screen[data-screen="scan"] h2{color:var(--sim-text);text-align:left;font-size:20px;}
+  .camera-stage{position:relative;width:100%;height:388px;margin:0 auto 14px;overflow:hidden;
+    border:0;border-radius:0;background:#101010;}
+  .camera-stage video{display:none;width:100%;height:100%;object-fit:cover;background:#2F241E;}
+  .camera-stage.is-active video{display:block;}
+  .camera-stage canvas{display:none;}
+  .camera-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;gap:14px;padding:24px;color:#fff;}
+  .camera-placeholder img{width:260px;height:auto;padding:0;border-radius:0;background:transparent;}
+  .camera-placeholder strong{font-size:14px;}
+  .camera-stage.is-active .camera-placeholder{display:none;}
+  .scan-frame{display:none;position:absolute;left:50%;top:50%;width:260px;aspect-ratio:708/273;
+    transform:translate(-50%,-50%);background:url("../assets/nnw-activity/app-ui/scanGreenQRCode.png") center/contain no-repeat;
+    pointer-events:none;}
+  .camera-stage.is-active .scan-frame{display:block;}
+  .scanner-status{min-height:44px;margin:0 0 12px;padding:10px 12px;border:1px solid rgba(255,255,255,.18);
+    border-radius:12px;background:rgba(255,255,255,.10);color:#fff;font-size:13px;line-height:1.55;}
+  .scanner-status[data-state="error"]{border-color:#FFC4C0;background:var(--sim-error-soft);color:var(--sim-error);}
+  .scanner-status[data-state="success"]{border-color:#A7E0DC;background:var(--sim-green-soft);color:var(--sim-green);}
+  .camera-actions{display:grid;gap:10px;margin-top:14px;}
+  .camera-privacy{display:flex;margin:0 0 12px;padding:9px 11px;border-radius:10px;
+    background:rgba(1,175,162,.18);color:#BDF6F1;font-size:12px;font-weight:700;line-height:1.5;}
+  [hidden]{display:none!important;}
+  .gift-choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0;}
+  .gift-choice{min-height:166px;padding:0 0 10px;overflow:hidden;border:2px solid #D5D5D5;border-radius:14px;
+    background:var(--sim-surface);color:var(--sim-text);cursor:pointer;}
+  .choice-media{position:relative;display:block;aspect-ratio:4/3;overflow:hidden;background:#FFF8ED;}
+  .choice-food-art{display:block;width:100%;height:100%;object-fit:cover;}
+  .gift-choice>strong{display:block;margin-top:8px;}
+  .gift-choice.is-selected{border-color:var(--sim-green);background:var(--sim-green-soft);color:var(--sim-green);}
+  .gift-choice.is-selected span{color:var(--sim-green);}
+  .gift-choice.is-sold-out{position:relative;border-color:#D5D5D5;background:#F5F5F5;color:var(--sim-hint);cursor:not-allowed;}
+  .gift-choice.is-sold-out .choice-media,.gift-choice.is-sold-out>strong{opacity:.45;filter:grayscale(.8);}
+  .choice-stock-badge{position:absolute;z-index:2;top:8px;right:8px;padding:4px 7px;border-radius:999px;
+    background:var(--sim-error);color:#fff!important;font-size:11px;font-weight:700;}
+  .supply-panel{margin:0 0 12px;padding:14px 16px;text-align:left;border-color:#FFD8AC;background:#FFF8ED;}
+  .supply-panel h3{margin:0 0 4px;font-size:15px;}
+  .supply-panel .supply-help{margin:0 0 10px;font-size:12px;line-height:1.5;color:var(--sim-hint);}
+  .supply-label,.replacement-label{display:grid;gap:6px;font-size:12px;font-weight:700;color:var(--sim-text);}
+  .supply-select,.replacement-input{width:100%;min-height:44px;padding:9px 11px;border:1px solid #CFCFCF;
+    border-radius:10px;background:#fff;color:var(--sim-text);font:inherit;}
+  .supply-select:focus,.replacement-input:focus{border-color:var(--sim-green);outline:3px solid rgba(1,175,162,.14);}
+  .replacement-editor{display:grid;gap:9px;margin-top:12px;padding-top:12px;border-top:1px dashed #FFD09A;}
+  .replacement-choice{grid-column:1/-1;min-height:92px;padding:12px;display:grid;grid-template-columns:58px 1fr;
+    align-items:center;gap:12px;text-align:left;}
+  .replacement-choice .choice-media{width:58px;aspect-ratio:1;border-radius:10px;display:flex;align-items:center;
+    justify-content:center;background:var(--sim-orange-soft);color:#6B400F;font-size:24px;font-weight:900;}
+  .replacement-choice>span:last-child{min-width:0;}
+  .replacement-choice>span:last-child strong,.replacement-choice>span:last-child small{display:block;margin:0;}
+  .replacement-choice>span:last-child small{margin-top:4px;color:var(--sim-hint);font-size:11px;line-height:1.45;}
+  .replacement-choice:disabled{opacity:.6;cursor:not-allowed;}
+  .confirm-check{display:flex;align-items:flex-start;gap:10px;margin:0 0 12px;padding:12px 14px;text-align:left;
+    border:1px solid #D5D5D5;border-radius:12px;background:var(--sim-surface);font-size:12px;line-height:1.55;cursor:pointer;}
+  .confirm-check input{width:20px;height:20px;flex:0 0 20px;margin:0;accent-color:var(--sim-green);}
+  .redemption-review{margin:0 0 14px;padding:14px 16px;text-align:left;border-color:#A7E0DC;background:var(--sim-green-soft);}
+  .redemption-review strong{display:block;margin-bottom:4px;color:var(--sim-green);}
+  .redemption-review p{margin:0;font-size:13px;line-height:1.55;color:var(--sim-text);}
+  .redemption-review p+p{margin-top:6px;}
+  .redemption-facts{margin:10px 0 0;display:grid;gap:7px;}
+  .redemption-facts div{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;font-size:12px;}
+  .redemption-facts dt{color:var(--sim-hint);}
+  .redemption-facts dd{margin:0;text-align:right;font-weight:700;color:var(--sim-text);}
+  .eligible-pill{display:inline-flex;align-items:center;padding:4px 8px;border-radius:6px;
+    background:var(--sim-green-soft);color:#019F93;font-size:12px;font-weight:700;}
+  .success-mark{width:72px;height:72px;margin:18px auto;border-radius:50%;display:flex;
+    align-items:center;justify-content:center;background:var(--sim-green);color:#fff;font-size:15px;font-weight:700;}
+  .success-card{padding:22px 18px;}
+  .receipt-card{margin-top:12px;padding:12px 14px;text-align:left;}
+  .receipt-id{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:800;}
+  .attribution-summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0;}
+  .attribution-summary div{padding:12px;border-radius:12px;background:#FFF5E9;text-align:center;}
+  .attribution-summary strong,.attribution-summary span{display:block;}
+  .attribution-summary strong{font-size:24px;color:#6B400F;}
+  .attribution-summary span{margin-top:2px;font-size:11px;color:var(--sim-hint);}
+  .success-actions{display:grid;gap:10px;margin-top:14px;}
+
+  .sim-tabbar{display:grid;grid-template-columns:repeat(6,1fr);height:64px;background:var(--sim-surface);
+    border-top:1px solid #F0F0F0;padding:6px 2px 2px;}
+  .tab-button{min-width:0;min-height:44px;padding:0;background:transparent;color:var(--sim-hint);
+    display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:2px;font-size:11px;cursor:pointer;}
+  .tab-button img{width:26px;height:26px;display:block;object-fit:contain;}
+  .tab-button[aria-current="page"]{color:var(--sim-green);font-weight:700;}
+  .tab-button:disabled{opacity:1;cursor:not-allowed;}
+
+  .demo-toast{position:absolute;z-index:20;left:24px;right:24px;bottom:78px;margin:0;padding:10px 14px;pointer-events:none;
+    border-radius:10px;background:rgba(38,38,38,.92);color:#fff;text-align:center;font-size:12px;
+    box-shadow:0 5px 14px rgba(0,0,0,.18);}
+  .sim-shell[data-state="scan"] .demo-toast,.sim-shell[data-state="confirm"] .demo-toast,
+  .sim-shell[data-state="success"] .demo-toast{bottom:16px;}
+
+  .sim-shell button:focus-visible,.sim-shell a:focus-visible{outline:3px solid var(--sim-orange);
+    outline-offset:2px;}
+  .sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;
+    margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;}
+
+  .qa-only{display:none!important;}
+  html.mode-qa .qa-only{display:block!important;}
+  .qa-panel{max-width:1180px;margin:34px auto 0;padding:20px;background:var(--sim-surface);
+    border:1px solid #D5D5D5;border-radius:16px;color:var(--sim-text);}
+  .qa-panel h2{margin:0 0 12px;font-size:20px;}
+  .qa-panel h3{margin:18px 0 8px;font-size:15px;color:var(--sim-green);}
+  .qa-panel pre{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--sim-bg);padding:12px;border-radius:10px;font-size:12px;}
+  .qa-panel ul{margin:0;padding-left:20px;line-height:1.7;font-size:13px;}
+  .qa-legacy{max-width:1180px;margin:28px auto 0;}
+  .qa-legacy .phone{display:none!important;}
+  .qa-legacy .col-title{display:block;margin:8px 0 0;padding:8px 10px;background:var(--sim-bg);
+    color:var(--sim-text);border-radius:8px;text-align:left;}
+  .qa-legacy .frame{margin:0;}
+  .qa-legacy .len{display:block;text-align:left;padding:7px 10px;margin:5px 0;background:var(--sim-surface);
+    border:1px solid #E8E8E8;border-radius:8px;color:var(--sim-hint);}
+  .qa-legacy .note,.qa-legacy .spec{max-width:none;margin:18px 0;}
+
+  @media (max-width:600px){
+    :root{--sim-side-pad:0px;--sim-pad-top:0px;--sim-pad-bottom:0px;}
+    html.mode-default body{padding:0;}
+    html.mode-default .sim-shell{border:0;border-radius:0;box-shadow:none;}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .primary-button.is-loading::after{animation:none;}
+  }
+
+  /* ===== Owner Review 抬頭（?owner=1）：預設不生效 ===== */
+  .owner-review{display:none;position:fixed;z-index:100;left:var(--sim-side-pad);right:var(--sim-side-pad);
+    bottom:var(--sim-side-pad);max-height:min(70dvh,640px);overflow:auto;overscroll-behavior:contain;
+    background:var(--sim-surface);color:var(--sim-text);border:1px solid var(--sim-bg);border-radius:16px;
+    box-shadow:0 12px 32px rgba(38,38,38,.2);}
+  html.owner.mode-default .owner-review{display:block;}
+  .owner-review .owner-toggle{position:sticky;top:0;z-index:1;width:100%;min-height:44px;padding:8px 14px;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--sim-surface);
+    color:var(--sim-text);font-weight:700;text-align:left;cursor:pointer;}
+  .owner-review .owner-toggle-state{color:var(--sim-green);font-size:12px;}
+  .owner-review .owner-content{display:none;padding:4px 20px 20px;}
+  .owner-review.is-open .owner-content{display:block;}
+  .owner-review .or-brand{font-size:13px;font-weight:700;letter-spacing:1px;color:var(--sim-green);}
+  .owner-review .or-title{margin:6px 0;font-size:22px;font-weight:700;line-height:1.4;}
+  .owner-review .or-sub{display:inline-block;padding:3px 9px;border-radius:7px;background:var(--sim-orange-soft);
+    color:var(--sim-orange);font-size:12px;font-weight:700;}
+  .owner-review .or-demo{margin-top:12px;color:var(--sim-hint);font-size:12px;line-height:1.7;}
+  .owner-review .or-ask{margin-top:16px;padding-top:14px;border-top:1px solid var(--sim-bg);}
+  .owner-review .or-ask-t{margin-bottom:6px;font-size:14px;font-weight:700;}
+  .owner-review ol{margin:0;padding-left:20px;color:var(--sim-hint);font-size:13px;line-height:1.9;}
+  .owner-review .owner-toggle:focus-visible{outline:3px solid var(--sim-orange);outline-offset:-3px;}
+  @media (min-width:1100px){
+    .owner-review{top:var(--sim-pad-top);right:auto;bottom:auto;width:min(320px,calc(50vw - 231px));
+      max-height:calc(100dvh - var(--sim-pad-top) - var(--sim-pad-bottom));}
+  }
 </style>
 </head>
 <body>
 
-<svg width="0" height="0" style="position:absolute;overflow:hidden;">
-  <defs>
-    <!-- 共用剪影：可愛小狗頭（兩耳凸起＋圓潤下巴），objectBoundingBox 座標可套用到任意尺寸 -->
-    <clipPath id="dogHeadClip" clipPathUnits="objectBoundingBox">
-      <path d="M0.50,0.06 C0.42,0.07 0.36,0.12 0.33,0.20
-               C0.22,0.16 0.10,0.10 0.04,0.16 C0.02,0.22 0.06,0.32 0.14,0.36
-               C0.10,0.44 0.10,0.54 0.14,0.62 C0.18,0.78 0.32,0.92 0.50,0.94
-               C0.68,0.92 0.82,0.78 0.86,0.62 C0.90,0.54 0.90,0.44 0.86,0.36
-               C0.94,0.32 0.98,0.22 0.96,0.16 C0.90,0.10 0.78,0.16 0.67,0.20
-               C0.64,0.12 0.58,0.07 0.50,0.06 Z"/>
-    </clipPath>
-  </defs>
-</svg>
+<main class="sim-app" id="sim-app">
+  <div class="single-host" id="single-host">
+    <div class="sim-wrap">
+      <section class="sim-shell" aria-label="發票載具活動模擬器">
+        <div class="sim-statusbar" aria-hidden="true">
+          <span>9:41</span>
+          <span class="status-signals"><span class="signal-bars"><i></i><i></i><i></i><i></i></span><span>5G</span><span class="battery"></span></span>
+        </div>
+        <header class="sim-topbar">
+          <button class="icon-button back-button" type="button" data-action="back" aria-label="返回" disabled>
+            <img src="../assets/nnw-activity/app-ui/ic_back_24dp.svg" alt="" aria-hidden="true">
+          </button>
+          <h1 class="sim-title">發票載具</h1>
+          <div class="top-actions">
+            <button class="role-switch" type="button" data-action="switch-role">切店員</button>
+            <button class="icon-button" type="button" data-action="reset" aria-label="重設模擬流程">
+              <img src="../assets/nnw-activity/app-ui/ic_history_24dp.svg" alt="" aria-hidden="true">
+            </button>
+          </div>
+        </header>
+        <div class="sim-scroll" tabindex="0">
+          <article class="screen flush official-home" data-screen="home">
+            <section class="official-home-scene">
+              <div class="home-nav"><strong>發票載具</strong><span class="home-points">本期發票 128 張</span></div>
+              <img class="home-tree" src="../assets/nnw-activity/app-ui/img_tree_lv5.png" alt="小樹">
+              <div class="shortcut-tray" aria-label="常用功能">
+                <button class="shortcut-item shortcut-button" type="button" data-action="open-activities"><img src="../assets/nnw-activity/app-ui/img_my_reward.webp" alt=""><span>我的獎勵</span></button>
+                <span class="shortcut-item"><img src="../assets/nnw-activity/app-ui/img_fortune_telling.webp" alt=""><span>發票占卜</span></span>
+                <span class="shortcut-item"><img src="../assets/nnw-activity/app-ui/img_outcome_analysis.webp" alt=""><span>消費分析</span></span>
+                <span class="shortcut-item"><img src="../assets/nnw-activity/app-ui/img_barcode_widget.webp" alt=""><span>手機條碼</span></span>
+                <span class="shortcut-item"><img src="../assets/nnw-activity/app-ui/img_bonus_prize.webp" alt=""><span>獎金加碼</span></span>
+              </div>
+            </section>
+            <section class="home-content">
+              <div class="carrier-card surface-card"><span><strong>手機條碼</strong><small class="muted">/NNW7K23F</small></span><span class="carrier-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            </section>
+          </article>
+        </div>
+        <nav class="sim-tabbar" aria-label="主要分頁">
+          <button class="tab-button" type="button" data-action="go-home" data-tab="home" aria-current="page">
+            <img src="../assets/nnw-activity/app-ui/tab_icon_home_pressed.svg" data-default-src="../assets/nnw-activity/app-ui/tab_icon_home.svg" data-active-src="../assets/nnw-activity/app-ui/tab_icon_home_pressed.svg" alt="" aria-hidden="true">
+            <span>首頁</span>
+          </button>
+          <button class="tab-button" type="button" data-action="go-activities" data-tab="activities">
+            <img src="../assets/nnw-activity/app-ui/tab_icon_activity.svg" data-default-src="../assets/nnw-activity/app-ui/tab_icon_activity.svg" data-active-src="../assets/nnw-activity/app-ui/tab_icon_activity_pressed.svg" alt="" aria-hidden="true">
+            <span>活動</span>
+          </button>
+          <button class="tab-button" type="button" data-action="unavailable" data-tab="carrier" aria-label="載具管理，本次展示尚未開放">
+            <img src="../assets/nnw-activity/app-ui/tab_icon_carrier_mgmt.svg" data-default-src="../assets/nnw-activity/app-ui/tab_icon_carrier_mgmt.svg" data-active-src="../assets/nnw-activity/app-ui/tab_icon_carrier_mgmt_pressed.svg" alt="" aria-hidden="true">
+            <span>載具管理</span>
+          </button>
+          <button class="tab-button" type="button" data-action="unavailable" data-tab="scan" aria-label="掃描對獎，本次展示尚未開放">
+            <img src="../assets/nnw-activity/app-ui/tab_icon_scan.svg" data-default-src="../assets/nnw-activity/app-ui/tab_icon_scan.svg" data-active-src="../assets/nnw-activity/app-ui/tab_icon_scan_pressed.svg" alt="" aria-hidden="true">
+            <span>掃描對獎</span>
+          </button>
+          <button class="tab-button" type="button" data-action="unavailable" data-tab="invoice" aria-label="我的發票，本次展示尚未開放">
+            <img src="../assets/nnw-activity/app-ui/tab_icon_invoice.svg" data-default-src="../assets/nnw-activity/app-ui/tab_icon_invoice.svg" data-active-src="../assets/nnw-activity/app-ui/tab_icon_invoice_pressed.svg" alt="" aria-hidden="true">
+            <span>我的發票</span>
+          </button>
+          <button class="tab-button" type="button" data-action="unavailable" data-tab="mine" aria-label="個人，本次展示尚未開放">
+            <img src="../assets/nnw-activity/app-ui/tab_icon_mine.svg" data-default-src="../assets/nnw-activity/app-ui/tab_icon_mine.svg" data-active-src="../assets/nnw-activity/app-ui/tab_icon_mine_pressed.svg" alt="" aria-hidden="true">
+            <span>個人</span>
+          </button>
+        </nav>
+        <p class="demo-toast" data-demo-toast hidden></p>
+        <p class="sr-only live-region" aria-live="polite"></p>
+      </section>
+    </div>
+  </div>
+  <div class="compare-grid" id="compare-grid"></div>
+</main>
 
-<div class="note">
-  <b>這是內部審核用的 mockup，不是最終畫面。</b>D2「確認活動內容與畫面（憑發票贈炸雞球/洋蔥圈），給老闆娘過目」——
-  版型與品牌色沿用發票載具 APP 真實 design system（<code>invoicemanager-screens-dev</code>：Green #01AFA2 /
-  Orange #FF9924 / 卡片圓角），內容尚未接上任何系統。活動實際會放在 App 哪個位置仍待產品/工程確認，
-  這裡假設放在既有的「活動」分頁 →「推薦活動」區塊。
-  <br><br>
-  <b>0807 四版，針對你的五點回饋：</b>
-  <br>① <b>版面長度</b>：畫面 B 內容高度<b>實測 732px</b>（壓縮過程中量到的中間值 1,095px → 851px → 移除引用卡後 732px）——
-  hero 300→172px、店家資訊改成壓在主視覺上的浮層省掉一整塊、理念段併進主文案、
-  兌換步驟與活動須知都精簡過（須知 6 條併成 3 條）。畫面 0／A／C 三個都是 456px，一屏內看完。
-  <b>畫面 B 仍需捲動約一屏</b>，這是活動詳情頁的合理長度，沒有硬壓到不能捲。
-  <br>② <b>食物示意圖</b>：補上手繪風洋蔥圈／炸雞球插畫——線條刻意畫成不規則（半徑不等、外框粗細有變化），
-  避免上一版「幾何完美＝AI 感」的問題。實拍照 D2 跟老闆娘拿了再替換。
-  <br>③ <b>色調</b>：大面積冷灰（#F5F5F5）與純白全部換成暖奶油色（#FFF4E6 / #FFFCF6），文字由冷黑
-  #262626 改為暖黑 #3F3128，分隔線改暖色，步驟編號由品牌綠改成金黃色。品牌綠只留在 CTA 與載具識別處，
-  不再大面積用。
-  <br>④ <b>四隻毛孩貼圖</b>：從 Warm Nest 插畫裡把小米、財寶、序耶、露比媽媽的臉單獨裁成圓形貼圖，
-  貼在畫面 B 四周並加上輕微浮動動畫＋一句「快來找我玩！」對話框（已加 prefers-reduced-motion 停用支援）。
-  <br>⑤ <b>D2 理念換句話說</b>：主文案改成用他們粉專自介的理念重新講一次（不是複製貼上他們的字）。
-  <br><br>
-  <b>要給老闆娘確認：</b>①委託插畫與毛孩貼圖用於活動主視覺的授權（跟同意提供社群照片是兩回事）
-  ②洋蔥圈／炸雞球實拍照 ③毛孩名字（露比媽媽／財寶／序耶／小米，照插畫上標的）是否正確。
-  <br>（0807 移除：原本的「老闆娘的話」引用卡已依指示拿掉。）
-  <br><br>
-  <b>0807 五版，針對你最新兩點回饋：</b>
-  <br>① <b>補上顧客／商家的核銷頁面</b>——之前確實漏掉了，只做了「活動介紹頁」跟「商家看板」，
-  沒有畫「客人到底憑什麼被核銷、店員掃碼後看到什麼」這兩個真正的核銷動作本身。這次新增：
-  <b>畫面 B2（顧客核銷頁）</b>——客人在畫面 B 按「出示兌換碼給店員」後看到的畫面，QR code
-  是真的用 <code>qrcode</code> 套件產生的圖（示範用假碼 <code>NNW-DEMO-A7K2-3F2C</code>，不是能真的核銷的碼），
-  帶 5 分鐘倒數失效的概念，避免被客人截圖重複使用；
-  <b>畫面 C2（商家核銷確認）</b>——店員在畫面 C 按「掃描」後看到的畫面，顯示掃到哪個會員、
-  這桌沒核銷過、讓店員點選客人要洋蔥圈還是炸雞球後才送出核銷，不是掃了就直接算數。
-  <br>② <b>毛孩圖示改成貼在區塊角落，不再蓋住主要內容</b>——上一版四隻狗用大貼圖飄在畫面正中央，
-  會擋到活動內文，這次縮到 36px，各自貼在自己所屬區塊的角落（主視覺右下角／贈品卡片右上角／
-  兌換步驟卡右上角／須知卡右上角），角色更像「頁面裝飾角標」而不是蓋版元素。
-  <br><br>
-  <b>0808 六版，針對你最新四點回饋：</b>
-  <br>① <b>毛孩圖示不再是「臉被關在圓圈裡」</b>——改用 clip-path 剪出一個有兩個耳朵凸起、
-  下巴圓潤的「小狗頭剪影」形狀（不是正圓），尺寸也再縮小（22–26px），拿掉硬邊白框，
-  改成柔和陰影，讀起來比較像可愛小圖示，不是大頭貼卡在圓圈裡。
-  <br>② <b>贈品名稱統一為「洋蔥圈」「炸雞球」</b>——全頁 13 處「雞球」都改成「炸雞球」
-  （含通知文案、活動卡片、核銷頁、商家核銷頁、店員選項）。
-  <br>③ <b>主視覺圖片不再被裁到看不出內容</b>——原本直接放整張 1440×1440 的正方形插畫去填
-  172px 高的橫幅框，被裁掉一大半。這次從原圖裁出一張<b>專門給這個橫幅用的 2.15:1 構圖</b>
-  （掌廚老闆＋老闆娘＋毛孩小米，含 Warm Nest 淺色浮水印），跟框的比例(363:172≈2.11:1)幾乎一致，
-  裁切幅度降到最低，完整看得到主要角色。
-  <br>④ <b>活動詳情頁順序重新排過</b>——原本贈品圖片（洋蔥圈/炸雞球）放在標題跟說明「之前」，
-  客人還沒搞懂這是什麼活動就先看到食物照，容易一頭霧水。改成：主視覺 →
-  <b>🎁 用餐即贈標籤 + 標題 + 一句話說明</b>（先講清楚這是什麼）→「這次想送你（兩選一）」
-  贈品區 → 怎麼兌換 → 活動須知 → CTA，順序照「這是什麼 → 為什麼 → 送什麼 → 怎麼拿」排。
-  <br><br>
-  <b>0808 七版：實際假裝自己是收到推播的使用者，把整條鏈路走一遍，抓到一個真的邏輯漏洞。</b>
-  <br>🐛 <b>最大的問題：畫面 B 原本的 CTA 直接跳到有「5 分鐘倒數失效」的兌換碼。</b>
-  以使用者的角度重演一次：我在家收到推播、點開活動、覺得不錯，按了 CTA——結果馬上跳出一組
-  5 分鐘後失效的碼。我人根本還沒出門，等真的到店大概率已經過期，到時候店員說「這組碼失效了」，
-  我會覺得整個活動很爛。<b>根因是 CTA 的動作跟使用者當下的狀態對不上</b>——按這顆按鈕的人多半
-  是「剛看到、還沒出發」，不是「已經在店裡準備結帳」，把兩種狀態的入口合成一顆按鈕是錯的。
-  <br>✅ <b>修法</b>：畫面 B 的主要 CTA 改回「帶我去暖暖窩」（導航意圖，適合剛看到活動的人），
-  下面加一行次要連結「已經在店裡了嗎？點我出示兌換碼」給真正要結帳兌換的人，兩種狀態各自
-  有對應的按鈕，5 分鐘倒數只在使用者主動點了「已經在店裡」之後才開始，不會平白燒掉。
-  <br>🔍 <b>順便抓到兩個較小的缺口，一併補上：</b>
-  ①畫面 C2 原本「洋蔥圈」預設被選起來——店員可能手滑直接按確認，給錯品項；改成兩個都不預選，
-  按鈕文字先顯示「請先點選客人要的品項」，逼店員主動點一次。
-  ②整條鏈路測到畫面 C2（店員確認核銷）就斷了，沒有畫「客人那邊會發生什麼事」——新增
-  <b>畫面 B3</b>：店員核銷完成後，客人手上畫面 B2 應該變成的樣子（顯示已核銷、核銷了哪一款、
-  這組碼不能再用），讓整個核銷動作有始有終，不是核銷完就沒了下文。
-  <br><br>
-  <b>0808 八版：你回報「圖片沒有完整顯示、整體設計不像樣」，我原本先派 Codex 去查，
-  但等了一輪沒有可用結果，改成自己直接動手查證。</b>
-  <br>🔍 <b>先排除快取問題</b>：懷疑你截圖當下抓到的是 GitHub Pages CDN 的舊快取（這個環境部署後
-  最多要等 10 分鐘才會全部更新，這幾天已經踩過好幾次）。我用瀏覽器把 hero 圖片實際畫進一個
-  canvas 裡逐像素取樣，四個角+中心點都是真的插畫內容（湖水綠/黃色/膚色），不是空白或裁切錯位——
-  這確認<b>目前部署的版本，主視覺圖片本身是完整正確顯示的</b>。如果你現在看到的還是裁切怪異的樣子，
-  請用 <code>?fresh=1</code> 這類參數加在網址後面強制跳過快取重新整理一次。
-  <br>🐛 <b>但同一輪檢查真的挖到一個之前沒抓到的 bug</b>：畫面 B2（顧客核銷頁）的容器高度是我很早期
-  設定的固定值 376px，後來陸續加了 QR 卡片內距等調整，實際內容長到 429px——多出來的 53px
-  （剛好是最下面「兌換碼綁定你這次的到店，核銷後即失效」那行提醒文字）被手機外框的圓角
-  <code>overflow:hidden</code> 整段吃掉，畫面上完全看不到，使用者不會知道核銷碼有時效性。
-  已經改成量測過的正確高度 429px，這條文字現在會完整顯示。這個 bug 只靠肉睛看畫面截圖看不出來
-  （因為裁掉的部分根本不會出現在畫面裡），是我逐一比對每個畫面的「容器高度 vs 內容實際高度」
-  才抓到的，其他 6 個畫面都測過沒有一樣的問題。
-</div>
+<template id="screen-home-template">
+  <article class="screen flush official-home" data-screen="home">
+    <section class="official-home-scene">
+      <div class="home-nav"><strong>發票載具</strong><span class="home-points">本期發票 128 張</span></div>
+      <img class="home-tree" src="../assets/nnw-activity/app-ui/img_tree_lv5.png" alt="小樹">
+      <div class="shortcut-tray" aria-label="常用功能">
+        <button class="shortcut-item shortcut-button" type="button" data-action="open-activities"><img src="../assets/nnw-activity/app-ui/img_my_reward.webp" alt=""><span>我的獎勵</span></button>
+        <span class="shortcut-item"><img src="../assets/nnw-activity/app-ui/img_fortune_telling.webp" alt=""><span>發票占卜</span></span>
+        <span class="shortcut-item"><img src="../assets/nnw-activity/app-ui/img_outcome_analysis.webp" alt=""><span>消費分析</span></span>
+        <span class="shortcut-item"><img src="../assets/nnw-activity/app-ui/img_barcode_widget.webp" alt=""><span>手機條碼</span></span>
+        <span class="shortcut-item"><img src="../assets/nnw-activity/app-ui/img_bonus_prize.webp" alt=""><span>獎金加碼</span></span>
+      </div>
+    </section>
+    <section class="home-content">
+      <div class="carrier-card surface-card"><span><strong>手機條碼</strong><small class="muted">/NNW7K23F</small></span><span class="carrier-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+    </section>
+  </article>
+</template>
 
-<!-- ========== 畫面 0 ========== -->
-<div>
-  <div class="col-title">畫面 0 · 入口：首頁跳出的活動通知</div>
-  <div class="phone">
-    <div class="status"></div>
-    <div class="home-bg">
-      <div class="home-hdr"><span>/ABC1234　複製</span><span class="code">共 128 張發票</span></div>
-      <div class="tree-area">🌳</div>
-      <div class="vcard"><span>05-06月發票 <b>128 張</b></span><span>螢幕常亮</span></div>
-      <div class="notif-wrap">
-        <div class="notif">
-          <div class="ic"><img src="../assets/nnw-activity/dog-mi.png" alt="小米"></div>
-          <div class="body">
-            <div class="top"><span class="app">發票載具</span><span>剛剛</span></div>
-            <div class="ti">🐾 暖暖窩想見你和你的毛小孩</div>
-            <div class="sub">用餐即贈洋蔥圈或炸雞球一份，點開看看→</div>
+<template id="screen-activities-template">
+  <article class="screen flush" data-screen="activities">
+    <section class="activities-list">
+      <div class="activity-section-title"><h3>限時任務</h3><span>查看全部</span></div>
+      <div class="task-scroll" aria-label="限時任務">
+        <button class="official-task-card" type="button" data-action="unavailable"><img src="../assets/nnw-activity/app-ui/img_bonus_prize.webp" alt=""><span><strong>載具歸戶</strong><span>完成任務抽好禮</span></span></button>
+        <button class="official-task-card" type="button" data-action="unavailable"><img src="../assets/nnw-activity/app-ui/img_barcode_widget.webp" alt=""><span><strong>掃描消費</strong><span>累積活動點數</span></span></button>
+      </div>
+      <div class="activity-section-title"><h3>我的獎勵</h3><button class="section-link" type="button" data-action="reward-summary">查看全部</button></div>
+      <button class="reward-active" type="button" data-action="open-detail" data-active-reward aria-label="暖暖窩限定，用餐即贈洋蔥圈或炸雞球，可使用">
+        <img class="reward-icon" src="../assets/nnw-activity/app-ui/img_my_reward.webp" alt="" aria-hidden="true">
+        <span class="reward-copy"><small>暖暖窩限定</small><strong>用餐即贈｜洋蔥圈或炸雞球</strong><span>2026/9/1～12/31・限內用</span><span class="reward-qualification">展示資格：已綁載具・板橋附近</span></span>
+        <span class="reward-status">可使用</span>
+      </button>
+      <div class="reward-used" data-used-reward hidden>
+        <img class="reward-icon" src="../assets/nnw-activity/app-ui/img_my_reward.webp" alt="" aria-hidden="true">
+        <span class="reward-copy"><small>暖暖窩限定</small><strong>本次獎勵已完成核銷</strong><span data-used-summary>可在活動紀錄查看核銷結果</span></span>
+        <span class="reward-status">已使用</span>
+      </div>
+    </section>
+  </article>
+</template>
+
+<template id="screen-detail-template">
+  <article class="screen flush" data-screen="detail">
+    <div class="detail-hero">
+      <img src="../assets/nnw-activity/warmnest-illustration.jpg" alt="Warm Nest 暖暖窩完整委託插畫：掌廚老闆、老闆娘、夥伴與毛孩">
+      <div class="detail-store">
+        <strong>暖暖窩義式廚房</strong>
+        <a class="store-location" href="https://www.google.com/maps/search/?api=1&amp;query=%E6%9A%96%E6%9A%96%E7%AA%A9%E7%BE%A9%E5%BC%8F%E5%BB%9A%E6%88%BF%20%E6%9D%BF%E6%A9%8B%E6%96%87%E5%8C%96%E8%B7%AF%E4%B8%80%E6%AE%B5286%E5%B7%B716%E8%99%9F" target="_blank" rel="noopener" aria-label="在 Google 地圖開啟暖暖窩義式廚房">
+          <svg class="location-pin" viewbox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5Z"></path></svg>
+          <span class="location-copy">板橋文化路一段286巷16號・近新埔站</span>
+          <span class="map-label">Google 地圖</span>
+        </a>
+      </div>
+    </div>
+    <div class="section-pad">
+      <span class="eyebrow">我的獎勵・附近載具會員限定</span>
+      <h2>來吃飯，順便把毛小孩一起帶來</h2>
+      <div class="hand-line" aria-hidden="true"></div>
+      <p class="detail-copy">做菜沒有捷徑，二十多年的手藝一鍋一鍋慢慢來；連座位怎麼擺、燈開多亮都想過，就為了讓你坐下來能鬆一口氣。這裡與其說是餐廳，不如說是一個家——兩隻腳的、四隻腳的，都算自己人。</p>
+      <section class="gift-panel" aria-labelledby="gift-title">
+        <h3 id="gift-title">這次想送你（兩選一）</h3>
+        <div class="gift-grid">
+          <div class="photo-slot">
+            <div class="food-media">
+              <img class="food-art" src="../assets/nnw-activity/food-onion-rings-illustration.webp" alt="暖色手繪洋蔥圈插畫">
+            </div>
+            <div class="food-label"><strong>洋蔥圈</strong></div>
+          </div>
+          <div class="photo-slot">
+            <div class="food-media">
+              <img class="food-art" src="../assets/nnw-activity/food-chicken-balls-illustration.webp" alt="暖色手繪炸雞球插畫">
+            </div>
+            <div class="food-label"><strong>炸雞球</strong></div>
           </div>
         </div>
+      </section>
+      <section class="info-card surface-card">
+        <h3>怎麼兌換</h3>
+        <ol class="number-list"><li>在暖暖窩內用消費</li><li>結帳時開啟 6 位出示碼，不用 QR 或相機</li><li>店員在點到輸入短碼、選擇贈品並完成核銷</li></ol>
+      </section>
+      <section class="info-card surface-card">
+        <h3>活動須知</h3>
+        <ul class="terms"><li>活動期間：2026/9/1～12/31；僅限內用，每桌一份</li><li>洋蔥圈／炸雞球二選一；不與其他優惠活動同時使用</li><li>不設每日限量，依當日現場供應；任一款售罄時由店家提供同價餐點替代</li></ul>
+      </section>
+      <div class="cta-stack">
+        <button class="secondary-button" type="button" data-action="open-redeem">我已到店，開啟出示憑證</button>
       </div>
     </div>
-  </div>
-  <div class="len">高度 456px（實測）· 一屏內</div>
-</div>
+  </article>
+</template>
 
-<!-- ========== 畫面 A ========== -->
-<div>
-  <div class="col-title">畫面 A · 活動分頁「推薦活動」區塊</div>
-  <div class="phone">
-    <div class="status"></div>
-    <div class="nav">活動中心</div>
-    <div class="scr" style="height:376px;">
-      <div class="sec">
-        <div class="sec-h"><div class="t">推薦活動</div></div>
-        <div class="promo">
-          <div class="ph"><img src="../assets/nnw-activity/warmnest-illustration.jpg" alt="暖暖窩"></div>
-          <div class="body">
-            <span class="tag">暖暖窩限定</span>
-            <div class="ti">用餐即贈｜洋蔥圈或炸雞球</div>
-            <div class="sub">板橋・暖暖窩義式廚房 🐾 毛孩友善</div>
-          </div>
-        </div>
-        <div class="promo other">
-          <div class="ph" style="background:linear-gradient(135deg,#E6F7F6,#8ADAD4);">🎁</div>
-          <div class="body">
-            <span class="tag" style="background:var(--green100);color:var(--green700);">品牌加碼獎</span>
-            <div class="ti">（其他商家活動，示意用）</div>
-            <div class="sub">－</div>
-          </div>
-        </div>
-      </div>
+<template id="screen-redeem-template">
+  <article class="screen redeem-layout" data-screen="redeem">
+    <span class="eyebrow">我的獎勵・暖暖窩到店兌換</span>
+    <h2>請把這個畫面出示給店員</h2>
+    <div class="present-card surface-card">
+      <div class="present-store"><span><strong>暖暖窩義式廚房</strong><small>板橋文化路一段286巷16號</small></span><span class="eligible-pill">符合資格</span></div>
+      <div class="present-state" data-present-state>尚未核銷・可出示</div>
+      <div class="present-code-label">點到活動核銷 6 位碼</div>
+      <div class="present-code" data-present-code>A7K23F</div>
+      <div class="present-reward">內用贈禮：洋蔥圈或炸雞球（二選一）</div>
     </div>
-  </div>
-  <div class="len">高度 456px（實測）· 一屏內</div>
-</div>
+    <div class="countdown" data-countdown>10:00 後失效</div>
+    <div class="present-instruction surface-card"><strong>店員操作</strong><span class="muted">在點到選擇「活動核銷」，輸入上方 6 位碼；請確認限內用、每桌一份且未併用其他優惠。</span></div>
+    <button class="primary-button" type="button" data-action="open-merchant-demo">開啟點到店員端（展示用）</button>
+    <p class="demo-boundary">互動原型：這個按鈕只為方便測試跨 App 旅程；正式版由已登入暖暖窩門市的點到店員操作，不會讓顧客自行核銷。本分頁的 Demo 狀態會在關閉分頁後重設。</p>
+  </article>
+</template>
 
-<!-- ========== 畫面 B ========== -->
-<div class="frame">
-  <div class="col-title">畫面 B · 活動詳情頁（毛孩縮成角落小圖示，不擋內容）</div>
-  <div class="phone">
-    <div class="status"></div>
-    <div class="nav"><span class="h">‹ 返回</span>活動詳情</div>
-    <div class="scr">
-      <div class="hero">
-        <img src="../assets/nnw-activity/hero-crop.jpg"
-             alt="Warm Nest 暖暖窩插畫：掌廚老闆、老闆娘與毛孩小米">
-        <div class="badge">🐾 寵物友善</div>
-        <div class="storebar">
-          <div>
-            <div class="n">暖暖窩義式廚房</div>
-            <div class="a">板橋文化路一段286巷16號・近新埔站</div>
-          </div>
-          <div class="dogc big d-hero"><img src="../assets/nnw-activity/dog-mi.png" alt="小米"></div>
-        </div>
-      </div>
-
-      <div class="detail-body" style="padding-top:14px;">
-        <div class="offer-tag">🎁 用餐即贈・免費</div>
-        <h1 class="act-title hand">來吃飯，順便把毛小孩一起帶來</h1>
-        <svg class="squig-title" viewBox="0 0 132 8"><path d="M2 5 Q 14 1 27 5 T 53 5 T 79 4 T 105 5 T 130 3"
-          fill="none" stroke="#FF8C7A" stroke-width="2.2" stroke-linecap="round"/></svg>
-        <p class="act-desc">
-          做菜沒有捷徑，二十多年的手藝一鍋一鍋慢慢來；連座位怎麼擺、燈開多亮都想過，
-          就為了讓你坐下來能鬆一口氣。這裡與其說是餐廳，不如說是一個家——
-          兩隻腳的、四隻腳的，都算自己人。
-        </p>
-
-        <div class="mini-label">這次想送你（兩選一）</div>
-        <div class="gift-row">
-          <div class="g">
-            <!-- 手繪風洋蔥圈：半徑刻意不等、外框粗細有變化 -->
-            <svg viewBox="0 0 62 50" role="img" aria-label="洋蔥圈">
-              <g stroke="#8A5A2B" stroke-width="2" fill="#F0A64A" fill-rule="evenodd" stroke-linejoin="round">
-                <path d="M20,10 C29,9 37,15 38,24 C39,33 32,41 22,41 C13,41 6,35 6,26 C6,17 12,11 20,10 Z
-                         M21,20 C17,20 14,23 14,26 C14,30 17,32 21,32 C25,32 29,29 29,25 C29,22 25,20 21,20 Z"/>
-                <path d="M43,6 C51,5 58,11 58,19 C58,28 51,34 43,34 C35,34 30,28 30,20 C30,12 36,7 43,6 Z
-                         M43,15 C39,15 37,18 37,20 C37,24 40,26 43,26 C47,26 50,23 50,20 C50,17 47,15 43,15 Z"
-                      stroke-width="1.8" fill="#F5B865"/>
-              </g>
-              <g fill="#C97F2E" opacity="0.55">
-                <ellipse cx="12" cy="20" rx="2.2" ry="1.5" transform="rotate(-20 12 20)"/>
-                <ellipse cx="26" cy="37" rx="2" ry="1.3" transform="rotate(15 26 37)"/>
-                <ellipse cx="52" cy="12" rx="1.8" ry="1.2" transform="rotate(30 52 12)"/>
-              </g>
-            </svg>
-            <div class="hand gname">洋蔥圈</div>
-          </div>
-          <div class="g">
-            <!-- 手繪風炸雞球：不規則球體 -->
-            <svg viewBox="0 0 62 50" role="img" aria-label="炸雞球">
-              <g stroke="#8A5A2B" stroke-width="2" stroke-linejoin="round">
-                <path d="M17,20 C23,18 29,22 30,28 C31,35 26,41 19,41 C12,41 7,36 7,30 C7,24 11,21 17,20 Z" fill="#F0A64A"/>
-                <path d="M44,18 C51,17 57,22 57,29 C57,36 51,41 44,41 C37,41 32,36 33,29 C33,23 38,19 44,18 Z" fill="#EFA042"/>
-                <path d="M31,6 C38,5 44,10 44,17 C44,24 38,29 31,29 C24,29 19,24 19,17 C19,11 25,7 31,6 Z" fill="#F5B052"/>
-              </g>
-              <g fill="#C97F2E" opacity="0.5">
-                <ellipse cx="14" cy="28" rx="2.4" ry="1.6" transform="rotate(-25 14 28)"/>
-                <ellipse cx="24" cy="35" rx="2" ry="1.4" transform="rotate(10 24 35)"/>
-                <ellipse cx="40" cy="32" rx="2.2" ry="1.5" transform="rotate(-15 40 32)"/>
-                <ellipse cx="50" cy="27" rx="1.9" ry="1.3" transform="rotate(20 50 27)"/>
-                <ellipse cx="27" cy="13" rx="2.3" ry="1.5" transform="rotate(-10 27 13)"/>
-                <ellipse cx="36" cy="21" rx="1.8" ry="1.2" transform="rotate(25 36 21)"/>
-              </g>
-            </svg>
-            <div class="hand gname">炸雞球</div>
-          </div>
-          <div class="dogc d-gift"><img src="../assets/nnw-activity/dog-caibao.png" alt="財寶"></div>
-        </div>
-
-        <div class="card">
-          <h3><span>🎯 怎麼兌換</span><div class="dogc d-step"><img src="../assets/nnw-activity/dog-xuye.png" alt="序耶"></div></h3>
-          <div class="step"><div class="n">1</div><div class="t">在暖暖窩<b>內用</b>消費</div></div>
-          <div class="step"><div class="n">2</div><div class="t">結帳時一位客人出示這個畫面就好</div></div>
-          <div class="step"><div class="n">3</div><div class="t">跟店員說想吃哪一款，現場就給你</div></div>
-        </div>
-
-        <div class="card">
-          <h3><span>📋 活動須知</span><div class="dogc d-tos"><img src="../assets/nnw-activity/dog-ruby.png" alt="露比媽媽"></div></h3>
-          <ul class="tos">
-            <li><b>僅限內用</b>，一桌一份（不論幾位同行）；兩款擇一</li>
-            <li>期間與每日名額：<span class="tbd">［待老闆娘確認］</span></li>
-            <li>不可與其他優惠券併用；實際樣式以店家提供為準</li>
-          </ul>
-        </div>
-      </div>
-      <div class="cta">
-        帶我去暖暖窩
-        <span class="s">板橋文化路一段286巷16號・近新埔站</span>
-      </div>
-      <div class="already-here">已經在店裡了嗎？<b>點我出示兌換碼 →</b></div>
+<template id="screen-scan-template">
+  <article class="screen merchant-layout" data-screen="scan">
+    <div class="merchant-brand"><span class="merchant-logo">點到</span><span class="merchant-brand-copy"><strong>暖暖窩義式廚房</strong><small>活動核銷工作台</small></span><span class="merchant-session">店員已登入</span></div>
+    <div class="merchant-metrics" aria-label="本次展示統計">
+      <div class="merchant-metric surface-card"><span>本次展示核銷</span><strong><b data-redemption-count>0</b> 筆</strong></div>
+      <div class="merchant-metric surface-card"><span>已核銷資格數</span><strong><b data-unique-count>0</b> 筆</strong></div>
     </div>
-  </div>
-  <div class="len">內容高度 821px（實測）· 需捲動約一屏</div>
-</div>
+    <form class="lookup-card surface-card" data-merchant-code-form>
+      <h2>活動核銷</h2>
+      <p class="muted">輸入顧客「我的獎勵」出示頁上的 6 位碼。</p>
+      <label class="merchant-code-label" for="merchant-code">顧客出示碼</label>
+      <input class="merchant-code-input" id="merchant-code" data-code-input maxlength="6" autocomplete="one-time-code" autocapitalize="characters" spellcheck="false" aria-describedby="lookup-status">
+      <p class="lookup-status" id="lookup-status" data-lookup-status role="status" aria-live="polite">尚未查詢・展示碼為顧客頁上的 A7K23F</p>
+      <button class="primary-button" type="submit">查詢可核銷獎勵</button>
+    </form>
+    <div class="merchant-note surface-card"><strong>計數口徑</strong><p class="muted">只有點到後端成功交易才能算正式活動核銷。本 Demo 由店員確認內用、桌次與優惠狀態；正式版須串接桌次或 POS 訂單才能自動防止同桌用不同會員碼重複領取。</p></div>
+  </article>
+</template>
 
-<!-- ========== 畫面 B2：顧客核銷頁 ========== -->
-<div>
-  <div class="col-title">畫面 B2 · 顧客核銷頁（出示給店員看，你之前問的「顧客核銷頁面在哪」）</div>
-  <div class="phone">
-    <div class="status"></div>
-    <div class="nav"><span class="h">‹ 返回</span>出示給店員</div>
-    <div class="scr" style="height:429px;">
-      <div class="redeem-hero">
-        <div class="rt">暖暖窩義式廚房・用餐即贈</div>
-        <div class="rn hand">洋蔥圈 或 炸雞球</div>
-      </div>
-      <div class="qr-card">
-        <img src="../assets/nnw-activity/redeem-qr.png" alt="兌換 QR code">
-        <div class="code">NNW · A7K2 · 3F2C</div>
-        <div class="hint">請把這個畫面完整拿給店員掃描</div>
-      </div>
-      <div style="text-align:center;">
-        <span class="qr-status"><span class="dot"></span>尚未核銷・5:00 後失效</span>
-      </div>
-      <p class="redeem-rule">兌換碼綁定你這次的到店，核銷後即失效；一桌只需一人出示。</p>
+<template id="screen-confirm-template">
+  <article class="screen confirm-layout" data-screen="confirm">
+    <div class="merchant-brand"><span class="merchant-logo">點到</span><span class="merchant-brand-copy"><strong>暖暖窩義式廚房</strong><small>活動核銷工作台</small></span><span class="merchant-session">店員已登入</span></div>
+    <span class="eyebrow">有效獎勵・尚未核銷</span>
+    <h2>核對顧客並選擇贈品</h2>
+    <div class="surface-card info-card"><span class="eligible-pill">可核銷</span><strong> 暖暖窩用餐即贈</strong>
+      <dl class="redemption-facts"><div><dt>會員</dt><dd>載具會員 …3F2C</dd></div><div><dt>出示碼</dt><dd>A7K23F</dd></div><div><dt>門市</dt><dd>暖暖窩義式廚房</dd></div><div><dt>活動期間</dt><dd>2026/9/1～12/31</dd></div><div><dt>有效時間</dt><dd data-countdown>10:00 後失效</dd></div></dl>
     </div>
-  </div>
-  <div class="len">高度 429px（實測，0808 修正：原本固定 376px 裁掉底部 53px 的須知文字）</div>
-</div>
-
-<!-- ========== 畫面 C ========== -->
-<div>
-  <div class="col-title">畫面 C · 商家端核銷（給店員用）</div>
-  <div class="phone">
-    <div class="status"></div>
-    <div class="nav">核銷｜洋蔥圈/炸雞球活動</div>
-    <div class="scr merch-body" style="height:376px;">
-      <div class="counter">
-        <div class="num">7</div>
-        <div class="lbl">本活動累計核銷次數（≈到店桌數）</div>
-      </div>
-      <div class="redeem-btn">📷 掃描客人畫面上的兌換碼</div>
-      <div class="log">
-        <div class="log-row"><span>今天 19:42</span><span class="id">會員 …3f2c</span><span class="new">新客</span></div>
-        <div class="log-row"><span>今天 19:15</span><span class="id">會員 …8a91</span></div>
-        <div class="log-row"><span>今天 12:30</span><span class="id">會員 …c710</span></div>
-      </div>
+    <div class="gift-choices" role="group" aria-label="選擇贈品">
+      <button class="gift-choice" type="button" data-action="select-gift" data-gift="洋蔥圈" data-fulfillment-type="base" aria-pressed="false">
+        <span class="choice-stock-badge" data-stock-badge hidden>已售罄</span>
+        <span class="choice-media"><img class="choice-food-art" src="../assets/nnw-activity/food-onion-rings-illustration.webp" alt=""></span>
+        <strong>洋蔥圈</strong>
+      </button>
+      <button class="gift-choice" type="button" data-action="select-gift" data-gift="炸雞球" data-fulfillment-type="base" aria-pressed="false">
+        <span class="choice-stock-badge" data-stock-badge hidden>已售罄</span>
+        <span class="choice-media"><img class="choice-food-art" src="../assets/nnw-activity/food-chicken-balls-illustration.webp" alt=""></span>
+        <strong>炸雞球</strong>
+      </button>
+      <button class="gift-choice replacement-choice" type="button" data-action="select-gift" data-gift="" data-original-gift="" data-fulfillment-type="substitute" data-replacement-choice aria-pressed="false" hidden disabled>
+        <span class="choice-media" aria-hidden="true">替</span>
+        <span><strong data-replacement-choice-name>同價替代品</strong><small data-replacement-choice-note>請先填寫品名並確認同價</small></span>
+      </button>
     </div>
-  </div>
-  <div class="len">高度 456px（實測）· 一屏內</div>
-</div>
-
-<!-- ========== 畫面 C2：商家核銷確認 ========== -->
-<div>
-  <div class="col-title">畫面 C2 · 商家掃碼後的確認畫面（你之前問的「商家核銷頁面在哪」）</div>
-  <div class="phone">
-    <div class="status"></div>
-    <div class="nav"><span class="h">‹ 取消</span>確認核銷</div>
-    <div class="scr merch-body" style="height:376px;">
-      <div class="scan-result">
-        <div class="ok">✓</div>
-        <div class="name">會員 …3f2c</div>
-        <div class="meta">掃碼成功・這桌尚未核銷過</div>
+    <section class="supply-panel surface-card" aria-labelledby="supply-title">
+      <h3 id="supply-title">現場供應狀態</h3>
+      <p class="supply-help">店家確認：不設每日限量；其中一款售罄時，可改用其他同價餐點。</p>
+      <label class="supply-label">目前狀態
+        <select class="supply-select" data-supply-status>
+          <option value="">洋蔥圈、炸雞球皆有供應</option>
+          <option value="洋蔥圈">洋蔥圈售罄</option>
+          <option value="炸雞球">炸雞球售罄</option>
+        </select>
+      </label>
+      <div class="replacement-editor" data-replacement-editor hidden>
+        <label class="replacement-label">同價替代品名稱
+          <input class="replacement-input" data-replacement-name maxlength="20" autocomplete="off" placeholder="例如：薯條">
+        </label>
+        <label class="confirm-check"><input type="checkbox" data-same-price-confirm><span>店員已確認：這個替代品與售罄贈品價格相同</span></label>
       </div>
-      <div class="pick-row">
-        <div class="pick">
-          <svg viewBox="0 0 62 50"><g stroke="#8A5A2B" stroke-width="2" fill="#F0A64A" fill-rule="evenodd" stroke-linejoin="round">
-            <path d="M20,10 C29,9 37,15 38,24 C39,33 32,41 22,41 C13,41 6,35 6,26 C6,17 12,11 20,10 Z
-                     M21,20 C17,20 14,23 14,26 C14,30 17,32 21,32 C25,32 29,29 29,25 C29,22 25,20 21,20 Z"/></g></svg>
-          <div class="gname">洋蔥圈</div>
-        </div>
-        <div class="pick">
-          <svg viewBox="0 0 62 50"><g stroke="#8A5A2B" stroke-width="2" stroke-linejoin="round">
-            <path d="M17,20 C23,18 29,22 30,28 C31,35 26,41 19,41 C12,41 7,36 7,30 C7,24 11,21 17,20 Z" fill="#F0A64A"/>
-            <path d="M44,18 C51,17 57,22 57,29 C57,36 51,41 44,41 C37,41 32,36 33,29 C33,23 38,19 44,18 Z" fill="#EFA042"/></g></svg>
-          <div class="gname">炸雞球</div>
-        </div>
-      </div>
-      <div class="confirm-btn disabled">請先點選客人要的品項</div>
+    </section>
+    <label class="confirm-check"><input type="checkbox" data-policy-confirm><span>我已確認：本桌為內用、尚未領取本活動贈品，且沒有使用其他優惠活動。</span></label>
+    <div class="redemption-review surface-card" data-redemption-review hidden>
+      <strong>請再次核對</strong>
+      <p>暖暖窩義式廚房・會員 …3F2C・本次核銷品項：<b data-review-gift></b>。確認後這份獎勵不可再次核銷。</p>
+      <p data-review-substitute hidden>同價替代：原品項「<b data-review-original></b>」已售罄。</p>
+      <p>店員已確認：限內用、本桌尚未領取，且未併用其他優惠。</p>
     </div>
-  </div>
-  <div class="len">高度 456px（實測）· 一屏內 · 兩個都不預選，逼店員主動點一次，避免手滑給錯</div>
-</div>
+    <button class="primary-button confirm-action" type="button" data-action="confirm-redeem" disabled aria-disabled="true">請先點選客人要的品項</button>
+  </article>
+</template>
 
-<!-- ========== 畫面 B3：客人畫面上的核銷完成狀態 ========== -->
-<div>
-  <div class="col-title">畫面 B3 · 店員確認後，客人畫面 B2 會變成的樣子（收尾狀態）</div>
-  <div class="phone">
-    <div class="status"></div>
-    <div class="nav"><span class="h">‹ 返回</span>出示給店員</div>
-    <div class="scr" style="height:376px;">
-      <div class="redeem-hero">
-        <div class="rt">暖暖窩義式廚房・用餐即贈</div>
-        <div class="rn hand">洋蔥圈 或 炸雞球</div>
-      </div>
-      <div class="done-card">
-        <div class="done-icon">✓</div>
-        <div class="done-title">已核銷，店員馬上為你準備</div>
-        <div class="done-sub">兌換品項：洋蔥圈</div>
-      </div>
-      <div style="text-align:center;">
-        <span class="qr-status done"><span class="dot"></span>已核銷・今天 19:42</span>
-      </div>
-      <p class="redeem-rule">這組兌換碼已使用過，不能再次核銷；下次光顧會是新的一組碼。</p>
+<template id="screen-success-template">
+  <article class="screen success-layout" data-screen="success">
+    <div class="merchant-brand"><span class="merchant-logo">點到</span><span class="merchant-brand-copy"><strong>暖暖窩義式廚房</strong><small>活動核銷工作台</small></span><span class="merchant-session">店員已登入</span></div>
+    <div class="success-card surface-card">
+      <div class="success-mark" aria-hidden="true">完成</div>
+      <h2>核銷成功</h2>
+      <p>請為客人準備 <strong data-selected-choice>已選贈品</strong></p>
+      <div class="receipt-card surface-card"><dl class="redemption-facts"><div><dt>核銷編號</dt><dd class="receipt-id" data-receipt-id>NNW-DEMO-0001</dd></div><div><dt>完成時間</dt><dd data-redeemed-at>--:--</dd></div><div><dt>本次核銷品項</dt><dd data-actual-gift>已選贈品</dd></div><div data-substitution-row hidden><dt>替代原品項</dt><dd><span data-original-gift></span>（售罄・同價替代）</dd></div><div><dt>活動規則</dt><dd>店員已確認</dd></div><div><dt>狀態</dt><dd>已核銷・不可重複</dd></div></dl></div>
+      <div class="attribution-summary"><div><strong data-redemption-count>1</strong><span>本次展示核銷</span></div><div><strong data-unique-count>1</strong><span>已核銷資格數</span></div></div>
+      <p class="muted">這代表「活動獎勵已在店內核銷」，不等於活動造成的新增客流；正式增量需用對照組驗證。</p>
+      <div class="success-actions"><button class="primary-button" type="button" data-action="scan-next">回到核銷查詢</button><button class="secondary-button" type="button" data-action="return-to-rewards">回到顧客「我的獎勵」（展示用）</button></div>
     </div>
-  </div>
-  <div class="len">高度 456px（實測）· 一屏內 · 補上收尾畫面，讓核銷這件事有始有終</div>
-</div>
+  </article>
+</template>
 
-<div class="spec">
-  <h2>衡量機制：核銷完之後，怎麼知道這個活動帶來多少人、值不值得推進</h2>
-  <p>對應 Sales Kit「試辦期閘門」已定義的兩個指標（核銷率 ≥15%、可歸因來客數 ≥10 位）——
-  這裡講清楚數字從哪裡來，不是核銷完就沒了。</p>
+<script>
+  (function(){
+    "use strict";
 
-  <h3>① 每次核銷要記一筆什麼</h3>
-  <p><code>{ activityId, shopId, memberId（載具唯一識別碼，不是手機或Email）, redeemedAt }</code></p>
-  <p>memberId 從客人畫面 B 的兌換碼帶出來，店員用畫面 C 掃碼核銷——不存個資，
-  跟發票載具「只產出 memberId 不含個資」的原則一致。</p>
+    var SCREEN_KEYS=["home","activities","detail","redeem","scan","confirm","success"];
+    var TITLES={
+      home:"發票載具",
+      activities:"活動中心",
+      detail:"活動詳情",
+      redeem:"出示給店員",
+      scan:"點到活動核銷",
+      confirm:"確認核銷",
+      success:"核銷結果"
+    };
+    var TRANSITIONS={
+      home:["activities"],
+      activities:["home","detail"],
+      detail:["home","activities","redeem"],
+      redeem:["detail","scan"],
+      scan:["redeem","confirm"],
+      confirm:["scan","success"],
+      success:["scan","activities"]
+    };
+    var BACK_FALLBACK={
+      home:"home",activities:"home",detail:"activities",redeem:"detail",
+      scan:"redeem",confirm:"scan",success:"confirm"
+    };
+    var params=new URLSearchParams(location.search);
+    var localQaHost=location.hostname==="127.0.0.1"||location.hostname==="localhost"||location.hostname==="::1";
+    if(!localQaHost){
+      ["owner","mode","qaScan","qaExpiry"].forEach(function(key){params.delete(key);});
+    }
+    var requested=params.get("screen");
+    var mode=params.get("mode");
+    if(params.get("owner")==="1") document.documentElement.classList.add("owner");
+    var current=SCREEN_KEYS.indexOf(requested)>-1?requested:"home";
+    var historyStack=[];
+    var selectedGift="";
+    var selectedOriginalGift="";
+    var selectedFulfillmentType="base";
+    var unavailableGift="";
+    var replacementGift="";
+    var samePriceConfirmed=false;
+    var policyConfirmed=false;
+    var merchantHandoffReady=false;
+    var redeemDeadline=0;
+    var redeemExpired=false;
+    var countdownDuration=params.get("qaExpiry")==="1"?1:600;
+    var countdownTimer=null;
+    var demoToastTimer=null;
+    var EXPECTED_QR_VALUE="NNW-DEMO-A7K2-3F2C";
+    var DEMO_CREDENTIAL="A7K23F";
+    var DEMO_CAMPAIGN_ID="NNW-2026-FALL";
+    var DEMO_STORAGE_KEY="nnw-demo-redemptions-v25";
+    var demoLedger=[];
+    try{demoLedger=JSON.parse(sessionStorage.getItem(DEMO_STORAGE_KEY)||"[]");}catch(error){demoLedger=[];}
+    if(!Array.isArray(demoLedger)) demoLedger=[];
+    var activeReceipt=demoLedger.find(function(item){return item&&item.campaignId===DEMO_CAMPAIGN_ID;})||null;
+    if(current==="scan"||current==="confirm"||current==="success") current="activities";
+    var cameraStream=null;
+    var cameraFrameId=null;
+    var cameraTimeoutId=null;
+    var cameraSession=0;
+    var cameraDetector=null;
+    var scanAccepted=false;
+    var scanBusy=false;
+    var lastScanAt=0;
+    var singleHost=document.getElementById("single-host");
+    var compareGrid=document.getElementById("compare-grid");
+    var singleShell=null;
 
-  <h3>② 由這筆紀錄可以算出的指標</h3>
-  <table>
-    <tr><th>指標</th><th>算法</th><th>看什麼</th></tr>
-    <tr><td>核銷次數</td><td>紀錄總筆數</td><td>≈到店桌數（因一桌一份）</td></tr>
-    <tr><td>去重會員數</td><td>memberId 去重後的數量</td><td>同一人不重複計算，這是「帶來多少人」的下限</td></tr>
-    <tr><td>新客占比</td><td>此 memberId 在 carrier-join 歷史資料裡是否已有暖暖窩消費紀錄</td><td>證明是活動吸引來的，不是本來就會來的人</td></tr>
-    <tr><td>核銷率</td><td>核銷次數 ÷ 活動詳情頁被打開次數</td><td>需在畫面 B 加「查看」埋點，目前還沒做</td></tr>
-  </table>
+    if(mode!=="compare"&&mode!=="qa") mode="default";
+    document.documentElement.classList.add("mode-"+mode);
 
-  <h3>③ 老實說，這輪還沒做到的</h3>
-  <p>「新客占比」要靠 carrier-join 歷史資料（見 nest-integration 資料橋），還沒打通；
-  「核銷率」要先加曝光埋點才有分母。這兩項列進下一輪工程項目，
-  D2 這次先能拿到「核銷次數」與「去重會員數」兩個最基本的數字。</p>
-</div>
+    function fitSim(){
+      var root=document.documentElement;
+      var styles=getComputedStyle(root);
+      var sidePad=parseFloat(styles.getPropertyValue("--sim-side-pad"))||0;
+      var topPad=parseFloat(styles.getPropertyValue("--sim-pad-top"))||0;
+      var bottomPad=parseFloat(styles.getPropertyValue("--sim-pad-bottom"))||0;
+      var availWidth=root.clientWidth-sidePad*2;
+      var availHeight=root.clientHeight-topPad-bottomPad;
+      var s=Math.min(1,availWidth/390,availHeight/844);
+      root.style.setProperty("--sim-scale",s);
+    }
+    fitSim(); addEventListener('resize', fitSim);
+
+    var ownerReview=document.querySelector(".owner-review");
+    if(ownerReview&&document.documentElement.classList.contains("owner")&&mode==="default"){
+      var ownerToggle=ownerReview.querySelector(".owner-toggle");
+      var ownerToggleState=ownerReview.querySelector(".owner-toggle-state");
+      var ownerDesktop=matchMedia("(min-width:1100px)");
+      var setOwnerOpen=function(open){
+        ownerReview.classList.toggle("is-open",open);
+        ownerToggle.setAttribute("aria-expanded",String(open));
+        ownerToggleState.textContent=open?"收合":"展開";
+      };
+      setOwnerOpen(ownerDesktop.matches);
+      ownerToggle.addEventListener("click",function(){
+        setOwnerOpen(!ownerReview.classList.contains("is-open"));
+      });
+      ownerDesktop.addEventListener("change",function(event){setOwnerOpen(event.matches);});
+    }
+
+    function cloneTemplate(id){
+      return document.getElementById(id).content.cloneNode(true);
+    }
+
+    function makeShell(state){
+      var wrap=singleHost.firstElementChild.cloneNode(true);
+      configureShell(wrap.querySelector(".sim-shell"),state);
+      return wrap;
+    }
+
+    function stateTab(state){
+      if(state==="home") return "home";
+      if(state==="scan"||state==="confirm"||state==="success") return "merchant";
+      return "activities";
+    }
+
+    function saveDemoLedger(){
+      try{sessionStorage.setItem(DEMO_STORAGE_KEY,JSON.stringify(demoLedger));}catch(error){}
+    }
+
+    function demoCount(){return demoLedger.filter(function(item){return item&&item.status==="redeemed";}).length;}
+
+    function paintDemoCounts(root){
+      var count=demoCount();
+      root.querySelectorAll("[data-redemption-count]").forEach(function(target){target.textContent=String(count);});
+      root.querySelectorAll("[data-unique-count]").forEach(function(target){target.textContent=String(count);});
+    }
+
+    function resetSelectionData(options){
+      selectedGift="";
+      selectedOriginalGift="";
+      selectedFulfillmentType="base";
+      policyConfirmed=false;
+      if(!(options&&options.keepSupply)){
+        unavailableGift="";
+        replacementGift="";
+        samePriceConfirmed=false;
+      }
+    }
+
+    function resetReviewState(){
+      if(!singleShell) return;
+      var review=singleShell.querySelector("[data-redemption-review]");
+      if(review) review.hidden=true;
+      var confirm=singleShell.querySelector(".confirm-action");
+      if(confirm) confirm.dataset.action="confirm-redeem";
+    }
+
+    function updateConfirmAction(){
+      if(!singleShell) return;
+      var confirm=singleShell.querySelector(".confirm-action");
+      if(!confirm) return;
+      confirm.dataset.action="confirm-redeem";
+      if(!selectedGift){
+        confirm.disabled=true;
+        confirm.setAttribute("aria-disabled","true");
+        confirm.textContent="請先點選客人要的品項";
+        return;
+      }
+      if(!policyConfirmed){
+        confirm.disabled=true;
+        confirm.setAttribute("aria-disabled","true");
+        confirm.textContent="請先確認本桌活動規則";
+        return;
+      }
+      confirm.disabled=false;
+      confirm.setAttribute("aria-disabled","false");
+      confirm.textContent="確認核銷「"+selectedGift+"」";
+    }
+
+    function clearRedemptionSelection(){
+      selectedGift="";
+      selectedOriginalGift="";
+      selectedFulfillmentType="base";
+      if(singleShell){
+        singleShell.querySelectorAll(".gift-choice").forEach(function(choice){
+          choice.classList.remove("is-selected");
+          choice.setAttribute("aria-pressed","false");
+        });
+      }
+      resetReviewState();
+      updateConfirmAction();
+    }
+
+    function normalizedReplacementName(value){
+      return String(value||"").trim().replace(/\s+/g," ").slice(0,20);
+    }
+
+    function updateReplacementChoice(){
+      if(!singleShell) return;
+      var input=singleShell.querySelector("[data-replacement-name]");
+      var check=singleShell.querySelector("[data-same-price-confirm]");
+      var choice=singleShell.querySelector("[data-replacement-choice]");
+      if(!choice) return;
+      replacementGift=normalizedReplacementName(input&&input.value);
+      samePriceConfirmed=!!(check&&check.checked);
+      var sameAsOriginal=!!replacementGift&&replacementGift.toLocaleLowerCase("zh-TW")===unavailableGift.toLocaleLowerCase("zh-TW");
+      choice.hidden=!unavailableGift;
+      choice.disabled=!unavailableGift||!replacementGift||sameAsOriginal||!samePriceConfirmed;
+      choice.dataset.gift=replacementGift;
+      choice.dataset.originalGift=unavailableGift;
+      var name=choice.querySelector("[data-replacement-choice-name]");
+      var note=choice.querySelector("[data-replacement-choice-note]");
+      if(name) name.textContent=replacementGift||"同價替代品";
+      if(note){
+        if(!replacementGift) note.textContent="請先填寫實際品名";
+        else if(sameAsOriginal) note.textContent="替代品不可與售罄原品相同";
+        else if(!samePriceConfirmed) note.textContent="請先勾選店員已確認同價";
+        else note.textContent="替代「"+unavailableGift+"」・可選擇核銷";
+      }
+    }
+
+    function hydrateConfirmDraft(){
+      if(!singleShell) return;
+      var select=singleShell.querySelector("[data-supply-status]");
+      if(select) select.value=unavailableGift;
+      singleShell.querySelectorAll('.gift-choice[data-fulfillment-type="base"]').forEach(function(choice){
+        var soldOut=choice.dataset.gift===unavailableGift;
+        choice.disabled=soldOut;
+        choice.classList.toggle("is-sold-out",soldOut);
+        choice.setAttribute("aria-disabled",String(soldOut));
+        var badge=choice.querySelector("[data-stock-badge]");
+        if(badge) badge.hidden=!soldOut;
+      });
+      var editor=singleShell.querySelector("[data-replacement-editor]");
+      if(editor) editor.hidden=!unavailableGift;
+      var input=singleShell.querySelector("[data-replacement-name]");
+      var priceCheck=singleShell.querySelector("[data-same-price-confirm]");
+      var policyCheck=singleShell.querySelector("[data-policy-confirm]");
+      if(input) input.value=replacementGift;
+      if(priceCheck) priceCheck.checked=samePriceConfirmed;
+      if(policyCheck) policyCheck.checked=policyConfirmed;
+      updateReplacementChoice();
+      singleShell.querySelectorAll(".gift-choice").forEach(function(choice){
+        var selected=selectedFulfillmentType===(choice.dataset.fulfillmentType||"base")&&choice.dataset.gift===selectedGift&&!!selectedGift;
+        choice.classList.toggle("is-selected",selected);
+        choice.setAttribute("aria-pressed",String(selected));
+      });
+      updateConfirmAction();
+    }
+
+    function applySupplyState(){
+      if(!singleShell) return;
+      var select=singleShell.querySelector("[data-supply-status]");
+      var nextUnavailable=select?select.value:"";
+      clearRedemptionSelection();
+      unavailableGift=nextUnavailable;
+      replacementGift="";
+      samePriceConfirmed=false;
+      singleShell.querySelectorAll('.gift-choice[data-fulfillment-type="base"]').forEach(function(choice){
+        var soldOut=choice.dataset.gift===unavailableGift;
+        choice.disabled=soldOut;
+        choice.classList.toggle("is-sold-out",soldOut);
+        choice.setAttribute("aria-disabled",String(soldOut));
+        var badge=choice.querySelector("[data-stock-badge]");
+        if(badge) badge.hidden=!soldOut;
+      });
+      var editor=singleShell.querySelector("[data-replacement-editor]");
+      if(editor) editor.hidden=!unavailableGift;
+      var input=singleShell.querySelector("[data-replacement-name]");
+      var check=singleShell.querySelector("[data-same-price-confirm]");
+      if(input) input.value="";
+      if(check) check.checked=false;
+      updateReplacementChoice();
+      announce(unavailableGift?"已標記「"+unavailableGift+"」售罄，請填寫同價替代品":"已恢復兩款贈品供應");
+    }
+
+    function paintRewardState(shell,state){
+      if(state==="activities"){
+        var active=shell.querySelector("[data-active-reward]");
+        var used=shell.querySelector("[data-used-reward]");
+        if(active) active.hidden=!!activeReceipt;
+        if(used){
+          used.hidden=!activeReceipt;
+          if(activeReceipt){
+            var summary=used.querySelector("[data-used-summary]");
+            if(summary) summary.textContent=activeReceipt.redeemedAt+"・"+(activeReceipt.confirmedItem||activeReceipt.gift);
+          }
+        }
+      }
+      if(state==="redeem"){
+        var code=shell.querySelector("[data-present-code]");
+        var presentState=shell.querySelector("[data-present-state]");
+        var openMerchant=shell.querySelector('[data-action="open-merchant-demo"]');
+        if(code) code.textContent=activeReceipt?"已使用":DEMO_CREDENTIAL;
+        if(activeReceipt){
+          if(presentState){presentState.textContent="已於 "+activeReceipt.redeemedAt+" 核銷";presentState.dataset.state="used";}
+          var countdown=shell.querySelector("[data-countdown]");
+          if(countdown) countdown.hidden=true;
+          if(openMerchant) openMerchant.textContent="查看點到核銷結果（展示用）";
+        }
+      }
+      if(state==="success"&&activeReceipt){
+        var confirmedItem=activeReceipt.confirmedItem||activeReceipt.gift;
+        var choice=shell.querySelector("[data-selected-choice]");
+        var receiptId=shell.querySelector("[data-receipt-id]");
+        var redeemedAt=shell.querySelector("[data-redeemed-at]");
+        var actualGift=shell.querySelector("[data-actual-gift]");
+        var substitutionRow=shell.querySelector("[data-substitution-row]");
+        var originalGift=shell.querySelector("[data-original-gift]");
+        if(choice) choice.textContent=confirmedItem;
+        if(receiptId) receiptId.textContent=activeReceipt.id;
+        if(redeemedAt) redeemedAt.textContent=activeReceipt.redeemedAt;
+        if(actualGift) actualGift.textContent=confirmedItem;
+        if(substitutionRow) substitutionRow.hidden=activeReceipt.fulfillmentType!=="substitute";
+        if(originalGift) originalGift.textContent=activeReceipt.requestedOriginalItem||"";
+      }
+      paintDemoCounts(shell);
+    }
+
+    function configureShell(shell,state){
+      var scroll=shell.querySelector(".sim-scroll");
+      scroll.replaceChildren(cloneTemplate("screen-"+state+"-template"));
+      scroll.scrollTop=0;
+      shell.dataset.state=state;
+      shell.querySelector(".sim-title").textContent=TITLES[state];
+      var back=shell.querySelector(".back-button");
+      back.disabled=state==="home"||state==="activities";
+      var staff=state==="scan"||state==="confirm"||state==="success";
+      var role=shell.querySelector(".role-switch");
+      role.textContent=staff?"切顧客":"切店員";
+      role.setAttribute("aria-label",staff?"切換至顧客視角":"切換至店員視角");
+      var activeTab=stateTab(state);
+      shell.querySelectorAll(".tab-button").forEach(function(tab){
+        var active=tab.dataset.tab===activeTab;
+        var icon=tab.querySelector("img");
+        if(active) tab.setAttribute("aria-current","page");
+        else tab.removeAttribute("aria-current");
+        icon.src=active?icon.dataset.activeSrc:icon.dataset.defaultSrc;
+      });
+      paintRewardState(shell,state);
+      if(state==="confirm"&&shell===singleShell){
+        hydrateConfirmDraft();
+      }
+    }
+
+    function announce(message){
+      if(!singleShell) return;
+      var live=singleShell.querySelector(".live-region");
+      live.textContent="";
+      setTimeout(function(){live.textContent=message;},0);
+      var toast=singleShell.querySelector("[data-demo-toast]");
+      if(toast){
+        if(demoToastTimer!==null) clearTimeout(demoToastTimer);
+        toast.textContent=message;
+        toast.hidden=false;
+        demoToastTimer=setTimeout(function(){toast.hidden=true;},2200);
+      }
+    }
+
+    function scannerParts(){
+      return {
+        stage:singleShell&&singleShell.querySelector("[data-camera-stage]"),
+        video:singleShell&&singleShell.querySelector("[data-camera-video]"),
+        canvas:singleShell&&singleShell.querySelector("[data-camera-canvas]"),
+        status:singleShell&&singleShell.querySelector("[data-scanner-status]"),
+        start:singleShell&&singleShell.querySelector('[data-action="start-camera-scan"]'),
+        stop:singleShell&&singleShell.querySelector('[data-action="stop-camera-scan"]')
+      };
+    }
+
+    function setScannerStatus(message,state){
+      var status=scannerParts().status;
+      if(!status) return;
+      status.textContent=message;
+      if(state) status.dataset.state=state;
+      else status.removeAttribute("data-state");
+    }
+
+    function stopScanner(options){
+      cameraSession+=1;
+      scanBusy=false;
+      scanAccepted=false;
+      cameraDetector=null;
+      if(cameraFrameId!==null){cancelAnimationFrame(cameraFrameId);cameraFrameId=null;}
+      if(cameraTimeoutId!==null){clearTimeout(cameraTimeoutId);cameraTimeoutId=null;}
+      if(cameraStream){
+        cameraStream.getTracks().forEach(function(track){track.stop();});
+        cameraStream=null;
+      }
+      var parts=scannerParts();
+      if(parts.video){
+        try{parts.video.pause();}catch(error){}
+        parts.video.srcObject=null;
+      }
+      if(parts.stage) parts.stage.classList.remove("is-active");
+      if(parts.start){
+        parts.start.disabled=false;
+        parts.start.classList.remove("is-loading");
+        parts.start.textContent="開啟相機掃描";
+        parts.start.hidden=false;
+      }
+      if(parts.stop) parts.stop.hidden=true;
+      if(!(options&&options.preserveStatus)) setScannerStatus("點擊下方按鈕後，允許使用後鏡頭。","");
+    }
+
+    function stopAsync(){
+      if(countdownTimer!==null){clearInterval(countdownTimer);countdownTimer=null;}
+      stopScanner();
+    }
+
+    function redeemCodeIsValid(){
+      return !redeemExpired&&redeemDeadline>Date.now();
+    }
+
+    function markRedeemExpired(){
+      if(activeReceipt) return;
+      redeemExpired=true;
+      if(countdownTimer!==null){clearInterval(countdownTimer);countdownTimer=null;}
+      var target=singleShell&&singleShell.querySelector("[data-countdown]");
+      if(target) target.textContent="出示碼已失效";
+      var presentState=singleShell&&singleShell.querySelector("[data-present-state]");
+      if(presentState){presentState.textContent="出示碼已失效";presentState.dataset.state="expired";}
+      var scanButton=singleShell&&singleShell.querySelector('[data-action="open-merchant-demo"]');
+      if(scanButton){
+        scanButton.disabled=false;
+        scanButton.dataset.action="renew-redeem";
+        scanButton.textContent="重新產生出示憑證";
+      }
+      announce("出示碼已失效，請重新產生");
+    }
+
+    function startCountdown(){
+      if(activeReceipt) return;
+      if(!redeemDeadline){
+        redeemDeadline=Date.now()+countdownDuration*1000;
+        redeemExpired=false;
+      }
+      function paint(){
+        var target=singleShell&&singleShell.querySelector("[data-countdown]");
+        if(!target) return false;
+        var seconds=Math.max(0,Math.ceil((redeemDeadline-Date.now())/1000));
+        if(seconds<=0){markRedeemExpired();return false;}
+        var minutes=Math.floor(seconds/60);
+        var rest=String(seconds%60).padStart(2,"0");
+        target.textContent=String(minutes).padStart(2,"0")+":"+rest+" 後失效";
+        return true;
+      }
+      if(paint()) countdownTimer=setInterval(paint,250);
+    }
+
+    function issueRedeemCode(){
+      if(activeReceipt){
+        go("redeem","這份獎勵已完成核銷");
+        return;
+      }
+      redeemDeadline=Date.now()+countdownDuration*1000;
+      redeemExpired=false;
+      resetSelectionData({keepSupply:true});
+      go("redeem","已產生到店出示憑證，倒數開始");
+    }
+
+    function ensureRedeemWindow(){
+      if(!redeemDeadline&&!redeemExpired){
+        redeemDeadline=Date.now()+countdownDuration*1000;
+      }
+      return redeemCodeIsValid();
+    }
+
+    function updateQa(){
+      var target=document.getElementById("qa-state");
+      if(target) target.textContent="目前 state："+current+"\n可用轉場："+TRANSITIONS[current].join("、");
+    }
+
+    function renderSingle(next,message,pushHistory){
+      if(SCREEN_KEYS.indexOf(next)===-1) next="home";
+      var merchantState=next==="scan"||next==="confirm"||next==="success";
+      if(merchantState&&!merchantHandoffReady){
+        next="activities";
+        message="請先從顧客的出示憑證進入點到店員端展示";
+        pushHistory=false;
+        merchantState=false;
+      }
+      if(next==="confirm"&&activeReceipt){
+        next="success";
+        message="這份獎勵已核銷，已開啟原核銷結果";
+        merchantState=true;
+      }
+      var leavingMerchant=(current==="scan"||current==="confirm"||current==="success")&&!merchantState;
+      if(leavingMerchant) merchantHandoffReady=false;
+      stopAsync();
+      if(pushHistory&&next!==current) historyStack.push(current);
+      if(next==="success"&&activeReceipt) historyStack=[];
+      current=next;
+      configureShell(singleShell,current);
+      updateQa();
+      if((current==="redeem"||current==="confirm")&&!activeReceipt) startCountdown();
+      if(message){
+        announce(message);
+        var heading=singleShell.querySelector(".sim-title");
+        if(heading){
+          heading.setAttribute("tabindex","-1");
+          requestAnimationFrame(function(){heading.focus({preventScroll:true});});
+        }
+      }
+    }
+
+    function go(next,message){
+      renderSingle(next,message,true);
+    }
+
+    function goBack(){
+      var next=current==="success"?"scan":(historyStack.length?historyStack.pop():BACK_FALLBACK[current]);
+      renderSingle(next,"已返回「"+TITLES[next]+"」",false);
+    }
+
+    function resetFlow(){
+      resetSelectionData();
+      redeemDeadline=0;
+      redeemExpired=false;
+      demoLedger=[];
+      activeReceipt=null;
+      merchantHandoffReady=false;
+      try{sessionStorage.removeItem(DEMO_STORAGE_KEY);}catch(error){}
+      historyStack=[];
+      renderSingle("home","流程已重設，回到首頁",false);
+    }
+
+    function scanNext(){
+      resetSelectionData({keepSupply:true});
+      historyStack=[];
+      renderSingle("scan","已回到核銷查詢；再次輸入同一出示碼會顯示原核銷結果",false);
+    }
+
+    function lookupCredential(){
+      if(!merchantHandoffReady){
+        renderSingle("activities","請先從顧客的出示憑證進入點到店員端展示",false);
+        return;
+      }
+      var input=singleShell&&singleShell.querySelector("[data-code-input]");
+      var status=singleShell&&singleShell.querySelector("[data-lookup-status]");
+      if(!input||!status) return;
+      var value=input.value.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6);
+      input.value=value;
+      status.removeAttribute("data-state");
+      if(value.length!==6){
+        status.textContent="請輸入完整 6 位出示碼。";
+        status.dataset.state="error";
+        input.focus();
+        return;
+      }
+      if(value!==DEMO_CREDENTIAL){
+        status.textContent="找不到這個獎勵，請和顧客確認出示碼。";
+        status.dataset.state="error";
+        input.select();
+        return;
+      }
+      if(activeReceipt){
+        status.textContent="此獎勵已核銷，正在開啟原核銷結果。";
+        status.dataset.state="success";
+        renderSingle("success","重複查詢已阻擋；核銷筆數沒有增加",true);
+        return;
+      }
+      if(!redeemCodeIsValid()){
+        status.textContent="這組出示碼已過期，請顧客重新開啟出示憑證。";
+        status.dataset.state="error";
+        return;
+      }
+      resetSelectionData({keepSupply:true});
+      status.textContent="資格有效，正在開啟核銷確認。";
+      status.dataset.state="success";
+      go("confirm","獎勵資格有效，請選擇贈品並再次確認");
+    }
+
+    function chooseGift(button){
+      if(button.disabled) return;
+      if(!redeemCodeIsValid()){
+        renderSingle("redeem","出示碼已失效，請重新產生",false);
+        return;
+      }
+      var fulfillmentType=button.dataset.fulfillmentType||"base";
+      if(fulfillmentType==="substitute"&&(!replacementGift||!samePriceConfirmed)) return;
+      selectedGift=button.dataset.gift;
+      selectedOriginalGift=button.dataset.originalGift||selectedGift;
+      selectedFulfillmentType=fulfillmentType;
+      singleShell.querySelectorAll(".gift-choice").forEach(function(choice){
+        var selected=choice===button;
+        choice.classList.toggle("is-selected",selected);
+        choice.setAttribute("aria-pressed",String(selected));
+      });
+      resetReviewState();
+      updateConfirmAction();
+      announce("已選擇"+selectedGift+(policyConfirmed?"，可以確認核銷":"，請再確認本桌活動規則"));
+    }
+
+    function scannerErrorMessage(error){
+      if(!window.isSecureContext) return "相機只能在 HTTPS 安全連線中使用。";
+      if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia) return "這個瀏覽器不支援相機掃描，請改用最新版 Safari 或 Chrome。";
+      if(error&&error.name==="NotAllowedError") return "相機權限未開啟，請在瀏覽器網站設定中允許相機後再重試。";
+      if(error&&error.name==="NotFoundError") return "找不到可用相機，請確認裝置有鏡頭。";
+      if(error&&error.name==="NotReadableError") return "相機目前被其他程式使用，請關閉其他相機程式後重試。";
+      if(error&&error.name==="AbortError") return "相機啟動被中斷，請重新嘗試。";
+      return "相機無法啟動，請檢查權限後重新嘗試。";
+    }
+
+    async function selectCameraDetector(){
+      if(!("BarcodeDetector" in window)||typeof BarcodeDetector.getSupportedFormats!=="function") return null;
+      try{
+        var formats=await BarcodeDetector.getSupportedFormats();
+        if(formats.indexOf("qr_code")>-1) return new BarcodeDetector({formats:["qr_code"]});
+      }catch(error){}
+      return null;
+    }
+
+    function decodeCanvas(canvas){
+      if(typeof window.jsQR!=="function") throw new Error("jsQR-unavailable");
+      var context=canvas.getContext("2d",{willReadFrequently:true});
+      var frame=context.getImageData(0,0,canvas.width,canvas.height);
+      return window.jsQR(frame.data,canvas.width,canvas.height,{inversionAttempts:"attemptBoth"});
+    }
+
+    function decodeVideoFrame(video,canvas){
+      var width=video.videoWidth;
+      var height=video.videoHeight;
+      if(!width||!height) return null;
+      var scale=Math.min(1,720/width);
+      canvas.width=Math.max(1,Math.round(width*scale));
+      canvas.height=Math.max(1,Math.round(height*scale));
+      canvas.getContext("2d",{willReadFrequently:true}).drawImage(video,0,0,canvas.width,canvas.height);
+      return decodeCanvas(canvas);
+    }
+
+    function acceptDecodedValue(rawValue,session){
+      if(session!==cameraSession||scanAccepted) return;
+      if(rawValue!==EXPECTED_QR_VALUE){
+        setScannerStatus("這不是暖暖窩活動兌換碼，請換一張 QR Code。","error");
+        return;
+      }
+      if(!redeemCodeIsValid()){
+        stopScanner({preserveStatus:true});
+        renderSingle("redeem","兌換碼已失效，請重新產生",false);
+        return;
+      }
+      scanAccepted=true;
+      resetSelectionData({keepSupply:true});
+      setScannerStatus("兌換碼讀取成功，正在開啟店員確認。","success");
+      stopScanner({preserveStatus:true});
+      go("confirm","兌換碼已讀取，請選擇贈品");
+    }
+
+    async function scanCameraFrame(session){
+      if(session!==cameraSession||scanAccepted||!cameraStream) return;
+      cameraFrameId=requestAnimationFrame(function(){scanCameraFrame(session);});
+      var now=performance.now();
+      if(scanBusy||now-lastScanAt<140) return;
+      var parts=scannerParts();
+      if(!parts.video||parts.video.readyState<2) return;
+      lastScanAt=now;
+      scanBusy=true;
+      var detectorForFrame=cameraDetector;
+      try{
+        var rawValue="";
+        if(detectorForFrame){
+          var results=await detectorForFrame.detect(parts.video);
+          if(session!==cameraSession) return;
+          if(results&&results.length){
+            var values=results.map(function(result){return result.rawValue||"";});
+            rawValue=values.indexOf(EXPECTED_QR_VALUE)>-1?EXPECTED_QR_VALUE:values[0];
+          }
+        }else{
+          var decoded=decodeVideoFrame(parts.video,parts.canvas);
+          if(decoded) rawValue=decoded.data||"";
+        }
+        if(session!==cameraSession) return;
+        if(rawValue) acceptDecodedValue(rawValue,session);
+      }catch(error){
+        if(session!==cameraSession) return;
+        if(detectorForFrame&&cameraDetector===detectorForFrame){
+          cameraDetector=null;
+          setScannerStatus("已切換到相容解碼模式，請繼續對準 QR Code。","");
+        }else{
+          stopScanner({preserveStatus:true});
+          setScannerStatus(error&&error.message==="jsQR-unavailable"?
+            "QR 解碼器載入失敗，請重新整理頁面。":"掃描發生錯誤，請重新嘗試。","error");
+        }
+      }finally{
+        if(session===cameraSession) scanBusy=false;
+      }
+    }
+
+    function decodeFixture(session){
+      var parts=scannerParts();
+      var image=new Image();
+      image.onload=function(){
+        if(session!==cameraSession) return;
+        parts.canvas.width=image.naturalWidth;
+        parts.canvas.height=image.naturalHeight;
+        parts.canvas.getContext("2d",{willReadFrequently:true}).drawImage(image,0,0);
+        var decoded=decodeCanvas(parts.canvas);
+        acceptDecodedValue(decoded&&decoded.data||"",session);
+      };
+      image.onerror=function(){
+        if(session!==cameraSession) return;
+        stopScanner({preserveStatus:true});
+        setScannerStatus("測試兌換碼圖片無法載入。","error");
+      };
+      image.src="../assets/nnw-activity/redeem-qr.png";
+    }
+
+    async function startCameraScan(button){
+      if(!ensureRedeemWindow()){
+        renderSingle("redeem","兌換碼已失效，請重新產生",false);
+        return;
+      }
+      stopScanner();
+      var session=cameraSession;
+      var parts=scannerParts();
+      button=parts.start||button;
+      button.disabled=true;
+      button.classList.add("is-loading");
+      button.textContent="等待相機權限";
+      setScannerStatus("正在等待相機權限…","");
+      if(parts.stop){parts.stop.hidden=false;parts.stop.textContent="取消";}
+      cameraTimeoutId=setTimeout(function(){
+        if(session!==cameraSession) return;
+        stopScanner({preserveStatus:true});
+        setScannerStatus("仍在等待相機權限，請檢查瀏覽器設定後重試。","error");
+      },10000);
+      if(params.get("qaScan")==="fixture"){
+        decodeFixture(session);
+        return;
+      }
+      if(!window.isSecureContext||!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+        stopScanner({preserveStatus:true});
+        setScannerStatus(scannerErrorMessage(),"error");
+        return;
+      }
+      try{
+        var stream;
+        try{
+          stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{
+            facingMode:{ideal:"environment"},width:{ideal:1280},height:{ideal:720}
+          }});
+        }catch(error){
+          if(error&&error.name==="OverconstrainedError"){
+            stream=await navigator.mediaDevices.getUserMedia({audio:false,video:true});
+          }else throw error;
+        }
+        if(session!==cameraSession){
+          stream.getTracks().forEach(function(track){track.stop();});
+          return;
+        }
+        cameraStream=stream;
+        parts.video.srcObject=stream;
+        await parts.video.play();
+        if(session!==cameraSession){
+          stream.getTracks().forEach(function(track){track.stop();});
+          if(cameraStream===stream) cameraStream=null;
+          return;
+        }
+        var selectedDetector=await selectCameraDetector();
+        if(session!==cameraSession){
+          stream.getTracks().forEach(function(track){track.stop();});
+          if(cameraStream===stream) cameraStream=null;
+          return;
+        }
+        cameraDetector=selectedDetector;
+        if(cameraTimeoutId!==null){clearTimeout(cameraTimeoutId);cameraTimeoutId=null;}
+        parts.stage.classList.add("is-active");
+        parts.start.hidden=true;
+        parts.start.classList.remove("is-loading");
+        parts.stop.hidden=false;
+        parts.stop.textContent="停止掃描";
+        setScannerStatus("相機已開啟，請將 QR Code 放進方框內。","");
+        cameraTimeoutId=setTimeout(function(){
+          if(session!==cameraSession) return;
+          stopScanner({preserveStatus:true});
+          setScannerStatus("20 秒內沒有讀到兌換碼，請重新掃描。","error");
+        },20000);
+        scanCameraFrame(session);
+      }catch(error){
+        if(session!==cameraSession) return;
+        stopScanner({preserveStatus:true});
+        setScannerStatus(scannerErrorMessage(error),"error");
+      }
+    }
+
+    function handleAction(event){
+      var control=event.target.closest("[data-action]");
+      if(!control||control.disabled) return;
+      var action=control.dataset.action;
+      if(action==="back") goBack();
+      else if(action==="reset"||action==="restart") resetFlow();
+      else if(action==="scan-next") scanNext();
+      else if(action==="open-activities"||action==="go-activities") go("activities","已開啟活動中心");
+      else if(action==="open-detail"){
+        go("detail","已開啟暖暖窩活動詳情");
+      }
+      else if(action==="open-redeem"||action==="renew-redeem") issueRedeemCode();
+      else if(action==="open-merchant-demo"){
+        if(activeReceipt){
+          merchantHandoffReady=true;
+          go("success","已開啟原核銷結果；核銷筆數沒有增加");
+        }
+        else if(redeemCodeIsValid()){
+          merchantHandoffReady=true;
+          go("scan","已開啟點到店員端展示");
+        }
+        else markRedeemExpired();
+      }
+      else if(action==="go-home") go("home","已回到首頁");
+      else if(action==="switch-role") go(current==="scan"||current==="confirm"||current==="success"?"redeem":"activities","已切換展示視角");
+      else if(action==="return-to-rewards") go("activities","已回到顧客的「我的獎勵」");
+      else if(action==="reward-summary") announce(activeReceipt?"目前有 1 筆已使用獎勵紀錄":"目前有 1 個可使用獎勵");
+      else if(action==="start-camera-scan") startCameraScan(control);
+      else if(action==="stop-camera-scan"){
+        stopScanner({preserveStatus:true});
+        setScannerStatus("掃描已停止；需要時可重新開啟相機。","");
+      }
+      else if(action==="select-gift") chooseGift(control);
+      else if(action==="confirm-redeem"){
+        if(!selectedGift||!policyConfirmed) return;
+        if(selectedFulfillmentType==="substitute"&&(!samePriceConfirmed||!replacementGift)) return;
+        if(!redeemCodeIsValid()){
+          renderSingle("redeem","出示碼已失效，請重新產生",false);
+          return;
+        }
+        var review=singleShell.querySelector("[data-redemption-review]");
+        if(review){
+          review.hidden=false;
+          review.querySelector("[data-review-gift]").textContent=selectedGift;
+          var substitute=review.querySelector("[data-review-substitute]");
+          var original=review.querySelector("[data-review-original]");
+          if(substitute) substitute.hidden=selectedFulfillmentType!=="substitute";
+          if(original) original.textContent=selectedOriginalGift;
+        }
+        control.dataset.action="finalize-redeem";
+        control.textContent="再次確認核銷「"+selectedGift+"」";
+        control.disabled=true;
+        control.setAttribute("aria-disabled","true");
+        setTimeout(function(){
+          if(current==="confirm"&&control.isConnected&&control.dataset.action==="finalize-redeem"){
+            control.disabled=false;
+            control.setAttribute("aria-disabled","false");
+          }
+        },700);
+        announce("請再次核對會員與贈品後完成核銷");
+      }
+      else if(action==="finalize-redeem"){
+        if(!selectedGift||!policyConfirmed) return;
+        if(selectedFulfillmentType==="substitute"&&(!samePriceConfirmed||!replacementGift)) return;
+        if(activeReceipt){
+          go("success","這份獎勵已核銷；核銷筆數沒有增加");
+          return;
+        }
+        if(!redeemCodeIsValid()){
+          renderSingle("redeem","出示碼已失效，請重新產生",false);
+          return;
+        }
+        control.disabled=true;
+        redeemExpired=true;
+        var now=new Date();
+        var redeemedAt=now.toLocaleString("zh-TW",{month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false});
+        activeReceipt={
+          id:"NNW-DEMO-"+String(demoLedger.length+1).padStart(4,"0"),
+          campaignId:DEMO_CAMPAIGN_ID,
+          gift:selectedGift,
+          requestedOriginalItem:selectedOriginalGift,
+          confirmedItem:selectedGift,
+          fulfillmentType:selectedFulfillmentType,
+          substitutionReason:selectedFulfillmentType==="substitute"?"sold_out":null,
+          samePriceConfirmed:selectedFulfillmentType==="substitute"&&samePriceConfirmed,
+          policyConfirmed:policyConfirmed,
+          redeemedAt:redeemedAt,
+          status:"redeemed"
+        };
+        demoLedger.push(activeReceipt);
+        saveDemoLedger();
+        go("success","核銷成功；本次展示核銷數已增加 1 筆");
+      }
+      else if(action==="unavailable") announce("此功能尚未開放");
+    }
+
+    function renderCompare(){
+      SCREEN_KEYS.forEach(function(state){
+        var card=document.createElement("section");
+        card.className="compare-card";
+        var label=document.createElement("h2");
+        label.className="compare-label";
+        label.textContent=state+" · "+TITLES[state];
+        var wrap=makeShell(state);
+        wrap.querySelector(".sim-shell").inert=true;
+        card.append(label,wrap);
+        compareGrid.appendChild(card);
+      });
+      updateQa();
+    }
+
+    if(mode==="compare"||mode==="qa"){
+      renderCompare();
+    }else{
+      var wrap=singleHost.firstElementChild;
+      singleShell=wrap.querySelector(".sim-shell");
+      configureShell(singleShell,current);
+      singleHost.addEventListener("click",handleAction);
+      singleHost.addEventListener("submit",function(event){
+        if(!event.target.matches("[data-merchant-code-form]")) return;
+        event.preventDefault();
+        lookupCredential();
+      });
+      singleHost.addEventListener("input",function(event){
+        if(event.target.matches("[data-code-input]")){
+          event.target.value=event.target.value.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6);
+          return;
+        }
+        if(event.target.matches("[data-replacement-name]")){
+          if(selectedFulfillmentType==="substitute") clearRedemptionSelection();
+          var priceCheck=singleShell.querySelector("[data-same-price-confirm]");
+          if(priceCheck) priceCheck.checked=false;
+          samePriceConfirmed=false;
+          resetReviewState();
+          updateReplacementChoice();
+          updateConfirmAction();
+        }
+      });
+      singleHost.addEventListener("change",function(event){
+        if(event.target.matches("[data-supply-status]")){
+          applySupplyState();
+          return;
+        }
+        if(event.target.matches("[data-same-price-confirm]")){
+          if(selectedFulfillmentType==="substitute") clearRedemptionSelection();
+          resetReviewState();
+          updateReplacementChoice();
+          updateConfirmAction();
+          return;
+        }
+        if(event.target.matches("[data-policy-confirm]")){
+          policyConfirmed=event.target.checked;
+          resetReviewState();
+          updateConfirmAction();
+          announce(policyConfirmed?"已確認本桌活動規則":"已取消本桌活動規則確認");
+        }
+      });
+      if(current==="redeem"||current==="confirm") startCountdown();
+      updateQa();
+    }
+    addEventListener("pagehide",function(){
+      stopScanner({preserveStatus:true});
+    });
+    document.addEventListener("visibilitychange",function(){
+      if(document.hidden&&cameraStream){
+        stopScanner({preserveStatus:true});
+        setScannerStatus("頁面進入背景，相機已停止；請重新開啟掃描。","");
+      }
+    });
+    fitSim();
+  })();
+</script>
 
 </body>
 </html>

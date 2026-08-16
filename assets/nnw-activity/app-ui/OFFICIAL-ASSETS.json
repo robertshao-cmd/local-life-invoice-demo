@@ -1,0 +1,76 @@
+{
+  "source_base_url": "https://invoicemanager-screens-dev-557076811903.asia-east1.run.app/",
+  "download_date": "2026-08-10",
+  "assets": [
+    {
+      "filename": "bg_default_floor.webp",
+      "sha256": "0bec624f7f7d1c2309d864d0d88f4a1896f111301572e2055a3b0674c8a49acb",
+      "bytes": 10028
+    },
+    {
+      "filename": "bg_default_sky.webp",
+      "sha256": "c34bb4e041b777f61b2c19e8d5cf47a038e573b953b6c43665f92f2257e46bc4",
+      "bytes": 3382
+    },
+    {
+      "filename": "img_tree_lv5.png",
+      "sha256": "18543c7df60c5ec67c2e61b5e0ed0317ac84c0744d09bf160f53e4215733b372",
+      "bytes": 74853
+    },
+    {
+      "filename": "img_fortune_telling.webp",
+      "sha256": "ac8eaffd596b5878a2d1600ac2096078129b35c922f82594c3202d4dba491202",
+      "bytes": 3038
+    },
+    {
+      "filename": "img_my_reward.webp",
+      "sha256": "0f0eac7eb3b0c55a4e780ef1e61957acf127ff6ad88cad3d970ad3c56f892792",
+      "bytes": 1816
+    },
+    {
+      "filename": "img_barcode_widget.webp",
+      "sha256": "0f50a676a07f37dc8dcbf5c7574221a025e18741b6c89141b1260ebbad6a0917",
+      "bytes": 2174
+    },
+    {
+      "filename": "img_outcome_analysis.webp",
+      "sha256": "e4bbdfca0f05d4c5305e9d096b8c3d9e59d1ef0c005f1df208e992175f95e7b2",
+      "bytes": 1030
+    },
+    {
+      "filename": "img_bonus_prize.webp",
+      "sha256": "6e214adddfdd8e512e71739ddff6ba16fe111d4ce7ee10ea5fc5738a72112d66",
+      "bytes": 1010
+    },
+    {
+      "filename": "img_bee_colorless.png",
+      "sha256": "d89e9a8875927f515e05deff67e6c4e8e0053b130d1ad244b0b8a7c7b40c5d31",
+      "bytes": 47536
+    },
+    {
+      "filename": "scanGreenQRCode.png",
+      "sha256": "2fcceb5838e3610a40da90ec043766025ec284d10afb76d588180d0e4b799539",
+      "bytes": 25144
+    },
+    {
+      "filename": "scanTipDigital.png",
+      "sha256": "0640e93f05b7a5afae53b96afa96d0b97bbdeff08f8e83332a934b50451f2a0a",
+      "bytes": 7579
+    },
+    {
+      "filename": "scanTipTraditional.png",
+      "sha256": "5a5facd467649f16eee05ac6675a613b4f73df59629f9074afe3264a1b636df0",
+      "bytes": 13929
+    },
+    {
+      "filename": "tab_icon_carrier_mgmt.svg",
+      "sha256": "8e1d3a8e1cf7d5238299ff00501041aa74f3051200e1873aaa153e17b3a06336",
+      "bytes": 591
+    },
+    {
+      "filename": "tab_icon_carrier_mgmt_pressed.svg",
+      "sha256": "f0f5be90ff5069e73b8e39da59778754104efead5964bc246a89e0fd01130e33",
+      "bytes": 707
+    }
+  ]
+}
