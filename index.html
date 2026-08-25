@@ -3,167 +3,365 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>本地生活圈 × 發票載具</title>
+<title>本地生活圈 × 發票載具｜Demo 總覽</title>
 <style>
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:-apple-system,"PingFang TC","Noto Sans TC",sans-serif;background:#F5F7F7;color:#262626;line-height:1.7}
-  .wrap{max-width:860px;margin:0 auto;padding:32px 20px 60px}
-  header{border-bottom:3px solid #01AFA2;padding-bottom:18px;margin-bottom:26px}
-  h1{font-size:26px;font-weight:800;letter-spacing:.02em}
-  header p{font-size:14px;color:#6B7280;margin-top:8px}
-  .stage{display:inline-block;background:#FFF4D6;color:#8A6A1B;font-size:12px;font-weight:800;border-radius:99px;padding:4px 12px;margin-top:10px}
-  h2{font-size:15px;font-weight:800;color:#01AFA2;letter-spacing:.1em;margin:30px 0 12px;display:flex;align-items:center;gap:8px}
-  h2::before{content:"";width:4px;height:15px;background:#01AFA2;border-radius:2px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
-  a.card{display:block;background:#fff;border:1px solid #E6EAF0;border-radius:12px;padding:14px 16px;text-decoration:none;color:inherit;transition:.15s}
-  a.card:hover{border-color:#01AFA2;transform:translateY(-2px);box-shadow:0 6px 16px rgba(1,175,162,.12)}
-  a.card b{display:block;font-size:14.5px;font-weight:700}
-  a.card small{display:block;font-size:12px;color:#6B7280;margin-top:4px}
-  .tag{display:inline-block;font-size:10.5px;font-weight:800;border-radius:5px;padding:2px 7px;margin-top:7px}
-  .t-live{background:#E6F7F6;color:#01805C}
-  .t-demo{background:#EEF2FF;color:#4356A8}
-  .t-old{background:#F3F4F6;color:#8A8F98}
-  footer{margin-top:40px;padding-top:18px;border-top:1px solid #E6EAF0;font-size:12.5px;color:#8A8F98}
-  code{background:#F3F4F6;border-radius:4px;padding:1px 6px;font-size:12px}
+/* ══════════════════════════════════════════════════════════════
+   Design Token —— 單一 :root，system 層不得手改（design-system-governance spec）
+   本頁零外連：字體、樣式、資料全部內嵌。WebView 離線開啟不白屏。
+   ══════════════════════════════════════════════════════════════ */
+:root{
+  /* system · 色彩 */
+  /* c-brand 與 c-ink-3 都刻意壓深過一次：原值 #01805C / #8A8F98 在
+     淺底上量到 4.48 與 3.25，未達 WCAG AA 4.5:1。弱化的文字仍然要讀得到。 */
+  --c-brand:#016B4D; --c-brand-weak:#E6F7F6; --c-brand-line:#01AFA2;
+  --c-ink:#1A1F26; --c-ink-2:#5A6472; --c-ink-3:#6B7280;
+  --c-bg:#F5F7F7; --c-surface:#FFFFFF; --c-line:#E1E6EC;
+  --c-warn-bg:#FFF8E8; --c-warn-line:#F2E3B8; --c-warn-ink:#7A5D14;
+  --c-block-bg:#FDECEC; --c-block-line:#F5C4C4; --c-block-ink:#9B2020;
+  --c-focus:#0B63CE;
+  /* system · 間距（4/8 階） */
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:24px; --s-6:32px; --s-7:48px;
+  /* system · 字級 */
+  --f-xs:11.5px; --f-sm:12.5px; --f-md:14px; --f-lg:16px; --f-xl:20px; --f-2xl:26px;
+  --r-sm:6px; --r-md:10px; --r-lg:14px;
+  --shadow:0 1px 2px rgba(16,24,40,.04),0 4px 12px rgba(16,24,40,.06);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+  background:var(--c-bg); color:var(--c-ink); line-height:1.7;
+  -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:var(--s-6) var(--s-4) var(--s-7)}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--c-focus);outline-offset:2px;border-radius:var(--r-sm)}
+
+/* ── 頁首 ── */
+header{border-bottom:3px solid var(--c-brand-line);padding-bottom:var(--s-4);margin-bottom:var(--s-5)}
+h1{font-size:var(--f-2xl);font-weight:800;letter-spacing:.01em;line-height:1.35}
+.sub{font-size:var(--f-md);color:var(--c-ink-2);margin-top:var(--s-2);max-width:62ch}
+.gate{
+  display:inline-flex;align-items:center;gap:var(--s-2);margin-top:var(--s-3);
+  background:var(--c-warn-bg);border:1px solid var(--c-warn-line);color:var(--c-warn-ink);
+  font-size:var(--f-sm);font-weight:700;border-radius:99px;padding:var(--s-1) var(--s-3);
+}
+
+/* ── 篩選 ── */
+.filters{
+  background:var(--c-surface);border:1px solid var(--c-line);border-radius:var(--r-lg);
+  padding:var(--s-4);margin-bottom:var(--s-4);box-shadow:var(--shadow);
+}
+.frow{display:flex;flex-wrap:wrap;gap:var(--s-3);align-items:flex-end}
+.fgroup{display:flex;flex-direction:column;gap:var(--s-1);min-width:0}
+.fgroup label{font-size:var(--f-xs);font-weight:700;color:var(--c-ink-2);letter-spacing:.04em}
+select,input[type=search]{
+  font:inherit;font-size:var(--f-sm);color:var(--c-ink);background:var(--c-surface);
+  border:1px solid var(--c-line);border-radius:var(--r-sm);padding:7px 10px;min-height:38px;
+}
+input[type=search]{min-width:190px}
+.fcount{margin-left:auto;font-size:var(--f-sm);color:var(--c-ink-2);white-space:nowrap;padding-bottom:8px}
+.fcount b{color:var(--c-ink);font-variant-numeric:tabular-nums}
+.btn-reset{
+  font:inherit;font-size:var(--f-sm);background:none;border:1px solid var(--c-line);
+  border-radius:var(--r-sm);padding:8px 12px;cursor:pointer;color:var(--c-ink-2);min-height:38px;
+}
+.btn-reset:hover{border-color:var(--c-brand-line);color:var(--c-brand)}
+
+/* ── 狀態圖例 ── */
+.legend{
+  display:flex;flex-wrap:wrap;gap:var(--s-2) var(--s-4);
+  padding:var(--s-3) var(--s-4);background:var(--c-surface);
+  border:1px solid var(--c-line);border-radius:var(--r-lg);margin-bottom:var(--s-5);
+  font-size:var(--f-sm);color:var(--c-ink-2);
+}
+.legend .li{display:flex;align-items:center;gap:6px}
+
+/* 狀態徽章：形狀＋文字雙編碼，不靠顏色單獨表意 */
+.badge{
+  display:inline-flex;align-items:center;gap:5px;font-size:var(--f-xs);font-weight:800;
+  border-radius:var(--r-sm);padding:2px 8px;border:1px solid transparent;white-space:nowrap;
+}
+.badge .gl{font-size:10px;line-height:1}
+.b-available   {background:var(--c-brand-weak);color:var(--c-brand);   border-color:#B9E5DE}
+.b-demo-mocked {background:#EEF2FF;            color:#3B4A9E;          border-color:#CBD5F5}
+.b-in-development{background:#FFF1E4;          color:#8A4B10;          border-color:#F3D4B4}
+.b-planned     {background:#F1F3F6;            color:#4E5866;          border-color:#DCE1E8}
+.b-out-of-scope{background:#F1F3F6;            color:#5A6472;          border-color:#DCE1E8}
+
+/* ── 區塊 ── */
+h2{
+  font-size:var(--f-md);font-weight:800;color:var(--c-brand);letter-spacing:.1em;
+  margin:var(--s-6) 0 var(--s-3);display:flex;align-items:center;gap:var(--s-2);
+}
+h2::before{content:"";width:4px;height:15px;background:var(--c-brand-line);border-radius:2px}
+h2 .n{font-size:var(--f-xs);color:var(--c-ink-3);font-weight:600;letter-spacing:0}
+
+/* ── 卡片 ── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:var(--s-3);align-items:stretch}
+.card{
+  background:var(--c-surface);border:1px solid var(--c-line);border-radius:var(--r-md);
+  padding:var(--s-4);display:flex;flex-direction:column;gap:var(--s-2);box-shadow:var(--shadow);
+}
+.card h3{font-size:var(--f-lg);font-weight:700;line-height:1.4}
+.card .desc{font-size:var(--f-sm);color:var(--c-ink-2);flex:1}
+.meta{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.chip{
+  font-size:var(--f-xs);color:var(--c-ink-2);background:#F4F6F8;
+  border-radius:var(--r-sm);padding:2px 7px;white-space:nowrap;
+}
+.chip b{color:var(--c-ink)}
+.note{
+  font-size:var(--f-xs);line-height:1.65;color:var(--c-warn-ink);
+  background:var(--c-warn-bg);border:1px solid var(--c-warn-line);
+  border-radius:var(--r-sm);padding:6px 9px;
+}
+.note.blocked{color:var(--c-block-ink);background:var(--c-block-bg);border-color:var(--c-block-line)}
+.actions{display:flex;flex-wrap:wrap;gap:var(--s-2);margin-top:var(--s-1)}
+.act{
+  font-size:var(--f-sm);font-weight:700;text-decoration:none;border-radius:var(--r-sm);
+  padding:7px 12px;border:1px solid var(--c-line);color:var(--c-ink);background:var(--c-surface);
+  display:inline-flex;align-items:center;gap:5px;min-height:38px;
+}
+.act:hover{border-color:var(--c-brand-line);color:var(--c-brand);background:var(--c-brand-weak)}
+.act.primary{background:var(--c-brand);color:#fff;border-color:var(--c-brand)}
+.act.primary:hover{background:#01523B;color:#fff}
+.act.muted{color:var(--c-ink-3);border-style:dashed;cursor:not-allowed}
+.act.muted:hover{border-color:var(--c-line);color:var(--c-ink-3);background:var(--c-surface)}
+.verified{font-size:var(--f-xs);color:var(--c-ink-3);margin-top:2px}
+
+.empty{
+  border:1px dashed var(--c-line);border-radius:var(--r-md);padding:var(--s-6);
+  text-align:center;color:var(--c-ink-2);font-size:var(--f-md);background:var(--c-surface);
+}
+footer{margin-top:var(--s-7);padding-top:var(--s-4);border-top:1px solid var(--c-line);
+  font-size:var(--f-sm);color:var(--c-ink-3);line-height:1.9}
+footer a{color:var(--c-brand)}
+
+@media (max-width:520px){
+  .wrap{padding:var(--s-4) var(--s-3) var(--s-6)}
+  h1{font-size:var(--f-xl)}
+  .grid{grid-template-columns:1fr}
+  .fcount{margin-left:0;width:100%;padding-bottom:0}
+  input[type=search]{min-width:0;width:100%}
+  .fgroup{flex:1 1 46%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
 <div class="wrap">
+
   <header>
-    <h1>本地生活圈 × 發票載具</h1>
-    <p>把「消費後對獎」的發票載具 App，往前推成「消費前入口」的 O2O 平台。</p>
-    <span class="stage">目前階段：EVIDENCE FIRST · 驗證優先，尚未進入正式建置</span>
+    <h1>本地生活圈 × 發票載具｜Demo 總覽</h1>
+    <p class="sub">把「消費後對獎」的發票載具 App，往前推成「消費前入口」的 O2O 平台。
+       這一頁是所有 Demo 的唯一入口，內容由 <code>registry/capabilities.json</code> 產生——
+       新增頁面請登記 capability，不要手改這份 HTML。</p>
+    <span class="gate" id="gate-note"></span>
   </header>
 
-  <h2>商家小程序 · 到店鏈路</h2>
-  <div class="grid">
-    <a class="card" href="./consumer/nnw-store-test.html?store=nuan">
-      <b>🍝 到店實測版</b>
-      <small>真掃碼 → 解析點到桌卡 → 跳正式點餐頁，含測試記錄面板</small>
-      <span class="tag t-live">可實測</span>
-    </a>
-    <a class="card" href="./consumer/activity-nnw-gift.html">
-      <b>🎁 暖暖窩活動頁 <span style="font-size:11px;color:#01805C">v27</span></b>
-      <small>顧客「我的獎勵」6 位碼 → 店員核銷 → 售罄同價替代 → 收據</small>
-      <span class="tag t-live">最新版</span>
-    </a>
-    <a class="card" href="https://nnw-warmnest-owner-demo.pages.dev/" target="_blank" rel="noopener noreferrer">
-      <b>🎁 暖暖窩活動頁 <span style="font-size:11px;color:#B0742A">v24</span></b>
-      <small>官方 Cloudflare 站。<b>目前落後三版</b>，缺售罄替代機制</small>
-      <span class="tag t-old">官方·舊版</span>
-    </a>
-    <a class="card" href="./merchant/merchant.html">
-      <b>🏪 商家工作台</b>
-      <small>助手／生意參謀／用戶端預覽／載具首頁</small>
-      <span class="tag t-demo">Demo</span>
-    </a>
-  </div>
-  <div style="background:#FFF8E8;border:1px solid #F2E3B8;border-radius:10px;padding:12px 14px;font-size:12.5px;line-height:1.85;color:#7A6428;margin-top:4px">
-    ⚠️ <b>兩個活動頁版本不同，發連結前先確認你要給的是哪一個</b>（2026-08-16 實測，逐位元組比對）
-    <table style="width:100%;border-collapse:collapse;margin:8px 0 6px;font-size:12px">
-      <tr style="text-align:left;color:#8A6A1B">
-        <th style="padding:3px 6px 3px 0">　</th><th style="padding:3px 6px">版本</th>
-        <th style="padding:3px 6px">大小</th><th style="padding:3px 6px">SHA-256</th>
-      </tr>
-      <tr><td style="padding:3px 6px 3px 0">本站（GitHub）</td><td style="padding:3px 6px"><b>v27</b></td>
-          <td style="padding:3px 6px">104,186</td><td style="padding:3px 6px"><code style="font-size:11px">8523b21d…</code></td></tr>
-      <tr><td style="padding:3px 6px 3px 0">官方（Cloudflare）</td><td style="padding:3px 6px"><b>v24</b></td>
-          <td style="padding:3px 6px">89,892</td><td style="padding:3px 6px"><code style="font-size:11px">87a12505…</code></td></tr>
-    </table>
-    <b>官方站缺的東西：</b><br>
-    ・<b>v25 核心閉環</b>（最大一塊，體積差 14KB）——店員標記售罄、售罄原品不可直接核銷、
-    替代品必填品名並勾選「已確認同價」、核銷前強制確認限內用／本桌未領取／未併用優惠<br>
-    ・<b>v26–v27 兩個 UX 修正</b>——toast 遮住核銷按鈕、程式焦點造成標題黑框<br>
-    <b>為什麼還沒更新：</b>v27 的 UAT 12 項全 PASS、bundle audit 判定 GO，
-    卡的是 <b>Cloudflare 裝置授權尚未完成</b>，不是品質問題。授權完成部署後兩邊就會一致。
-  </div>
+  <section class="filters" aria-label="篩選">
+    <div class="frow">
+      <div class="fgroup"><label for="f-side">端</label>
+        <select id="f-side"><option value="">全部</option>
+          <option value="user">User 使用者端</option>
+          <option value="biz">Biz 商家端</option>
+          <option value="shared">Shared 共用</option></select></div>
+      <div class="fgroup"><label for="f-status">狀態</label>
+        <select id="f-status"><option value="">全部</option></select></div>
+      <div class="fgroup"><label for="f-phase">Roadmap</label>
+        <select id="f-phase"><option value="">全部</option></select></div>
+      <div class="fgroup"><label for="f-data">資料</label>
+        <select id="f-data"><option value="">全部</option>
+          <option value="real">Real 真實</option>
+          <option value="mock">Mock 模擬</option>
+          <option value="hybrid">Hybrid</option></select></div>
+      <div class="fgroup"><label for="f-doc">技術文件</label>
+        <select id="f-doc"><option value="">全部</option>
+          <option value="1">有文件</option></select></div>
+      <div class="fgroup"><label for="f-q">搜尋</label>
+        <input type="search" id="f-q" placeholder="名稱、說明、Sales Kit…"></div>
+      <button class="btn-reset" id="f-reset" type="button">清除條件</button>
+      <div class="fcount" id="f-count" role="status" aria-live="polite"></div>
+    </div>
+  </section>
 
-  <h2>商家核銷場測 · 外部站</h2>
-  <div class="grid">
-    <a class="card" href="https://nnw-merchant-field-pilot.pages.dev/?scale=micro" target="_blank" rel="noopener noreferrer">
-      <b>🧾 店員核銷（單店極簡版）</b>
-      <small>店員掃顧客 QR → 核對資格 → 選贈品 → 本機收據。0817 暖暖窩受控場測用</small>
-      <span class="tag t-live">受控場測</span>
-    </a>
-    <a class="card" href="https://nnw-merchant-field-pilot.pages.dev/tester?scale=micro" target="_blank" rel="noopener noreferrer">
-      <b>📱 顧客出示端（測試用）</b>
-      <small>在另一支手機顯示 Pilot QR 與 6 位碼；顧客只出示，不掃碼</small>
-      <span class="tag t-live">受控場測</span>
-    </a>
-  </div>
-  <p style="font-size:12px;color:#8A8F98;margin-top:-4px;line-height:1.8">
-    ⚠️ 這兩個是<b>外部站</b>（Cloudflare Pages，不在本 repo）。屬「受控、有人看守、單店、
-    單一店員裝置」的 UX Pilot ——<b>不是正式核銷</b>，沒有正式身分驗證、跨裝置帳本或 POS 驗證。
-    顧客不掃碼，只出示 QR；掃描的是店員。
-  </p>
+  <div class="legend" id="legend" aria-label="狀態圖例"></div>
 
-  <h2>自營小程序 · 已上線正式站</h2>
-  <div class="grid">
-    <a class="card" href="https://ailab-dev.cmoney.tw/bored/" target="_blank" rel="noopener noreferrer">
-      <b>😶 無聊快篩</b>
-      <small>3 題測驗 → 推薦 → 可叫出載具條碼。<b>正式站，永遠最新</b></small>
-      <span class="tag t-live">已上線</span>
-    </a>
-    <a class="card" href="https://ailab-dev.cmoney.tw/wealth/" target="_blank" rel="noopener noreferrer">
-      <b>💸 幾歲破產</b>
-      <small>帶 cid 進來會查本人發票、換成真實金額。<b>正式站，永遠最新</b></small>
-      <span class="tag t-live">已上線</span>
-    </a>
-  </div>
-  <p style="font-size:12px;color:#8A8F98;margin-top:-4px;line-height:1.8">
-    ✅ 這兩個連的是<b>正式部署</b>（GitLab CI → Cloud Run），不是本 repo 的靜態鏡像——
-    所以你看到的永遠是最新版，個人化與埋點也都是真的在運作。
-  </p>
-
-  <h2>自營小程序 · 原型（尚未上線）</h2>
-  <div class="grid">
-    <a class="card" href="./mini/detox/">
-      <b>🧪 解毒吧</b>
-      <small>食安品項快篩。<b>尚未上線</b>，這是靜態原型</small>
-      <span class="tag t-demo">原型</span>
-    </a>
-    <a class="card" href="./mini/">
-      <b>🧩 小程序架（殼）</b>
-      <small>三顆並排時的貨架長相示意</small>
-      <span class="tag t-demo">原型</span>
-    </a>
-    <a class="card" href="./consumer/app.html?v=6.19">
-      <b>📱 用戶體驗版</b>
-      <small>消費者主線：對獎、掃碼、結帳折抵</small>
-      <span class="tag t-demo">原型</span>
-    </a>
-    <a class="card" href="./_legacy/real-home-v7.html">
-      <b>🏠 真實首頁殼</b>
-      <small>對主管演「裝在載具 App 裡的樣子」</small>
-      <span class="tag t-old">Legacy</span>
-    </a>
-  </div>
-  <p style="font-size:12px;color:#8A8F98;margin-top:-4px;line-height:1.8">
-    ⚠️ 這一區是<b>靜態快照，沒有後端</b>：只能看 UI，個人化資料、分類 API、埋點都不會運作，
-    而且不會跟著正式版更新。要看真實行為請用上面那區。
-  </p>
-
-  <h2>文件入口</h2>
-  <div class="grid">
-    <a class="card" href="https://github.com/robertshao-cmd/local-life-invoice#readme">
-      <b>📖 README</b>
-      <small>問題／北極星／階段／怎麼啟動</small>
-    </a>
-    <a class="card" href="https://github.com/robertshao-cmd/local-life-invoice/blob/main/docs/product/problem-brief.md">
-      <b>🎯 Problem Brief</b>
-      <small>面向誰、JTBD、為什麼是現在</small>
-    </a>
-    <a class="card" href="https://github.com/robertshao-cmd/local-life-invoice/tree/main/openspec/changes">
-      <b>📐 OpenSpec Changes</b>
-      <small>規格驅動的變更提案與驗收清單</small>
-    </a>
-  </div>
+  <main id="out"></main>
 
   <footer>
     原始碼：<a href="https://github.com/robertshao-cmd/local-life-invoice">robertshao-cmd/local-life-invoice</a>　·
-    本頁與所有原型皆為<b>內部示範</b>，不含任何真實個資或憑證。<br>
-    ⚠️ 2026-08-16 起本 repo 由 <code>fapiao-demo</code> 改名並合併其餘 8 個 repo；舊網址已失效。
+    規格：<a href="https://github.com/robertshao-cmd/local-life-invoice/tree/main/openspec/changes">OpenSpec Changes</a>　·
+    技術文件：<code>docs/capabilities/</code><br>
+    本頁與所有原型皆為<b>內部示範</b>，不含任何真實個資或憑證。手機號一律遮罩。
   </footer>
 </div>
+
+<!-- REGISTRY:BEGIN —— 由 scripts/sync-registry.py 注入，請勿手改 -->
+<script id="registry-data" type="application/json">{"_meta":{"gate0":"pending","statusVocabulary":{"available":"目前可運作","demo-mocked":"僅供展示，使用 Mock Data","in-development":"已進入開發","planned":"Roadmap 規劃中","out-of-scope":"目前不包含"},"roadmapPhases":["W0","W1","W2","W3","W4","W5","W6","unscheduled"]},"capabilities":[{"id":"S-01","title":"總覽導覽頁","description":"所有 NNW Demo 的唯一入口，由本 registry 渲染","side":"shared","category":"導覽","roadmapPhase":"unscheduled","implementationStatus":"available","salesKitReference":"P5","salesMessage":"不用先做一個新 App，也能把店開到顧客原本就在使用的地方","demoRoute":"./index.html","technicalDocUrl":"./docs/capabilities/S-01.md","designSystemReferences":["token/system","component/status-badge","component/capability-card","component/doc-link"],"dataMode":"mock","dependencies":[],"counterpartIds":[],"owner":"Robert","lastVerifiedAt":"2026-08-25","notes":"本次變更由硬編碼卡片改為 registry 驅動"},{"id":"S-02","title":"小程序架（殼）","description":"三顆自營小程序並排時的貨架長相","side":"shared","category":"導覽","roadmapPhase":"unscheduled","implementationStatus":"demo-mocked","demoRoute":"./mini/index.html","technicalDocUrl":"./docs/capabilities/S-02.md","designSystemReferences":["token/system"],"dataMode":"mock","dependencies":[],"counterpartIds":[],"owner":"Robert","lastVerifiedAt":"2026-08-25"},{"id":"U-01","title":"餐飲小程序示範（入口）","description":"消費端各示範店的入口頁","side":"user","category":"入口","roadmapPhase":"unscheduled","implementationStatus":"demo-mocked","demoRoute":"./consumer/index.html","technicalDocUrl":"./docs/capabilities/U-01.md","designSystemReferences":["token/system"],"dataMode":"mock","dependencies":[],"counterpartIds":[],"owner":"Robert","lastVerifiedAt":"2026-08-25"},{"id":"U-02","title":"用戶體驗版 v6.0","description":"消費者主線：對獎、掃碼、結帳折抵（已接第三方支付）","side":"user","category":"主線","roadmapPhase":"unscheduled","implementationStatus":"demo-mocked","salesKitReference":"P8","salesMessage":"顧客只做三件事：看到、進店、使用","demoRoute":"./consumer/user.html","technicalDocUrl":"./docs/capabilities/U-02.md","designSystemReferences":["token/system"],"dataMode":"mock","dependencies":[],"counterpartIds":[],"owner":"Robert","lastVerifiedAt":"2026-08-25","notes":"⚠️ 與 U-03 內容高度重複，差異僅第三方支付；職責切分待決（tasks 0.4）"},{"id":"U-03","title":"用戶體驗版・未接第三方支付","description":"同 U-02，但情境為到店付款＋嗶載具","side":"user","category":"主線","roadmapPhase":"unscheduled","implementationStatus":"demo-mocked","salesKitReference":"P8","demoRoute":"./consumer/app.html","technicalDocUrl":"./docs/capabilities/U-03.md","designSystemReferences":["token/system"],"dataMode":"mock","dependencies":[],"counterpartIds":[],"owner":"Robert","lastVerifiedAt":"2026-08-25","notes":"⚠️ 舊總覽頁連結標 ?v=6.19，檔內標題為 v6.0——版本標註不一致待修"},{"id":"U-04","title":"暖暖窩體驗 Demo（連鎖底版）","description":"中小型連鎖體驗 demo 通用底版。連結打開即為店內菜單","side":"user","category":"連鎖底版","roadmapPhase":"W1","roadmapMilestone":"W1 種子商家 pitch","implementationStatus":"demo-mocked","salesKitReference":"P2","salesMessage":"不用做新 App、不用換 POS，你就能在客人手機裡有一間自己的店","demoRoute":"./consumer/nnw-demo.html","technicalDocUrl":"./docs/capabilities/U-04.md","designSystemReferences":["token/brand","component/persona-card"],"dataMode":"mock","dependencies":[],"counterpartIds":["B-02"],"owner":"Robert","lastVerifiedAt":"2026-08-25","notes":"進場直達店內菜單（?home=1 可切回 App 首頁進場；?store=<key> 指定品牌）。換店只改 PERSONA 與 preset 層，schema 不動。"},{"id":"U-05","title":"Robert's Steak House（沙盒）","description":"以底版換店的驗證實例，虛構品牌","side":"user","category":"沙盒","roadmapPhase":"unscheduled","implementationStatus":"out-of-scope","demoRoute":"./consumer/steak-demo.html","technicalDocUrl":"./docs/capabilities/U-05.md","designSystemReferences":["token/brand"],"dataMode":"mock","dependencies":["U-04"],"counterpartIds":[],"owner":"Robert","lastVerifiedAt":"2026-08-25","notes":"虛構品牌，可對外展示"},{"id":"U-06","title":"雞肉本家 青島店（沙盒）","description":"真實商家的假設性沙盒——未接觸該商家，不對外發佈","side":"user","category":"沙盒","roadmapPhase":"unscheduled","implementationStatus":"out-of-scope","technicalDocUrl":"./docs/capabilities/U-06.md","designSystemReferences":["token/brand"],"dataMode":"mock","dependencies":["U-04"],"counterpartIds":[],"owner":"Robert","lastVerifiedAt":"2026-08-25","notes":"🔒 刻意無 demoRoute：真實店家沙盒放上公開站會被讀成既有合作關係。檔案存在但只在本機可開，publish-demo 已排除。"},{"id":"U-07","title":"暖暖窩活動頁 v27","description":"顧客「我的獎勵」6 位碼 → 店員核銷 → 售罄同價替代 → 收據","side":"user","category":"活動","roadmapPhase":"W0","implementationStatus":"available","salesKitReference":"P8","demoRoute":"./consumer/activity-nnw-gift.html","technicalDocUrl":"./docs/capabilities/U-07.md","designSystemReferences":["token/brand"],"dataMode":"mock","dependencies":[],"counterpartIds":["B-04"],"owner":"Robert","lastVerifiedAt":"2026-08-25","notes":"⚠️ 官方 Cloudflare 站為 v24，落後三版（缺 v25 核心閉環＋v26–27 UX 修正）。卡在裝置授權，非品質問題。"},{"id":"U-08","title":"到店實測版（0814）","description":"真掃碼 → 解析點到桌卡 → 跳正式點餐頁，含測試記錄面板","side":"user","category":"場測","roadmapPhase":"W0","roadmapMilestone":"W0 全鏈路真單走通（8/19 實測）","implementationStatus":"available","demoRoute":"./consumer/nnw-store-test.html?store=nuan","technicalDocUrl":"./docs/capabilities/U-08.md","designSystemReferences":["token/system"],"dataMode":"real","dependencies":["dotdao.ordering"],"counterpartIds":["B-01"],"owner":"Robert","lastVerifiedAt":"2026-08-25","notes":"連點到正式點餐頁"},{"id":"U-09","title":"掃碼點餐到店實測版","description":"0814 暖暖窩掃碼點餐實測","side":"user","category":"場測","roadmapPhase":"W0","implementationStatus":"available","demoRoute":"./consumer/nnw-live-test.html","technicalDocUrl":"./docs/capabilities/U-09.md","designSystemReferences":["token/system"],"dataMode":"real","dependencies":["dotdao.ordering"],"counterpartIds":[],"owner":"Robert","lastVerifiedAt":"2026-08-25","notes":"⚠️ 與 U-08 職責重疊，需釐清"},{"id":"U-10","title":"無聊快篩","description":"3 題測驗 → 推薦 → 可叫出載具條碼","side":"user","category":"自營小程序","roadmapPhase":"unscheduled","implementationStatus":"available","demoRoute":"https://ailab-dev.cmoney.tw/bored/","technicalDocUrl":"./docs/capabilities/U-10.md","designSystemReferences":["package/unit-kit"],"dataMode":"real","dependencies":[],"counterpartIds":[],"owner":"Robert","lastVerifiedAt":"2026-08-25","notes":"正式部署（GitLab CI → Cloud Run），永遠最新；埋點與個人化皆真實運作"},{"id":"U-11","title":"幾歲破產","description":"帶 cid 進來會查本人發票、換成真實金額","side":"user","category":"自營小程序","roadmapPhase":"unscheduled","implementationStatus":"available","demoRoute":"https://ailab-dev.cmoney.tw/wealth/","technicalDocUrl":"./docs/capabilities/U-11.md","designSystemReferences":["package/unit-kit"],"dataMode":"real","dependencies":[],"counterpartIds":[],"owner":"Robert","lastVerifiedAt":"2026-08-25","notes":"正式部署，永遠最新"},{"id":"U-12","title":"解毒吧","description":"食安品項快篩","side":"user","category":"自營小程序","roadmapPhase":"unscheduled","implementationStatus":"demo-mocked","demoRoute":"./mini/detox/index.html","technicalDocUrl":"./docs/capabilities/U-12.md","designSystemReferences":["package/unit-kit"],"dataMode":"mock","dependencies":[],"counterpartIds":[],"owner":"Robert","lastVerifiedAt":"2026-08-25","notes":"尚未上線，靜態原型"},{"id":"U-13","title":"真實首頁殼（legacy）","description":"對主管演「裝在載具 App 裡的樣子」","side":"user","category":"legacy","roadmapPhase":"unscheduled","implementationStatus":"out-of-scope","demoRoute":"./_legacy/real-home-v7.html","technicalDocUrl":"./docs/capabilities/U-13.md","designSystemReferences":[],"dataMode":"mock","dependencies":[],"counterpartIds":[],"owner":"Robert","lastVerifiedAt":"2026-08-25","notes":"已被 U-04 取代"},{"id":"B-01","title":"商家工作台 v4.3（聚合版）","description":"助手／生意參謀／用戶端預覽／載具首頁 的聚合入口","side":"biz","category":"聚合入口","roadmapPhase":"W2","implementationStatus":"demo-mocked","salesKitReference":"P9","salesMessage":"店由你自己管理；CMoney 負責工具、上架與第一次合作支援","demoRoute":"./merchant/merchant.html","technicalDocUrl":"./docs/capabilities/B-01.md","bizTemplateReference":"BLOCKED:C-1","designSystemReferences":["token/system"],"dataMode":"mock","dependencies":[],"counterpartIds":["U-08"],"owner":"Robert","lastVerifiedAt":"2026-08-25","notes":"⛔ 模板標準化阻塞於 C-1（Biz Store Dev Template Doc 查無此文件）"},{"id":"B-02","title":"商家助手 v3.6","description":"商家端主線：接單、菜單、會員","side":"biz","category":"商家主線","roadmapPhase":"W2","implementationStatus":"demo-mocked","salesKitReference":"P9","demoRoute":"./merchant/merchant-app.html","technicalDocUrl":"./docs/capabilities/B-02.md","bizTemplateReference":"BLOCKED:C-1","designSystemReferences":["token/system"],"dataMode":"mock","dependencies":[],"counterpartIds":["U-04"],"owner":"Robert","lastVerifiedAt":"2026-08-25","notes":"⛔ 阻塞於 C-1"},{"id":"B-03","title":"數據參謀 v1.3","description":"商家端當日營業額、訂單數與品項排行","side":"biz","category":"數據","roadmapPhase":"W2","implementationStatus":"demo-mocked","salesKitReference":"P10","salesMessage":"第一檔看三個數字：多少人進入商店、多少人查看優惠、多少人完成核銷","demoRoute":"./merchant/merchant-analytics.html","technicalDocUrl":"./docs/capabilities/B-03.md","bizTemplateReference":"BLOCKED:C-1","designSystemReferences":["token/system"],"dataMode":"mock","dependencies":[],"counterpartIds":[],"owner":"Robert","lastVerifiedAt":"2026-08-25","notes":"⚠️ 頁內日期停在 07/20–07/26，對外 demo 前要更新（verify-demo 警告）"},{"id":"B-04","title":"店員核銷（單店極簡版）","description":"店員掃顧客 QR → 核對資格 → 選贈品 → 本機收據","side":"biz","category":"核銷","roadmapPhase":"W0","roadmapMilestone":"0817 暖暖窩受控場測","implementationStatus":"available","demoRoute":"https://nnw-merchant-field-pilot.pages.dev/?scale=micro","technicalDocUrl":"./docs/capabilities/B-04.md","bizTemplateReference":"BLOCKED:C-1","designSystemReferences":[],"dataMode":"real","dependencies":[],"counterpartIds":["U-07"],"owner":"Robert","lastVerifiedAt":"2026-08-25","notes":"⚠️ 外部站（Cloudflare Pages），不在本 repo。受控場測、非正式核銷：無正式身分驗證、跨裝置帳本或 POS 驗證。"},{"id":"B-05","title":"顧客出示端（測試用）","description":"在另一支手機顯示 Pilot QR 與 6 位碼","side":"biz","category":"核銷","roadmapPhase":"W0","implementationStatus":"available","demoRoute":"https://nnw-merchant-field-pilot.pages.dev/tester?scale=micro","technicalDocUrl":"./docs/capabilities/B-05.md","bizTemplateReference":"BLOCKED:C-1","designSystemReferences":[],"dataMode":"real","dependencies":["B-04"],"counterpartIds":[],"owner":"Robert","lastVerifiedAt":"2026-08-25","notes":"⚠️ 外部站。顧客只出示 QR，掃描的是店員。"},{"id":"B-06","title":"五步開店精靈","description":"商家從素材備妥到店面可被掃碼下單，主動操作 ≤30 分鐘","side":"biz","category":"開店","roadmapPhase":"W2","roadmapMilestone":"store-foundation-v1","implementationStatus":"planned","salesKitReference":"P10","technicalDocUrl":"./docs/capabilities/B-06.md","bizTemplateReference":"BLOCKED:C-1","designSystemReferences":[],"dataMode":"mock","dependencies":["xlab.provisioning"],"counterpartIds":[],"owner":"Robert","lastVerifiedAt":"2026-08-25","notes":"⛔ Gate 0 待核（store-foundation-v1）＋ 假設 A1（xlab provisioning）未驗證。刻意無 demoRoute。"},{"id":"U-14","title":"發票自動歸戶","description":"訂單開立發票後自動存進載具","side":"user","category":"發票","roadmapPhase":"W2","implementationStatus":"demo-mocked","salesKitReference":"P4","salesMessage":"發票不是我們做出來的流量，是每一筆消費本來就會產生的憑證","technicalDocUrl":"./docs/capabilities/U-14.md","designSystemReferences":[],"dataMode":"mock","dependencies":["store.enableInvoice"],"counterpartIds":[],"owner":"Robert","lastVerifiedAt":"2026-08-25","notes":"⚠️ Conflict C-3：Roadmap 列為 V1 必須，但 0824 實測六家候選種子店近 30 天全無發票紀錄。依賴商家開票能力，非我方可控。刻意無 demoRoute。"}]}</script>
+<!-- REGISTRY:END -->
+
+<script>
+(function(){
+  "use strict";
+  var DATA = JSON.parse(document.getElementById('registry-data').textContent);
+  var META = DATA._meta || {}, CAPS = DATA.capabilities || [];
+  var VOCAB = META.statusVocabulary || {};
+  /* 狀態的形狀編碼——色覺障礙者只靠顏色分不出來，所以形狀＋文字雙保險 */
+  var GLYPH = {
+    'available':'●', 'demo-mocked':'◐', 'in-development':'◔',
+    'planned':'○', 'out-of-scope':'✕'
+  };
+  var SIDE_ZH = { user:'User 使用者端', biz:'Biz 商家端', shared:'Shared 共用' };
+  var DATA_ZH = { real:'Real 真實資料', mock:'Mock 模擬資料', hybrid:'Hybrid' };
+  var byId = {}; CAPS.forEach(function(c){ byId[c.id] = c; });
+
+  var $ = function(id){ return document.getElementById(id); };
+  var esc = function(s){ return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); };
+
+  /* ── Gate 0 提示 ── */
+  $('gate-note').textContent = META.gate0 === 'pending'
+    ? 'Gate 0 未核准 · 本頁為核准前實作'
+    : 'Gate 0：' + (META.gate0 || 'unknown');
+
+  /* ── 動態填篩選選項與圖例 ── */
+  Object.keys(VOCAB).forEach(function(k){
+    var o = document.createElement('option'); o.value = k;
+    o.textContent = VOCAB[k] + '（' + k + '）'; $('f-status').appendChild(o);
+    var li = document.createElement('span'); li.className = 'li';
+    li.innerHTML = '<span class="badge b-' + k + '"><span class="gl">' + GLYPH[k] +
+                   '</span>' + esc(VOCAB[k]) + '</span>';
+    $('legend').appendChild(li);
+  });
+  (META.roadmapPhases || []).forEach(function(p){
+    var o = document.createElement('option'); o.value = p;
+    o.textContent = p === 'unscheduled' ? '未排期' : p; $('f-phase').appendChild(o);
+  });
+
+  /* ── 篩選狀態 ⇄ URL（可複製分享、重新整理不掉） ── */
+  var F = { side:'', status:'', phase:'', data:'', doc:'', q:'' };
+  function readURL(){
+    var p = new URLSearchParams(location.search);
+    Object.keys(F).forEach(function(k){ F[k] = p.get(k) || ''; });
+  }
+  function writeURL(){
+    var p = new URLSearchParams();
+    Object.keys(F).forEach(function(k){ if (F[k]) p.set(k, F[k]); });
+    var qs = p.toString();
+    history.replaceState(null, '', qs ? '?' + qs : location.pathname);
+  }
+  function syncControls(){
+    $('f-side').value = F.side; $('f-status').value = F.status;
+    $('f-phase').value = F.phase; $('f-data').value = F.data;
+    $('f-doc').value = F.doc; $('f-q').value = F.q;
+  }
+
+  function match(c){
+    if (F.side && c.side !== F.side) return false;
+    if (F.status && c.implementationStatus !== F.status) return false;
+    if (F.phase && c.roadmapPhase !== F.phase) return false;
+    if (F.data && c.dataMode !== F.data) return false;
+    if (F.doc === '1' && !c.technicalDocUrl) return false;
+    if (F.q){
+      var hay = [c.id, c.title, c.description, c.category, c.salesKitReference,
+                 c.salesMessage, c.notes].join(' ').toLowerCase();
+      if (hay.indexOf(F.q.toLowerCase()) === -1) return false;
+    }
+    return true;
+  }
+
+  function badge(c){
+    var s = c.implementationStatus;
+    return '<span class="badge b-' + esc(s) + '"><span class="gl">' + (GLYPH[s] || '·') +
+           '</span>' + esc(VOCAB[s] || s) + '</span>';
+  }
+
+  function card(c){
+    var h = ['<article class="card">'];
+    h.push('<div class="meta">' + badge(c) +
+           '<span class="chip"><b>' + esc(c.id) + '</b></span>' +
+           '<span class="chip">' + esc(c.roadmapPhase === 'unscheduled' ? '未排期' : c.roadmapPhase) + '</span>' +
+           '<span class="chip">' + esc(DATA_ZH[c.dataMode] || c.dataMode) + '</span>' +
+           '</div>');
+    h.push('<h3>' + esc(c.title) + '</h3>');
+    h.push('<p class="desc">' + esc(c.description) + '</p>');
+
+    var chips = ['<span class="chip">' + esc(SIDE_ZH[c.side] || c.side) + '</span>',
+                 '<span class="chip">' + esc(c.category) + '</span>'];
+    if (c.salesKitReference) chips.push('<span class="chip">Sales Kit <b>' + esc(c.salesKitReference) + '</b></span>');
+    (c.designSystemReferences || []).forEach(function(d){
+      chips.push('<span class="chip">' + esc(d) + '</span>');
+    });
+    h.push('<div class="meta">' + chips.join('') + '</div>');
+
+    if (c.notes){
+      var blocked = /⛔|BLOCKED/.test(c.notes) ||
+                    /^BLOCKED/.test(c.bizTemplateReference || '');
+      h.push('<p class="note' + (blocked ? ' blocked' : '') + '">' + esc(c.notes) + '</p>');
+    }
+
+    var a = [];
+    if (c.demoRoute){
+      var ext = /^https?:/.test(c.demoRoute);
+      a.push('<a class="act primary" href="' + esc(c.demoRoute) + '"' +
+             (ext ? ' target="_blank" rel="noopener noreferrer"' : '') + '>開啟 Demo' +
+             (ext ? ' ↗' : '') + '</a>');
+    } else {
+      /* 沒有 demoRoute 就不給可點的入口——planned 被誤認為 live 是本案要防的第一件事 */
+      a.push('<span class="act muted" aria-disabled="true">尚無 Demo</span>');
+    }
+    if (c.technicalDocUrl) a.push('<a class="act" href="' + esc(c.technicalDocUrl) + '">技術文件</a>');
+    (c.counterpartIds || []).forEach(function(o){
+      var m = byId[o]; if (!m) return;
+      var label = c.side === 'user' ? '對應商家端' : '使用者會看到';
+      a.push('<a class="act" href="?q=' + encodeURIComponent(o) + '">' + label + '：' + esc(m.title) + '</a>');
+    });
+    h.push('<div class="actions">' + a.join('') + '</div>');
+    if (c.lastVerifiedAt) h.push('<div class="verified">最後驗證 ' + esc(c.lastVerifiedAt) + '</div>');
+    h.push('</article>');
+    return h.join('');
+  }
+
+  var SECTIONS = [
+    { key:'user',   label:'USER SIDE　使用者端' },
+    { key:'biz',    label:'BIZ SIDE　商家端' },
+    { key:'shared', label:'SHARED　共用與導覽' }
+  ];
+
+  function render(){
+    var hits = CAPS.filter(match);
+    $('f-count').innerHTML = '符合 <b>' + hits.length + '</b> / ' + CAPS.length + ' 項';
+    if (!hits.length){
+      $('out').innerHTML = '<div class="empty">沒有符合條件的功能。<br>' +
+        '試著放寬條件，或按「清除條件」看全部 ' + CAPS.length + ' 項。</div>';
+      return;
+    }
+    var out = [];
+    SECTIONS.forEach(function(s){
+      var list = hits.filter(function(c){ return c.side === s.key; });
+      if (!list.length) return;
+      out.push('<h2>' + s.label + '<span class="n">' + list.length + ' 項</span></h2>');
+      out.push('<div class="grid">' + list.map(card).join('') + '</div>');
+    });
+    $('out').innerHTML = out.join('');
+  }
+
+  function bind(id, key){
+    $(id).addEventListener('input', function(){
+      F[key] = this.value; writeURL(); render();
+    });
+  }
+  bind('f-side','side'); bind('f-status','status'); bind('f-phase','phase');
+  bind('f-data','data'); bind('f-doc','doc'); bind('f-q','q');
+  $('f-reset').addEventListener('click', function(){
+    Object.keys(F).forEach(function(k){ F[k] = ''; });
+    syncControls(); writeURL(); render();
+  });
+  window.addEventListener('popstate', function(){ readURL(); syncControls(); render(); });
+
+  readURL(); syncControls(); render();
+})();
+</script>
 </body>
 </html>
