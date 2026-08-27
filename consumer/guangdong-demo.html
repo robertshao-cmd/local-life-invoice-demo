@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#2FA98C">
-<title>發票載具｜光東养茶茶餐 體驗預覽（示範・非正式商店）</title>
+<title>商家小程序｜光東养茶 體驗預覽（示範・非正式商店）</title>
 <style>
 :root{
   --navy:#1F3352; --teal:#0E7C7B; --teal-deep:#0A5F5E; --gold:#B8912F; --gold-bg:#FAF3DF;
@@ -997,20 +997,20 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
 
 <div class="stage">
   <div class="stage-head">
-    <div class="eyebrow">發票載具 · 小程序 DEMO v6.0</div>
-    <h1>用戶體驗版｜真實載具首頁（依截圖重建）· 沈浸式小程序</h1>
+    <div class="eyebrow">CMoney 商家小程序 · 體驗 DEMO</div>
+    <h1>用戶體驗版｜掃碼點餐 × 會員 · 沈浸式小程序</h1>
     <p>首頁依真實 App 截圖重建 · 小程序內容以「提案新增」嵌入 · 資料皆為模擬</p>
   </div>
 
   <div class="paybar" role="group" aria-label="支付情境切換">
     <span class="lb">支付情境</span>
     <button id="pb-on" class="on" onclick="setPay(true)">✅ 已接第三方支付</button>
-    <button id="pb-off" onclick="setPay(false)">🏪 未接 · 到店付＋嗶載具</button>
+    <button id="pb-off" onclick="setPay(false)">🏪 未接 · 到店付款</button>
   </div>
 
   <div class="phone"><div class="screen-wrap">
     <div class="statusbar" id="sb"><span class="t">9:41</span><span class="icons">●●●&nbsp;&nbsp;5G&nbsp;▮</span></div>
-    <div class="capsule" id="cap"><span onclick="capMenu()" style="cursor:pointer" title="小程序選單">•••</span><span class="dot" onclick="capHome()" style="cursor:pointer" title="回發票載具首頁">◉</span></div>
+    <div class="capsule" id="cap"><span onclick="capMenu()" style="cursor:pointer" title="小程序選單">•••</span><span class="dot" onclick="capHome()" style="cursor:pointer" title="回 App 首頁">◉</span></div>
 
     <div class="app" id="app">
 
@@ -1068,7 +1068,7 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
           <button class="im-store" onclick="launchMini('nuan')">
             <span class="im-logo">光</span>
             <span class="im-info">
-              <span class="im-name">光東养茶茶餐 板橋店</span>
+              <span class="im-name">光東养茶 板橋店</span>
               <span class="im-tags">
                 <span class="im-rate">★ 4.9</span>
                 <span class="im-chip g">合作店家</span>
@@ -1175,8 +1175,8 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
           <span class="tblrow"><i class="set s1"></i><i class="set s2"></i></span>
           <div class="nn-sign">
             <span class="mark">光</span>
-            <b>KWONG TUNG</b>
-            <small>CHA CHAAN TENG — 板橋 · 陽明街 131 號</small>
+            <b>光東养茶</b>
+            <small>GUANG DONG YANG CHA · 正宗港澳茶飲 — 板橋 · 陽明街 131 號</small>
           </div>
           <div class="nn-meta"><span>★ 4.9 Google 評論</span><span style="background:rgba(255,255,255,.92);color:#8a4b10;font-weight:800;border-radius:6px;padding:2px 8px">⚠ 示範預覽・非正式商店</span><span class="chip" id="paychip-nn"></span></div>
         </div>
@@ -1500,7 +1500,7 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
             </div>
             <div class="gx-card">
               <b style="font-size:13px;color:var(--ink)">📍 附近解毒站（板橋府中）</b>
-              <div class="dx-st f"><span class="lg">🥗</span><span class="in"><b>光東养茶茶餐 <span class="dx-cross">✚ 認證解毒站</span></b><small>原型食物 · 溫沙拉 · 400m · 步行 6 分</small></span><span class="ac"><button class="go" onclick="launchMini('nuan')">去點餐</button><button onclick="dxVerify(0)">模擬到店核銷</button></span></div>
+              <div class="dx-st f"><span class="lg">🥗</span><span class="in"><b>光東养茶 <span class="dx-cross">✚ 認證解毒站</span></b><small>原型食物 · 溫沙拉 · 400m · 步行 6 分</small></span><span class="ac"><button class="go" onclick="launchMini('nuan')">去點餐</button><button onclick="dxVerify(0)">模擬到店核銷</button></span></div>
               <div class="dx-st"><span class="lg">🍱</span><span class="in"><b>原味時代健康餐盒 府中店 <span class="dx-cross">✚</span></b><small>低 GI · 舒肥 · 350m · 步行 5 分</small></span><span class="ac"><button onclick="dxVerify(1)">模擬到店核銷</button></span></div>
               <div class="dx-st"><span class="lg">🥤</span><span class="in"><b>果漾 Fresh 冷壓蔬果飲 <span class="dx-cross">✚</span></b><small>無加糖 · 650m · 步行 9 分</small></span><span class="ac"><button onclick="dxVerify(2)">模擬到店核銷</button></span></div>
               <div class="gx-note" style="margin-top:6px">解毒站＝通過審核的健康商家（只做正面認證）；名單與距離為示範。</div>
@@ -1604,20 +1604,20 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
       <!-- ============ MAGIC ============ -->
       <section class="scene" id="magic">
         <div>
-          <h2 id="magic-t">點單即載具</h2>
+          <h2 id="magic-t">點單即會員</h2>
           <div class="sub" id="magic-s">一次點擊，五事並行——這就是差別</div>
           <div class="magic-list" id="msteps"></div>
           <div class="inv-fly" id="invfly">
-            <div class="h">電子發票</div>
-            <div class="no" id="inv-no">AB-58814920</div>
-            <div class="st" id="inv-st">✓ 已歸戶載具 /ABC1234 · 9/25 自動對獎</div>
+            <div class="h">消費紀錄</div>
+            <div class="no" id="inv-no">240827-016</div>
+            <div class="st" id="inv-st">✓ 已存入會員消費紀錄 · 回頭客優惠自動累積</div>
           </div>
         </div>
       </section>
 
       <!-- ============ STATUS ============ -->
       <section class="scene" id="status">
-        <div class="stat-hero" id="stat-hero" style="background:linear-gradient(150deg,#2A1D15,#4A3527)">
+        <div class="stat-hero" id="stat-hero" style="background:linear-gradient(150deg,#141414,#4A3E08)">
           <div class="lbl" id="stat-lbl">取餐碼</div>
           <div class="pickcode" id="stat-code">—</div>
           <div class="eta" id="stat-eta"></div>
@@ -1628,7 +1628,7 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
             <div class="tstep done" id="tl1"><span class="tdot">✓</span><span><span class="tt" id="tl1-t"></span><span class="ts" id="tl1-s"></span></span></div>
             <div class="tstep now" id="tl2"><span class="tdot">✓</span><span><span class="tt" id="tl2-t">店家已接單，製作中</span><span class="ts" id="tl2-s">前方 2 單 · 免現場等叫號</span></span></div>
             <div class="tstep" id="tl3"><span class="tdot">✓</span><span><span class="tt" id="tl3-t"></span><span class="ts" id="tl3-s">完成後通知你</span></span></div>
-            <div class="tstep hide" id="tl4"><span class="tdot">✓</span><span><span class="tt" id="tl4-t">付款完成 · 發票已歸戶</span><span class="ts" id="tl4-s"></span></span></div>
+            <div class="tstep hide" id="tl4"><span class="tdot">✓</span><span><span class="tt" id="tl4-t">付款完成 · 已記入會員紀錄</span><span class="ts" id="tl4-s"></span></span></div>
           </div>
           <button class="demo-fwd" id="demo-fwd" onclick="finishOrder()">▶ 示範：模擬店家完成製作</button>
           <div class="syncnote">同網域開啟「商家版」時，本單會即時出現在商家端；<br>商家按「完成」，這裡會自動跳到「請取餐」。</div>
@@ -1655,7 +1655,7 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
       <section class="scene" id="review">
         <div class="plainhead"><button class="back" onclick="go('home')" aria-label="返回">‹</button><h2>Google 評論</h2></div>
         <div class="co-body">
-          <div class="rv-badge">🧾 <span>本評價將綁定發票 <b style="font-family:var(--mono)" id="rv-inv">AB-58814920</b><br>只有真實消費過，才能留下這一票。</span></div>
+          <div class="rv-badge">🧾 <span>本評價將綁定消費紀錄 <b style="font-family:var(--mono)" id="rv-inv">240827-016</b><br>只有真實消費過，才能留下這一票。</span></div>
           <div class="card co-card" style="text-align:center;padding:18px 14px">
             <div style="font-size:14px;font-weight:800" id="rv-store">路易莎咖啡 復興門市</div>
             <div class="stars" id="stars">
@@ -1667,7 +1667,7 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
             </div>
           </div>
           <button class="btn primary" style="padding:13px 0;font-size:14px" onclick="submitReview()">送出評價 · 領 CM 幣 +5</button>
-          <div style="font-size:10.5px;color:var(--muted);text-align:center;line-height:1.7">評價公開顯示「憑發票」徽章與消費週別，店家可回覆與申訴。</div>
+          <div style="font-size:10.5px;color:var(--muted);text-align:center;line-height:1.7">評價公開顯示「憑真實消費」徽章與消費週別，店家可回覆與申訴。</div>
         </div>
       </section>
 
@@ -1684,7 +1684,7 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
     <div class="launch" id="launch" aria-hidden="true">
       <div class="lg" id="ln-lg">光</div>
       <div class="nm" id="ln-nm">…</div>
-      <div class="tag">發票載具 小程序</div>
+      <div class="tag">CMoney 商家小程序</div>
       <div class="dots"><i></i><i></i><i></i></div>
     </div>
     <div class="toast" id="toast"></div>
@@ -1721,15 +1721,15 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
     </div>
 
     <div class="drawer" id="drawer">
-      <div class="dr-brand">發票載具 · 小程序中心</div>
+      <div class="dr-brand">小程序中心</div>
       <div class="dr-search">搜尋小程序</div>
       <div class="dr-t">最近使用的小程序</div>
       <div class="dr-grid">
         <button class="dr-app" onclick="openMini('louisa','路易莎咖啡')"><span class="ic" style="background:var(--louisa);font-size:13px">LC</span>路易莎咖啡</button>
-        <button class="dr-app" onclick="openMini('nuan','光東养茶茶餐')"><span class="ic" style="background:var(--nn-olive)">光</span>光東养茶義式</button>
+        <button class="dr-app" onclick="openMini('nuan','光東养茶')"><span class="ic" style="background:var(--nn-olive)">光</span>光東养茶</button>
         <button class="dr-app" onclick="openMini('dtf','鼎泰豐')"><span class="ic" style="background:linear-gradient(150deg,#5E0F1D,#9E1B32)">鼎</span>鼎泰豐</button>
         <button class="dr-app" onclick="openMini('el','雅詩蘭黛')"><span class="ic" style="background:linear-gradient(150deg,#021530,#0A2E63);font-size:12px">EL</span>雅詩蘭黛</button>
-        <button class="dr-app" onclick="openMerchant()"><span class="ic" style="background:var(--navy)">商</span>發票載具 商家助手</button>
+        <button class="dr-app" onclick="openMerchant()"><span class="ic" style="background:var(--navy)">商</span>商家助手</button>
         <button class="dr-app" onclick="openMini('coupons','我的券夾')"><span class="ic" style="background:linear-gradient(140deg,#B8912F,#D9B45C)">券</span>我的券夾</button>
       </div>
       <div class="dr-t">官方自營（提案新增）</div>
@@ -1744,7 +1744,7 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
         <button class="dr-app dim" onclick="comingSoon('CoCo 都可')"><span class="ic" style="background:#D88A2B">Co</span>CoCo 都可</button>
         <button class="dr-app dim" onclick="comingSoon('定食 8')"><span class="ic" style="background:#4E6B3C">定</span>定食 8</button>
       </div>
-      <div class="dr-note">小程序中心＝發票載具自己的超級入口：顧客掃店頭 QR 用過一次，品牌小程序就常駐「最近使用」——用完即走、想到就回，入口即心智。</div>
+      <div class="dr-note">小程序中心＝App 自己的超級入口：顧客掃店頭 QR 用過一次，品牌小程序就常駐「最近使用」——用完即走、想到就回，入口即心智。</div>
       <button class="dr-close" onclick="closeDrawer()">⌃ 收起</button>
     </div>
   </div></div>
@@ -1752,19 +1752,19 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
   <div class="rail">
     <div class="t">提案劇本 · 90 秒</div>
     <ol>
-      <li><span class="n">01</span><span><b>真實載具首頁</b>：對獎膠囊、小樹苗與快訊泡泡、功能架、恆亮條碼卡、六格底部列——照現行 App 重建；「小程序」以 NEW 磁貼＋下拉進入。</span></li>
-      <li><span class="n">02</span><span><b>沈浸式進場</b>：點任一店家，品牌開屏後整版接管——路易莎＝雜誌編輯風、光東养茶＝夜色氛圍、鼎泰豐＝蒸籠紅金（排隊取號＋掃碼就座）、雅詩蘭黛＝深藍精品（零售宅配）；<b>載具底部按鈕自動隱藏</b>，右上膠囊「◉」隨時退出。</span></li>
-      <li><span class="n">03</span><span><b>雙支付情境</b>：用手機殼上方的開關切換——已接第三方支付＝線上付款五合一；未接＝先預點、到店付款嗶載具，發票照樣歸戶。</span></li>
-      <li><span class="n">04</span><span><b>下單</b>：觀看「點單即載具」動畫；同網域開著商家版時，訂單<b>即時同步到商家端</b>。</span></li>
+      <li><span class="n">01</span><span><b>真實 App 首頁</b>：對獎膠囊、小樹苗與快訊泡泡、功能架、恆亮條碼卡、六格底部列——照現行 App 重建；「小程序」以 NEW 磁貼＋下拉進入。</span></li>
+      <li><span class="n">02</span><span><b>沈浸式進場</b>：點任一店家，品牌開屏後整版接管——路易莎＝雜誌編輯風、光東养茶＝夜色氛圍、鼎泰豐＝蒸籠紅金（排隊取號＋掃碼就座）、雅詩蘭黛＝深藍精品（零售宅配）；<b>App 底部按鈕自動隱藏</b>，右上膠囊「◉」隨時退出。</span></li>
+      <li><span class="n">03</span><span><b>雙支付情境</b>：用手機殼上方的開關切換——已接第三方支付＝線上付款五合一；未接＝先預點、到店結帳。</span></li>
+      <li><span class="n">04</span><span><b>下單</b>：觀看「點單即會員」動畫；同網域開著商家版時，訂單<b>即時同步到商家端</b>。</span></li>
       <li><span class="n">05</span><span><b>發券</b>：商家端發出的優惠券會即時掉進「券夾」；結帳時符合條件自動折抵。</span></li>
-      <li><span class="n">06</span><span><b>二次複購</b>：訂單頁「再來一單」一鍵重下；「訂單／券夾」屬於載具本身，底部欄會回來。</span></li>
+      <li><span class="n">06</span><span><b>二次複購</b>：訂單頁「再來一單」一鍵重下；「訂單／券夾」屬於 App 本身，底部欄會回來。</span></li>
       <li><span class="n">07</span><span><b>v5.7 新增</b>：三家餐飲全開「外送」（滿 300 免運）；鼎泰豐＝取號 → 排隊預點 → 掃桌碼就座 → 商家製作；雅詩蘭黛＝一鍵入會 → 體驗預約 → 積分商城 → 下單宅配（黑貓 · 滿 1,500 免運）。</span></li>
     <li><span class="n">08</span><span><b>v5.8 新增（官方自營）</b>：功能架新增「🧪 中毒快篩」「🐣 呷健康隊」——先猜後驗、五毒雷達、真食安比對（官方名單 × 你的發票）、解毒站核銷降毒；組隊養呷寶、每日食安問答、就醫單導流解毒站；首頁快訊泡泡直連「真食安比對」。</span></li>
     <li><span class="n">09</span><span><b>v5.9 新增</b>：兩款官方自營小程序全面「遊戲化畫風」——中毒快篩＝霓虹實驗室（快篩棒發光、五毒條紋動畫、人格收藏卡）、呷健康隊＝牧場養成（天空草地舞台、遊戲血條、獎牌榜、票券式活動）。支援 ?embed=1 嵌入商家工作台、?store=nuan 直達品牌店。</span></li>
     <li><span class="n">10</span><span><b>v6.0 新增</b>：兩款遊戲全面「漫畫風」——粗墨線描邊＋硬陰影面板、半調網點與放射爆炸線背景、描邊大數字、貼紙徽章、對話框吐槽；按鈕改漫畫按壓手感，互動色彩全面加飽和。</span></li>
     </ol>
   </div>
-  <div class="foot">發票載具 · 用戶體驗版原型 v6.0（H5 模擬小程序）<br>店家與數據皆為示範用途，非實際營業資訊</div>
+  <div class="foot">CMoney 商家小程序 · 體驗版原型（H5 模擬）<br>店家與數據皆為示範用途，非實際營業資訊</div>
 </div>
 
 <script>
@@ -1802,7 +1802,7 @@ var history1 = [
 /* 效期一律用 daysFromNow() 算,不寫死日期——寫死的「7/31」隔天就變成過期券,跟開獎日是同一類坑 */
 function daysFromNow(n){ var d = new Date(); d.setDate(d.getDate() + n); return (d.getMonth() + 1) + "/" + d.getDate(); }
 var coupons = [
-  { id:"nn40", store:"nuan", storeName:"光東养茶茶餐", title:"回頭客券｜套餐折 NT$40", sub:"單筆滿 200 可用 · 效期至 " + daysFromNow(14) + " · 首購後商家自動發送", tag:"-40", amt:40, min:200, used:false },
+  { id:"nn40", store:"nuan", storeName:"光東养茶", title:"回頭客券｜套餐折 NT$40", sub:"單筆滿 200 可用 · 效期至 " + daysFromNow(14) + " · 首購後商家自動發送", tag:"-40", amt:40, min:200, used:false },
   { id:"lucky", store:"louisa", storeName:"路易莎咖啡", title:"槓龜安慰券｜第二杯半價", sub:"上期未中獎自動發放 · 效期至 " + daysFromNow(26) + "（限飲品，示範不折算）", tag:"5折", amt:0, min:0, used:false }
 ];
 
@@ -1843,7 +1843,7 @@ var darkScenes = { nuan:1, dtf:1, el:1, magic:1, status:1, detox:1, team:1 };
 var MINI = { louisa:1, nuan:1, dtf:1, el:1, checkout:1, magic:1, status:1, review:1, detox:1, team:1 };
 var BRAND = {
   louisa:{ n:"路易莎咖啡", c:"LC", bg:"linear-gradient(150deg,#2A1D15,#4A3527)", kind:"food" },
-  nuan:{ n:"光東养茶茶餐", c:"光", bg:"linear-gradient(150deg,#242D18,#55613C)", kind:"food" },
+  nuan:{ n:"光東养茶", c:"光", bg:"linear-gradient(150deg,#F7C900,#B98F00)", kind:"food" },
   dtf:{ n:"鼎泰豐", c:"鼎", bg:"linear-gradient(150deg,#5E0F1D,#9E1B32)", kind:"food" },
   el:{ n:"雅詩蘭黛", c:"EL", bg:"linear-gradient(150deg,#021530,#0A2E63)", kind:"retail" }
 };
@@ -1904,8 +1904,8 @@ function launchMini(scene){
 }
 function capHome(){
   if (curScene === "home"){ openDrawer(); }
-  else if (MINI[curScene]){ toast("已退出小程序 · 返回發票載具"); go("home"); }
-  else { toast("已返回發票載具 首頁"); go("home"); }
+  else if (MINI[curScene]){ toast("已退出小程序 · 返回 App 首頁"); go("home"); }
+  else { toast("已返回 App 首頁"); go("home"); }
 }
 
 /* ================= 首次進店：手機號授權入會 ================= */
@@ -1971,7 +1971,7 @@ var _scanT = null;
 /* 掃碼已由發票載具 App 本身提供（ORDER-1521），Demo 不再內建相機。
    保留原本的呼叫點，改成「App 掃完桌卡回來」的模擬：直接綁定桌號。 */
 function scanInfo(){
-  toast("掃碼由發票載具 App 提供，此體驗版不內建相機");
+  toast("掃碼由 App 提供，此體驗版不內建相機");
 }
 function openScanner(){
   var s = BRAND[curScene] ? curScene : (cart.store || lastStore || "nuan");
@@ -2114,12 +2114,12 @@ function miniCtx(){
 }
 function capMenu(){
   var s = miniCtx();
-  if (!s){ toast("此頁為發票載具原生頁 · 「⋯」選單僅在品牌小程序內"); return; }
+  if (!s){ toast("此頁為 App 原生頁 · 「⋯」選單僅在品牌小程序內"); return; }
   var b = BRAND[s], fav = !!favs[s];
   var html = '<div class="sheet" role="dialog" aria-label="小程序選單">'
     + '<div style="display:flex;align-items:center;gap:12px">'
     +   '<span style="width:44px;height:44px;border-radius:12px;background:' + b.bg + ';color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex:none">' + b.c + '</span>'
-    +   '<div><h3 style="font-size:15px">' + b.n + '</h3><div style="font-size:11px;color:#8B96A3;margin-top:2px">發票載具 · 小程序</div></div>'
+    +   '<div><h3 style="font-size:15px">' + b.n + '</h3><div style="font-size:11px;color:#8B96A3;margin-top:2px">商家小程序</div></div>'
     + '</div>'
     + '<div class="cap-grid">'
     +   '<button class="cap-act" onclick="shareLine()"><span class="ico" style="background:#E4F6E9">💬</span>分享到 LINE</button>'
@@ -2145,7 +2145,7 @@ function reloadMini(){
 }
 function shareLine(){
   var s = miniCtx(), url = location.href.split("#")[0];
-  var txt = encodeURIComponent((s ? BRAND[s].n + "｜" : "") + "發票載具小程序，掃碼免下載直接點");
+  var txt = encodeURIComponent((s ? BRAND[s].n + "｜" : "") + "掃碼免下載，直接點餐");
   closeSheet(); toast("正在打開 LINE 分享…");
   try { window.open("https://social-plugins.line.me/lineit/share?url=" + encodeURIComponent(url) + "&text=" + txt, "_blank"); } catch(e){}
 }
@@ -2173,7 +2173,7 @@ function openMini(scene, name){
   setTimeout(function(){ go(scene); }, 380);
 }
 function openMerchant(){
-  closeDrawer(); toast("正在打開「發票載具 商家助手」…");
+  closeDrawer(); toast("正在打開「商家助手」…");
   fetch("./merchant.html", { method:"HEAD" })
     .then(function(r){ if (r.ok) location.href = "./merchant.html"; else merchantHint(); })
     .catch(merchantHint);
@@ -2223,7 +2223,7 @@ function ctxHtml(s, cls){
     return '<div class="dlvrow"><span class="i">📦</span><span class="tx"><b>宅配到 ' + ADDR.addr + '</b><small>' + ADDR.name + ' · ' + ADDR.phone + ' · 黑貓宅急便 · 明日 13:00 前到貨 · 滿 1,500 免運（未滿 +80）</small></span><button class="edit" onclick="editAddr()">修改</button></div>';
   }
   if (cart.mode==="專櫃取貨"){
-    return '<div class="dlvrow"><span class="i">🏬</span><span class="tx"><b>板橋大遠百 2F 專櫃取貨 · 免運</b><small>備貨完成推播通知 · 憑取貨碼＋嗶載具完成取貨</small></span></div>';
+    return '<div class="dlvrow"><span class="i">🏬</span><span class="tx"><b>板橋大遠百 2F 專櫃取貨 · 免運</b><small>備貨完成推播通知 · 憑取貨碼完成取貨</small></span></div>';
   }
   return '<div class="ctxlab">取餐時間</div>'+timeChips(cls);
 }
@@ -2467,7 +2467,7 @@ function setPay(on, fromRemote){
   var ech = $("paychip-el"); if (ech) ech.textContent = PAY ? "線上支付 ✓" : "貨到付款";
   if (curScene === "checkout") renderCheckout();
   if (setPay._init) toast(fromRemote ? "（聯動）商家端已設定：" + (PAY ? "已接第三方支付" : "到店付款") 
-                   : "情境切換：" + (PAY ? "已接第三方支付（線上付款五合一）" : "未接支付（預點 → 到店付款嗶載具）"));
+                   : "情境切換：" + (PAY ? "已接第三方支付（線上付款五合一）" : "未接支付（預點 → 到店付款）"));
   setPay._init = 1;
   try { history.replaceState(null, "", PAY ? "#pay" : "#nopay"); } catch(e){}
 }
@@ -2487,9 +2487,9 @@ function setMode(btn, m){
     }
   } else {
     cart.table = null;
-    if (m === "外送") toast("🛵 外送模式：滿 300 免外送費 · 送達付款也能嗶載具歸戶");
+    if (m === "外送") toast("🛵 外送模式：滿 300 免外送費 · 送達付款也沒問題");
     else if (m === "宅配") toast("📦 宅配模式：黑貓宅急便 · 滿 1,500 免運 · 明日 13:00 前到貨");
-    else if (m === "專櫃取貨") toast("🏬 專櫃取貨：備貨完成推播通知 · 憑取貨碼＋嗶載具取貨");
+    else if (m === "專櫃取貨") toast("🏬 專櫃取貨：備貨完成推播通知 · 憑取貨碼取貨");
     else toast("自取模式：到店免排隊直取");
   }
   if (BRAND[curScene]) renderBrandHome(curScene);
@@ -2586,7 +2586,7 @@ function feeLabel(){ return cart.mode === "宅配" ? "運費（黑貓宅急便�
 /* ================= checkout（雙支付情境） ================= */
 function renderCheckout(){
   if (!cart.items.length){ cart.items=[{name:"西西里檸檬咖啡",price:80,qty:1}]; cart.store=cart.store||"louisa"; }
-  var SNAME = { louisa:"路易莎咖啡 復興門市", nuan:"光東养茶茶餐 板橋店", dtf:"鼎泰豐 板橋店", el:"雅詩蘭黛 板橋大遠百專櫃" };
+  var SNAME = { louisa:"路易莎咖啡 復興門市", nuan:"光東养茶 板橋店", dtf:"鼎泰豐 板橋店", el:"雅詩蘭黛 板橋大遠百專櫃" };
   var box = $("co-items"), html = "";
   for (var i=0;i<cart.items.length;i++){
     var it = cart.items[i];
@@ -2621,10 +2621,10 @@ function renderCheckout(){
   } else { $("co-table").innerHTML = ""; }
 
   var wd;
-  if (cart.mode === "外送") wd = { here:"送達付款", hereDesc:"外送員送達時以現金／行動支付付款，<b>出示載具嗶一下</b>，發票即自動歸戶、照常對獎。", cta1:"送出外送單（送達付款）", cta1s:"先鎖餐點與運能 · 送達付款嗶載具", rebate:"送達結帳後入帳", inv:"送達結帳嗶載具 → 自動歸戶" };
-  else if (cart.mode === "宅配") wd = { here:"貨到付款", hereDesc:"黑貓送達時以現金付款，<b>包裹附載具條碼簽收頁</b>，簽收嗶載具，發票即自動歸戶。", cta1:"送出宅配單（貨到付款）", cta1s:"專櫃揀貨寄出 · 簽收付款嗶載具", rebate:"簽收結帳後入帳", inv:"簽收付款嗶載具 → 自動歸戶" };
-  else if (cart.mode === "專櫃取貨") wd = { here:"到櫃付款", hereDesc:"備貨完成後到專櫃取貨並付款，結帳時<b>出示載具嗶一下</b>，發票即自動歸戶、照常對獎。", cta1:"送出取貨單（到櫃付款）", cta1s:"先鎖商品免撲空 · 付款嗶載具發票歸戶", rebate:"到櫃結帳後入帳", inv:"到櫃結帳嗶載具 → 自動歸戶" };
-  else wd = { here:"到店付款", hereDesc:"先送出預點單鎖定餐點與時段；到店以現金／店內刷卡付款，結帳時<b>出示載具嗶一下</b>，發票即自動歸戶、照常對獎。", cta1:"送出預點單（到店付款）", cta1s:"先鎖餐點免排隊 · 付款嗶載具發票即歸戶", rebate:"到店結帳後入帳", inv:"到店結帳嗶載具 → 自動歸戶" };
+  if (cart.mode === "外送") wd = { here:"送達付款", hereDesc:"外送員送達時以現金／行動支付付款，消費自動記入會員紀錄。", cta1:"送出外送單（送達付款）", cta1s:"先鎖餐點與運能 · 送達付款", rebate:"送達結帳後入帳", inv:"送達結帳 → 記入會員紀錄" };
+  else if (cart.mode === "宅配") wd = { here:"貨到付款", hereDesc:"黑貓送達時以現金付款，簽收即完成，消費自動記入會員紀錄。", cta1:"送出宅配單（貨到付款）", cta1s:"專櫃揀貨寄出 · 簽收付款", rebate:"簽收結帳後入帳", inv:"簽收付款 → 記入會員紀錄" };
+  else if (cart.mode === "專櫃取貨") wd = { here:"到櫃付款", hereDesc:"備貨完成後到專櫃取貨並付款，消費自動記入會員紀錄。", cta1:"送出取貨單（到櫃付款）", cta1s:"先鎖商品免撲空 · 到櫃付款", rebate:"到櫃結帳後入帳", inv:"到櫃結帳 → 記入會員紀錄" };
+  else wd = { here:"到店付款", hereDesc:"先送出預點單鎖定餐點與時段；到店以現金／店內刷卡付款，消費自動記入會員紀錄。", cta1:"送出預點單（到店付款）", cta1s:"先鎖餐點免排隊 · 到店付款", rebate:"到店結帳後入帳", inv:"到店結帳 → 記入會員紀錄" };
   var needVow = (cart.mode === "自取" || cart.mode === "內用");
 
   if (PAY){
@@ -2646,11 +2646,11 @@ function renderCheckout(){
     $("co-pay").innerHTML = mth
       + '<div class="pay" style="margin-top:10px"><button class="on" onclick="pick(this)">LINE Pay</button><button onclick="pick(this)">信用卡</button><button onclick="pick(this)">Apple Pay</button></div>';
     $("co-hl").innerHTML = '<div class="hlrow"><span>🎁 預估回饋（結帳即入帳）</span><b>CM 幣 +' + Math.round(pay*0.03) + '</b></div>'
-      + '<div class="hlrow teal" style="margin-top:10px"><span>🧾 電子發票</span><b>付款同步開立 · 直接歸戶載具</b></div>';
+      + '<div class="hlrow teal" style="margin-top:10px"><span>🧾 消費紀錄</span><b>付款同步記入會員 · 回頭客優惠累積</b></div>';
     $("co-cta").className = "btn primary co-cta";
     $("co-cta").innerHTML = cart.mode === "宅配"
-      ? '<span>付款並寄出 · 發票自動歸戶<br><small>黑貓明日送達 · 積分同步累計</small></span>'
-      : '<span>下單並自動歸戶發票<br><small>點單即載具 · 一次點擊五事並行</small></span>';
+      ? '<span>付款並寄出 · 消費記入會員<br><small>黑貓明日送達 · 積分同步累計</small></span>'
+      : '<span>下單即記入會員<br><small>點單即會員 · 一次點擊五事並行</small></span>';
   } else {
     var cashLbl = (cart.mode === "宅配" || cart.mode === "外送") ? "現金／行動支付" : "現金／店內刷卡";
     $("co-pay").innerHTML = '<div class="paynote"><b>本店尚未串接第三方支付</b><br>' + wd.hereDesc + '</div>'
@@ -2681,7 +2681,7 @@ function placeOrder(){
   }
   var needVow = (cart.mode === "自取" || cart.mode === "內用");
   if (needVow && !isOnline() && vowBlocked()){ toast("⛔ 到店付款已暫停 · 請綁定信用卡或改用線上付款"); return; }
-  var SNAME = { louisa:"路易莎咖啡 復興門市", nuan:"光東养茶茶餐 板橋店", dtf:"鼎泰豐 板橋店", el:"雅詩蘭黛 板橋大遠百專櫃" };
+  var SNAME = { louisa:"路易莎咖啡 復興門市", nuan:"光東养茶 板橋店", dtf:"鼎泰豐 板橋店", el:"雅詩蘭黛 板橋大遠百專櫃" };
   var cp = findApplicable(), disc = cp ? cp.amt : 0;
   if (cp) cp.used = true;
   var fee = calcFee();
@@ -2692,7 +2692,7 @@ function placeOrder(){
     items: cart.items.map(function(x){ return {name:x.name, price:x.price, qty:x.qty}; }),
     total: cartTotal() - disc + fee, discount: disc, fee: fee, paid: isOnline(), doneFlag: false,
     table: cart.mode === "內用" ? cart.table : null,
-    inv: isOnline() ? "AB-58814920" : null
+    inv: isOnline() ? "240827-016" : null
   };
   send({ type:"order", o:{ code:curOrder.code, store:curOrder.store, storeName:curOrder.storeName,
         mode:curOrder.mode, table:curOrder.table, items:curOrder.items, total:curOrder.total, fee:fee, paid:isOnline(), coupon: cp ? cp.title : null }});
@@ -2703,22 +2703,22 @@ function startMagic(){
   var m = cart.mode, steps, mT, mS;
   if (m === "宅配"){
     steps = isOnline()
-      ? [["訂單成立，專櫃開始揀貨",0],["完成支付（LINE Pay）",0],["發票自動開立 · 歸戶載具",0],["黑貓宅急便 · 明日 13:00 前到貨",0],["積分＋CM 幣回饋即時入帳",0]]
-      : [["宅配單已送出，專櫃開始揀貨",0],["出貨單號已產生（黑貓）",0],["貨到付款：現金／行動支付",1],["簽收同時嗶載具 → 發票歸戶",1],["積分＋CM 幣於簽收後入帳",1]];
-    mT = isOnline() ? "下單即載具" : "先寄出 · 簽收嗶載具";
-    mS = isOnline() ? "一次點擊——付款、開票、歸戶、寄出、積分並行" : "未接支付也能宅配：貨到付款，發票簽收歸戶";
+      ? [["訂單成立，專櫃開始揀貨",0],["完成支付（LINE Pay）",0],["消費自動記入會員紀錄",0],["黑貓宅急便 · 明日 13:00 前到貨",0],["積分＋CM 幣回饋即時入帳",0]]
+      : [["宅配單已送出，專櫃開始揀貨",0],["出貨單號已產生（黑貓）",0],["貨到付款：現金／行動支付",1],["簽收付款完成 · 記入會員紀錄",1],["積分＋CM 幣於簽收後入帳",1]];
+    mT = isOnline() ? "下單即會員" : "先寄出 · 簽收付款";
+    mS = isOnline() ? "一次點擊——付款、入會、寄出、積分並行" : "未接支付也能宅配：貨到付款";
   } else if (m === "外送"){
     steps = isOnline()
-      ? [["訂單成立，店家開始製作",0],["完成支付（LINE Pay）",0],["發票自動開立 · 歸戶載具",0],["外送員接單 · 約 35 分送達",0],["CM 幣回饋即時入帳",0]]
-      : [["外送單已送出，店家開始製作",0],["外送員接單 · 約 35 分送達",0],["送達付款：現金／行動支付",1],["付款同時嗶載具 → 發票歸戶",1],["CM 幣回饋於送達後入帳",1]];
-    mT = isOnline() ? "點單即載具" : "先送出 · 送達嗶載具";
-    mS = isOnline() ? "一次點擊，五事並行——這就是差別" : "未接支付也能外送：送達付款，發票照樣歸戶";
+      ? [["訂單成立，店家開始製作",0],["完成支付（LINE Pay）",0],["消費自動記入會員紀錄",0],["外送員接單 · 約 35 分送達",0],["CM 幣回饋即時入帳",0]]
+      : [["外送單已送出，店家開始製作",0],["外送員接單 · 約 35 分送達",0],["送達付款：現金／行動支付",1],["付款完成 · 記入會員紀錄",1],["CM 幣回饋於送達後入帳",1]];
+    mT = isOnline() ? "點單即會員" : "先送出 · 送達付款";
+    mS = isOnline() ? "一次點擊，五事並行——這就是差別" : "未接支付也能外送：送達付款照樣累積會員";
   } else {
     steps = isOnline()
-      ? [["訂單成立，排入備餐佇列",0],["完成支付（LINE Pay）",0],["發票自動開立 · 歸戶載具",0],["自動參加對獎＋雲端專屬獎",0],["CM 幣回饋即時入帳",0]]
-      : [["預點單已送出，店家開始備餐",0],["取餐碼已產生（到店出示）",0],[(m === "專櫃取貨" ? "到櫃付款：現金／刷卡" : "到店付款：現金／店內刷卡"),1],["付款同時嗶載具 → 發票歸戶",1],["CM 幣回饋於結帳後入帳",1]];
-    mT = isOnline() ? "點單即載具" : "預點鎖單 · 到店嗶載具";
-    mS = isOnline() ? "一次點擊，五事並行——這就是差別" : "未接支付也能上車：交易先行，發票到店歸戶";
+      ? [["訂單成立，排入備餐佇列",0],["完成支付（LINE Pay）",0],["消費自動記入會員紀錄",0],["回頭客券自動發到券夾",0],["CM 幣回饋即時入帳",0]]
+      : [["預點單已送出，店家開始備餐",0],["取餐碼已產生（到店出示）",0],[(m === "專櫃取貨" ? "到櫃付款：現金／刷卡" : "到店付款：現金／店內刷卡"),1],["付款完成 · 記入會員紀錄",1],["CM 幣回饋於結帳後入帳",1]];
+    mT = isOnline() ? "點單即會員" : "預點鎖單 · 到店付款";
+    mS = isOnline() ? "一次點擊，五事並行——這就是差別" : "未接支付也能上車：先鎖單，到店再付款";
   }
   $("magic-t").textContent = mT;
   $("magic-s").textContent = mS;
@@ -2730,12 +2730,12 @@ function startMagic(){
   $("invfly").classList.remove("show");
   if (isOnline()){
     $("invfly").className = "inv-fly";
-    $("inv-no").textContent = "AB-58814920";
-    $("inv-st").innerHTML = "✓ 已歸戶載具 /ABC1234 · 9/25 自動對獎";
+    $("inv-no").textContent = "240827-016";
+    $("inv-st").innerHTML = "✓ 已存入會員消費紀錄 · 回頭客優惠自動累積";
   } else {
     $("invfly").className = "inv-fly pend";
     $("inv-no").textContent = m === "宅配" ? "（簽收結帳開立）" : (m === "外送" ? "（送達結帳開立）" : "（到店結帳開立）");
-    $("inv-st").innerHTML = "⏳ 付款嗶載具後自動歸戶 · 照常對獎";
+    $("inv-st").innerHTML = "⏳ 到店付款後自動記入會員紀錄";
   }
   var rows = host.children, autoN = isOnline() ? 5 : 2, i2 = 0;
   function tick(){
@@ -2764,21 +2764,21 @@ function setupStatus(){
     : (dlv ? "外送員已接單 · 預計 35 分內送達"
     : (ship ? "黑貓宅急便 · 明日 13:00 前到貨"
     : (pk ? "備貨完成會推播通知 · 到櫃出示取貨碼" : "預計 12:15 可取 · 步行 3 分鐘，到店直接拿")));
-  $("stat-pill").textContent = o.paid ? "✓ 已付款 · 發票已歸戶"
-    : (ship ? "📦 貨到付款 · 發票於簽收時歸戶" : (dlv ? "🛵 送達付款 · 發票於送達時歸戶" : (pk ? "🏬 到櫃付款 · 發票將於專櫃歸戶" : "🏪 到店付款 · 發票將於店內歸戶")));
-  $("tl1-t").textContent = o.paid ? "已付款 · 發票已歸戶" : (ship ? "宅配單已送出（貨到付款）" : (dlv ? "外送單已送出（送達付款）" : "預點單已送出（到店付款）"));
-  $("tl1-s").textContent = o.paid ? "12:03 · 發票 AB-58814920" : "12:03 · " + (ship ? "出貨單號 " : (dlv ? "外送單號 " : "取餐碼 ")) + o.code + " 已保留" + (ship || pk ? "商品" : "餐點");
+  $("stat-pill").textContent = o.paid ? "✓ 已付款 · 已記入會員"
+    : (ship ? "📦 貨到付款 · 簽收時結帳" : (dlv ? "🛵 送達付款 · 送達時結帳" : (pk ? "🏬 到櫃付款 · 到櫃時結帳" : "🏪 到店付款 · 店內結帳")));
+  $("tl1-t").textContent = o.paid ? "已付款 · 已記入會員" : (ship ? "宅配單已送出（貨到付款）" : (dlv ? "外送單已送出（送達付款）" : "預點單已送出（到店付款）"));
+  $("tl1-s").textContent = o.paid ? "12:03 · 單號 240827-016" : "12:03 · " + (ship ? "出貨單號 " : (dlv ? "外送單號 " : "取餐碼 ")) + o.code + " 已保留" + (ship || pk ? "商品" : "餐點");
   $("tl2-t").textContent = ship ? "專櫃揀貨 · 禮盒包裝中" : (pk ? "專櫃備貨中" : "店家已接單，製作中");
   $("tl2-s").textContent = ship ? "含積分兌換品一併寄出" : (dlv ? "製作完成後外送員取餐" : (pk ? "備貨完成推播通知你" : "前方 2 單 · 免現場等叫號"));
   $("tl3-t").textContent = dineIn ? "出餐完成（送至桌邊）"
     : (dlv ? (o.paid ? "外送配送中 → 送達你家" : "外送配送中 → 送達付款")
     : (ship ? (o.paid ? "黑貓配送中 → 明日送達" : "黑貓配送中 → 簽收付款")
     : (pk ? (o.paid ? "備貨完成 · 到櫃取貨" : "備貨完成 · 到櫃付款取貨")
-    : (o.paid ? "請取餐（推播＋叫號螢幕）" : "請取餐 · 櫃檯付款＋嗶載具"))));
+    : (o.paid ? "請取餐（推播＋叫號螢幕）" : "請取餐 · 櫃檯付款"))));
   $("tl3-s").textContent = "完成後通知你";
   $("tl2").className = "tstep now"; $("tl3").className = "tstep";
   $("tl4").className = "tstep hide";
-  $("tl4-t").textContent = "付款完成 · 發票已歸戶";
+  $("tl4-t").textContent = "付款完成 · 已記入會員紀錄";
   var fw = $("demo-fwd");
   if (fw) fw.textContent = ship ? "▶ 示範：模擬黑貓送達簽收" : (dlv ? "▶ 示範：模擬外送員送達" : "▶ 示範：模擬店家完成製作");
   $("stat-cm").textContent = "CM 幣 +" + Math.round(o.total*0.03) + (o.paid ? " 已入帳" : (ship ? "（簽收後入帳）" : (dlv ? "（送達後入帳）" : "（結帳後入帳）")));
@@ -2797,8 +2797,8 @@ function finishOrder(fromRemote){
     : (ship ? "📦 黑貓已送達 · 請簽收" : (dlv ? "🛵 外送員已送達" : "🔔 餐點完成！")));
   var paid = curOrder ? curOrder.paid : isOnline();
   var wrap = function(){
-    if (curOrder && !curOrder.inv) curOrder.inv = "AB-58814921";
-    $("rv-inv").textContent = curOrder ? curOrder.inv : "AB-58814920";
+    if (curOrder && !curOrder.inv) curOrder.inv = "240827-017";
+    $("rv-inv").textContent = curOrder ? curOrder.inv : "240827-016";
     $("rv-store").textContent = curOrder ? curOrder.storeName : "路易莎咖啡 復興門市";
     go("review");
   };
@@ -2813,8 +2813,8 @@ function finishOrder(fromRemote){
   if (!paid){
     setTimeout(function(){
       $("tl4").className = "tstep done";
-      $("tl4-s").textContent = "12:16 · " + (ship ? "簽收付款 · 嗶載具" : (dlv ? "送達付款 · 嗶載具" : "店內嗶載具")) + " · 發票 AB-58814921 · CM 幣已入帳";
-      toast(ship || dlv ? "💳 貨到付款完成 · 發票已歸戶" : "💳 到店付款完成 · 發票已歸戶");
+      $("tl4-s").textContent = "12:16 · " + (ship ? "簽收付款" : (dlv ? "送達付款" : "店內付款")) + " · 已記入會員 · CM 幣已入帳";
+      toast(ship || dlv ? "💳 貨到付款完成 · 已記入會員紀錄" : "💳 到店付款完成 · 已記入會員紀錄");
       showPickupCta();
     }, 1000);
   } else {
@@ -2847,7 +2847,7 @@ function renderOrders(){
   if (curOrder){
     html += '<div class="sec-label">進行中</div>'
       + '<div class="card ordcard"><div class="top"><span class="oc">' + curOrder.code + '</span>'
-      + '<span class="chip ' + (curOrder.paid ? 'teal">已付款 · 發票已歸戶' : 'gold">到店付款 · 備餐中') + '</span></div>'
+      + '<span class="chip ' + (curOrder.paid ? 'teal">已付款 · 已記入會員' : 'gold">到店付款 · 備餐中') + '</span></div>'
       + '<div class="items">' + curOrder.items.map(function(x){return x.name+' ×'+x.qty;}).join(' · ') + '</div>'
       + '<div class="act"><button class="btn ghost" onclick="go(\'status\')">查看進度 ›</button></div></div>';
   }
@@ -2885,7 +2885,7 @@ function renderCoupons(){
 function receiveCoupon(c){
   coupons.unshift({
     id: "rx" + Date.now(), store: c.store || "nuan",
-    storeName: c.storeName || "光東养茶茶餐", title: c.title || "限時優惠券",
+    storeName: c.storeName || "光東养茶", title: c.title || "限時優惠券",
     sub: (c.sub || "商家剛剛發送") + " · 即時聯動送達", tag: c.tag || "券",
     amt: c.amt || 0, min: c.min || 0, used: false
   });
@@ -2954,7 +2954,7 @@ function dxFamily(){
   toast("已完成家人複驗（載具歸戶授權 · 示範）");
 }
 function dxVerify(i){
-  var names=["光東养茶茶餐","原味時代健康餐盒","果漾 Fresh"];
+  var names=["光東养茶","原味時代健康餐盒","果漾 Fresh"];
   dxDone++; var old=dxScore; dxScore=Math.max(40,dxScore-7);
   $("dxSc2").textContent=dxScore; $("dxTk").textContent=Math.min(2,dxDone);
   $("dxScNote").innerHTML="🎉 發票已核銷：綜合中毒 "+old+" → <b style='color:#177A4C'>"+dxScore+"</b>，T 線變淺了（糖毒 −5 · 油毒 −2）";
@@ -3141,5 +3141,40 @@ if (_gxStore && BRAND[_gxStore[1]]) setTimeout(function(){
 })();
 </script>
 <div id="demo-disclaimer" style="position:fixed;top:0;left:0;width:100vw;box-sizing:border-box;z-index:2147483000;background:#7A5D14;color:#fff;font-size:12px;font-weight:800;text-align:center;padding:6px 10px;letter-spacing:.04em;font-family:inherit;line-height:1.4">⚠ 示範預覽・非正式商店｜菜單與價格以店內公告為準</div>
+
+<style id="brand-skin">
+:root{--nn-olive:#8A6D00;--nn-deep:#141414;--nn-ivory:#FFFBE6;--nn-line:#EFE3B4;--nuan:#141414;--nuan-bg:#FFF7D6}
+.nn-hero{background:radial-gradient(120% 90% at 30% 0%,#FFD936 0%,#F7C900 55%,#E6B800 100%)}
+.nn-hero .wall{background:repeating-linear-gradient(90deg,rgba(20,18,4,.85) 0 3px,transparent 3px 52px),repeating-linear-gradient(0deg,rgba(20,18,4,.85) 0 3px,transparent 3px 56px),linear-gradient(160deg,#FFE066 0%,#F2C200 46%,#D9A900 100%);border-left-color:rgba(20,18,4,.85)}
+.nn-hero .glow{background:radial-gradient(circle,rgba(255,255,255,.55),transparent 62%)}
+.nn-hero .ls{background:radial-gradient(closest-side,rgba(120,90,0,.3),rgba(120,90,0,0))}
+.nn-hero .lamp .cord{background:#141414}.nn-hero .lamp .shade{background:#141414;box-shadow:0 12px 18px -4px rgba(0,0,0,.35)}
+.nn-hero .lamp .bulb{background:#FFF6D0;box-shadow:0 0 14px 4px rgba(255,255,255,.8)}
+.nn-hero .tblrow{background:#141414}
+.nn-hero .set{background:#FFFDF3;box-shadow:0 2px 4px rgba(0,0,0,.35)}
+.nn-sign .mark{border-color:#141414;color:#141414;text-shadow:none;box-shadow:none;background:rgba(255,255,255,.28)}
+.nn-sign b{color:#141414;text-shadow:none}
+.nn-sign small{color:#3D3305}
+.nn-meta{color:#241D00}
+#paychip-nn{background:rgba(20,18,4,.14);color:#241D00}
+.nn-back{color:#141414}
+.nn-hello .hl small{color:#6B6242}
+.nn-login{background:#141414;color:#FFD936;box-shadow:0 5px 14px rgba(0,0,0,.28)}
+.nn-entry .ent small{color:#8A814F}
+.nn-perks .pk{color:#4A431F}
+.nn-perks .tag{background:#141414;color:#FFD936}.nn-perks .tag::after{background:#141414}
+.nn-perks .tag.dim{background:#B3A96F}.nn-perks .tag.dim::after{background:#B3A96F}
+.nn-more{color:#7C7147}
+.nn-banner{background:#FFF1B8}
+.nn-banner .pic{background:radial-gradient(70% 60% at 70% 26%,rgba(255,255,255,.55),rgba(255,255,255,0) 70%),linear-gradient(160deg,#FFD936 0%,#E6B800 100%)}
+.minitab.nn{background:#FFF6D9;border-top-color:#EFE3B4}
+.minitab.nn .mt{color:#9A8C4A}
+.scanmt .ring{background:#141414;color:#FFD936;border-color:#FFF6D9;box-shadow:0 7px 15px rgba(0,0,0,.35)}
+.add3{background:#141414;color:#FFD936;box-shadow:0 3px 8px rgba(0,0,0,.3)}
+#nuan .nn-time button{background:#FFF6D9;border-color:#EFE3B4;color:#6B6242}
+#nuan .nn-time button.on{background:#141414;border-color:#141414;color:#FFD936}
+#nuan .scanbind{background:#141414;color:#FFD936}
+#cart-nn .go{background:#141414;color:#FFD936}
+</style>
 </body>
 </html>
