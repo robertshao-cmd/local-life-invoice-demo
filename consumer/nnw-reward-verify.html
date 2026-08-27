@@ -67,11 +67,60 @@ body{margin:0;background:var(--cream);color:var(--ink);
     <div class="period"><span>活動期間</span><b>2026/9/1 ～ 2026/12/31</b></div>
   </div>
 
+  <div class="card" id="log-card" style="display:none">
+    <h2>贈品交給客人後，店員按這裡</h2>
+    <div style="display:flex;gap:9px;margin-bottom:10px">
+      <input id="log-tbl" inputmode="numeric" placeholder="桌號（選填）"
+        style="flex:1;min-width:0;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:14px;background:#fff;color:var(--ink);font-family:inherit">
+      <select id="log-gift"
+        style="flex:1.2;border:1px solid var(--line);border-radius:10px;padding:11px 8px;font-size:14px;background:#fff;color:var(--ink);font-family:inherit">
+        <option>🧅 洋蔥圈</option>
+        <option>🍗 炸雞球</option>
+        <option>同價替代</option>
+      </select>
+    </div>
+    <button id="log-btn" onclick="logRedeem()"
+      style="width:100%;border:0;border-radius:12px;padding:13px 0;font-size:15px;font-weight:800;background:var(--green);color:#fff;font-family:inherit;cursor:pointer">✓ 完成核銷（記錄一筆）</button>
+    <div id="log-st" style="margin-top:9px;text-align:center;font-size:12.5px;color:var(--ink2)"></div>
+  </div>
+
   <div class="foot">
     本頁為店家核銷確認頁，由顧客的獎勵 QRcode 開啟。<br>
     不設每日限量，依當日現場供應。活動細節如有異動以店內公告為準。<br>
     CMoney 商家小程序 × 暖暖窩義式廚房（板橋文化路一段286巷16號）
   </div>
 </div>
+<script>
+// 核銷紀錄端點（Robert 的 Apps Script 網頁應用程式 URL；留空＝隱藏紀錄區塊）
+var LOG_ENDPOINT = "";
+if (LOG_ENDPOINT) document.getElementById('log-card').style.display = '';
+
+function logRedeem(){
+  var btn = document.getElementById('log-btn'), st = document.getElementById('log-st');
+  if (btn.disabled) return;
+  btn.disabled = true; btn.style.opacity = .55; st.textContent = '記錄中…';
+  var payload = JSON.stringify({
+    t: new Date().toISOString(),
+    table: document.getElementById('log-tbl').value.trim(),
+    gift: document.getElementById('log-gift').value.replace(/^[^一-鿿]+/, ''),
+    note: ''
+  });
+  fetch(LOG_ENDPOINT, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: payload })
+    .then(function(){
+      var now = new Date();
+      st.textContent = '✅ 已記錄 ' + ('0'+now.getHours()).slice(-2) + ':' + ('0'+now.getMinutes()).slice(-2) + '，謝謝店員！';
+      btn.textContent = '✓ 本筆已完成';
+      setTimeout(function(){
+        btn.disabled = false; btn.style.opacity = 1;
+        btn.textContent = '✓ 完成核銷（記錄一筆）';
+        document.getElementById('log-tbl').value = '';
+      }, 45000);
+    })
+    .catch(function(){
+      st.textContent = '⚠ 網路不穩，這筆沒記到——贈品照給，稍後再補按一次即可';
+      btn.disabled = false; btn.style.opacity = 1;
+    });
+}
+</script>
 </body>
 </html>
