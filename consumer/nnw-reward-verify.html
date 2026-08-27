@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>暖暖窩活動核銷確認｜CMoney 商家小程序</title>
+<style>
+:root{--cream:#FFF4E6;--card:#FFFCF6;--line:#F2E3CE;--ink:#3F3128;--ink2:#7C6553;
+  --brown:#8A5A2B;--gold:#F0A64A;--green:#01AFA2;--green7:#019F93;--green1:#E6F7F6}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);
+  font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",-apple-system,sans-serif;
+  display:flex;justify-content:center;min-height:100vh}
+.wrap{width:100%;max-width:430px;padding:0 18px 40px}
+.top{background:var(--green);color:#fff;margin:0 -18px;padding:16px 18px 14px;text-align:center}
+.top .b{font-size:12px;opacity:.92;letter-spacing:.1em}
+.top h1{margin:4px 0 0;font-size:19px;font-weight:800}
+.state{margin:18px auto 0;display:flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--green1);color:var(--green7);font-weight:800;font-size:16px;
+  border-radius:99px;padding:10px 22px;width:fit-content}
+.state .dot{width:9px;height:9px;border-radius:50%;background:var(--green);animation:bl 1.6s ease-in-out infinite}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:.25}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:14px}
+.card h2{margin:0 0 10px;font-size:15px;color:var(--brown)}
+.reward{text-align:center;padding:6px 0 2px}
+.reward .t{font-size:20px;font-weight:800}
+.reward .s{font-size:13px;color:var(--ink2);margin-top:4px}
+.gifts{display:flex;gap:10px;margin-top:12px}
+.gifts .g{flex:1;background:linear-gradient(180deg,#FFF3DE,#FFE7C4);border:1px solid #F3DCB8;
+  border-radius:13px;padding:10px 6px;text-align:center;font-weight:800;color:var(--brown);font-size:15px}
+.gifts .g small{display:block;font-weight:400;font-size:11px;color:var(--ink2);margin-top:2px}
+.chk{display:flex;gap:9px;margin-bottom:9px;font-size:13.5px;line-height:1.55}
+.chk:last-child{margin-bottom:0}
+.chk .n{flex:none;width:20px;height:20px;border-radius:50%;background:var(--gold);color:#fff;
+  font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.period{display:flex;justify-content:space-between;font-size:13px;color:var(--ink2);margin-top:2px}
+.period b{color:var(--ink)}
+.foot{margin-top:18px;text-align:center;font-size:11px;color:var(--ink2);line-height:1.8}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="b">CMoney 商家小程序 · 活動核銷確認</div>
+    <h1>暖暖窩義式廚房</h1>
+  </div>
+
+  <div class="state"><span class="dot"></span>活動有效 · 可提供贈品</div>
+
+  <div class="card reward">
+    <div class="t">用餐即贈｜二選一</div>
+    <div class="s">內用消費即可兌換，隨餐提供</div>
+    <div class="gifts">
+      <div class="g">🧅 洋蔥圈<small>售罄時同價餐點替代</small></div>
+      <div class="g">🍗 炸雞球<small>售罄時同價餐點替代</small></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>店員請確認三件事</h2>
+    <div class="chk"><span class="n">1</span><span>本桌為<b>內用</b>消費</span></div>
+    <div class="chk"><span class="n">2</span><span>本桌<b>尚未領取</b>本活動贈品（每桌限一份）</span></div>
+    <div class="chk"><span class="n">3</span><span><b>未同時使用</b>其他優惠活動</span></div>
+  </div>
+
+  <div class="card">
+    <div class="period"><span>活動期間</span><b>2026/9/1 ～ 2026/12/31</b></div>
+  </div>
+
+  <div class="foot">
+    本頁為店家核銷確認頁，由顧客的獎勵 QRcode 開啟。<br>
+    不設每日限量，依當日現場供應。活動細節如有異動以店內公告為準。<br>
+    CMoney 商家小程序 × 暖暖窩義式廚房（板橋文化路一段286巷16號）
+  </div>
+</div>
+</body>
+</html>
