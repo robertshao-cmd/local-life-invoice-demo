@@ -1210,6 +1210,15 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
           <span class="pic">🌿</span>
         </button>
 
+        <button class="nn-stamp" onclick="toast('🥡 集點示範：內用消費 1 次自動集 1 點，滿 8 點兌換青醬鍋燒一份——點數規則、兌換品項都由店家自訂')">
+          <span class="sth"><b>逸麵麵集點卡</b><small>消費 1 次集 1 點・滿 8 點換青醬鍋燒</small></span>
+          <span class="std">
+            <span class="sd on">逸</span><span class="sd on">逸</span><span class="sd on">逸</span><span class="sd on">逸</span><span class="sd on">逸</span>
+            <span class="sd">6</span><span class="sd">7</span><span class="sd gift">🎁</span>
+          </span>
+          <span class="stn">已集 5 點・再 3 點換招牌青醬鍋燒（示範資料，消費後自動累點）</span>
+        </button>
+
         <div class="menu" id="nn-menu">
           <div class="nn-cat">鍋燒 ─ 招牌（食記參考價）</div>
           <div class="mrow">
@@ -3171,6 +3180,17 @@ if (_gxStore && BRAND[_gxStore[1]]) setTimeout(function(){
 #nuan .nn-time button.on{background:#3F6B3F;border-color:#3F6B3F;color:#F3F8E6}
 #nuan .scanbind{background:#3F6B3F;color:#F3F8E6}
 #cart-nn .go{background:#3F6B3F;color:#F3F8E6}
-</style>
+/* 集點卡（示範） */
+.nn-stamp{display:block;width:calc(100% - 32px);margin:10px 16px 2px;background:#FFFDF6;border:1.5px solid #DCE5C8;
+  border-radius:14px;padding:12px 14px;text-align:left;font-family:inherit;cursor:pointer}
+.nn-stamp .sth{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.nn-stamp .sth b{font-size:13.5px;color:#24401F;font-weight:800}
+.nn-stamp .sth small{font-size:10px;color:#7E8E64;font-weight:700}
+.nn-stamp .std{display:flex;gap:7px;margin-top:10px}
+.nn-stamp .sd{flex:1;aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;border:1.5px dashed #B9C79B;color:#B9C79B;background:#F6F8EE}
+.nn-stamp .sd.on{background:#3F6B3F;border:1.5px solid #3F6B3F;color:#F3F8E6}
+.nn-stamp .sd.gift{border:1.5px solid #F0A64A;color:#C77F1F;background:#FFF6E3;font-size:14px}
+.nn-stamp .stn{margin-top:9px;font-size:10.5px;color:#6E7C5A;font-weight:700}
 </body>
 </html>
