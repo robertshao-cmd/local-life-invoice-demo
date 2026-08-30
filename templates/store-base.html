@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#2FA98C">
-<title>商家小程序｜逸麵麵鍋燒專賣 體驗預覽（示範・非正式商店）</title>
+<title>商家小程序｜{{BRAND_NAME}} 體驗預覽（示範・非正式商店）</title>
 <style>
 :root{
   --navy:#1F3352; --teal:#0E7C7B; --teal-deep:#0A5F5E; --gold:#B8912F; --gold-bg:#FAF3DF;
@@ -317,7 +317,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #7FD1CC;outline-offset:2p
 #cart-nn .sum small{color:#C6CDA8}
 #cart-nn .go{background:var(--nuan)}
 
-/* ===== BRAND HOME v5.6 —— 逸麵麵鍋燒專賣 × NOW THAIA 氛圍風 ===== */
+/* ===== BRAND HOME v5.6 —— {{BRAND_NAME}} × NOW THAIA 氛圍風 ===== */
 #nuan{background:var(--nn-ivory)}
 .nn-hero{position:relative;height:232px;flex:none;overflow:hidden;background:
   radial-gradient(120% 90% at 30% 0%,#1B2412 0%,#10140C 58%,#0B0E08 100%)}
@@ -378,7 +378,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #7FD1CC;outline-offset:2p
 .nn-banner .pic{width:33%;min-height:96px;display:flex;align-items:center;justify-content:center;font-size:30px;
   background:radial-gradient(70% 60% at 70% 26%,rgba(244,244,220,.55),rgba(244,244,220,0) 70%),linear-gradient(160deg,#93A45F 0%,#55613C 100%)}
 
-/* ===== 品牌小程序 tab（v5.6：路易莎 墨線 / 逸麵麵鍋燒專賣 橄欖＋中央掃碼浮起鍵） ===== */
+/* ===== 品牌小程序 tab（v5.6：路易莎 墨線 / {{BRAND_NAME}} 橄欖＋中央掃碼浮起鍵） ===== */
 .minitab .mtwrap{display:none;flex:1}
 .minitab.lz{background:#FBF8F1;border-top:1px solid var(--lz-line)}
 .minitab.nn{background:#F2F0E4;border-top:1px solid var(--nn-line)}
@@ -1066,9 +1066,9 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
         <div class="im-near">
           <div class="im-near-h">附近店家 · 小程序點餐</div>
           <button class="im-store" onclick="launchMini('nuan')">
-            <span class="im-logo">逸</span>
+            <span class="im-logo">{{BRAND_CHAR}}</span>
             <span class="im-info">
-              <span class="im-name">逸麵麵鍋燒專賣 板橋店</span>
+              <span class="im-name">{{BRAND_NAME}} 板橋店</span>
               <span class="im-tags">
                 <span class="im-rate">★ 4.9</span>
                 <span class="im-chip g">合作店家</span>
@@ -1174,15 +1174,15 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
           <span class="lamp"><i class="cord"></i><i class="shade"></i><i class="bulb"></i></span>
           <span class="tblrow"><i class="set s1"></i><i class="set s2"></i></span>
           <div class="nn-sign">
-            <span class="mark">逸</span>
-            <b>逸麵麵鍋燒專賣</b>
-            <small>YI MIAN MIAN 鍋燒專賣 — 板橋 · 新海路 101 號</small>
+            <span class="mark">{{BRAND_CHAR}}</span>
+            <b>{{SIGN_MAIN}}</b>
+            <small>{{SIGN_SUB}}</small>
           </div>
           <div class="nn-meta"><span>★ 4.9 Google 評論</span><span style="background:rgba(255,255,255,.92);color:#8a4b10;font-weight:800;border-radius:6px;padding:2px 8px">⚠ 示範預覽・非正式商店</span><span class="chip" id="paychip-nn"></span></div>
         </div>
 
         <div class="nn-hello">
-          <div class="hl"><b>HELLO~</b><small id="nn-hello-sub">歡迎加入逸麵麵鍋燒專賣會員</small></div>
+          <div class="hl"><b>HELLO~</b><small id="nn-hello-sub">歡迎加入{{BRAND_NAME}}會員</small></div>
           <button class="nn-login" id="nn-login">立即入會</button>
         </div>
         <div class="nn-div"></div>
@@ -1209,40 +1209,31 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
           <span class="t">加入 LINE 熟客群<b>美味優惠先知道</b><small>點我加入 ›</small></span>
           <span class="pic">🌿</span>
         </button>
-
-        <button class="nn-stamp" onclick="toast('🥡 集點示範：內用消費 1 次自動集 1 點，滿 8 點兌換青醬鍋燒一份——點數規則、兌換品項都由店家自訂')">
-          <span class="sth"><b>逸麵麵集點卡</b><small>消費 1 次集 1 點・滿 8 點換青醬鍋燒</small></span>
-          <span class="std">
-            <span class="sd on">逸</span><span class="sd on">逸</span><span class="sd on">逸</span><span class="sd on">逸</span><span class="sd on">逸</span>
-            <span class="sd">6</span><span class="sd">7</span><span class="sd gift">🎁</span>
-          </span>
-          <span class="stn">已集 5 點・再 3 點換招牌青醬鍋燒（示範資料，消費後自動累點）</span>
-        </button>
-
+{{AFTER_BANNER}}
         <div class="menu" id="nn-menu">
-          <div class="nn-cat">鍋燒 ─ 招牌（食記參考價）</div>
+          <div class="nn-cat">{{CAT1}}</div>
           <div class="mrow">
-            <span class="mthumb">🍝</span>
-            <span class="info"><span class="n">特製青醬鍋燒意麵<span class="badge2">招牌</span></span><span class="d">羅勒青醬 · 可加叉燒 · 參考價</span><span class="p"><small>NT$ </small>175</span></span>
-            <button class="add3" onclick="quickAdd('特製青醬鍋燒意麵',175)" aria-label="加入三寶飯">＋</button>
+            <span class="mthumb">{{M1_EMOJI}}</span>
+            <span class="info"><span class="n">{{M1_NAME}}</span><span class="d">{{M1_DESC}}</span><span class="p"><small>NT$ </small>{{M1_PRICE}}</span></span>
+            <button class="add3" onclick="quickAdd('{{M1_ADD}}',{{M1_APRICE}})" aria-label="加入三寶飯">＋</button>
           </div>
           <div class="mrow">
-            <span class="mthumb">🧀</span>
-            <span class="info"><span class="n">起司牛奶鍋燒意麵</span><span class="d">三大片起司 · 參考價</span><span class="p"><small>NT$ </small>185</span></span>
-            <button class="add3" onclick="quickAdd('起司牛奶鍋燒意麵',185)" aria-label="加入燒鴨飯">＋</button>
+            <span class="mthumb">{{M2_EMOJI}}</span>
+            <span class="info"><span class="n">{{M2_NAME}}</span><span class="d">{{M2_DESC}}</span><span class="p"><small>NT$ </small>{{M2_PRICE}}</span></span>
+            <button class="add3" onclick="quickAdd('{{M2_ADD}}',{{M2_APRICE}})" aria-label="加入燒鴨飯">＋</button>
           </div>
-          <div class="nn-cat">飯食與甜點</div>
+          <div class="nn-cat">{{CAT2}}</div>
           <div class="mrow">
-            <span class="mthumb">🍛</span>
-            <span class="info"><span class="n">酥炸雞排咖哩</span><span class="d">可免費續醬續飯 · 參考價</span><span class="p"><small>NT$ </small>170</span></span>
-            <button class="add3" onclick="quickAdd('酥炸雞排咖哩',170)" aria-label="加入香滑絲襪奶茶">＋</button>
+            <span class="mthumb">{{M3_EMOJI}}</span>
+            <span class="info"><span class="n">{{M3_NAME}}</span><span class="d">{{M3_DESC}}</span><span class="p"><small>NT$ </small>{{M3_PRICE}}</span></span>
+            <button class="add3" onclick="quickAdd('{{M3_ADD}}',{{M3_APRICE}})" aria-label="加入香滑絲襪奶茶">＋</button>
           </div>
           <div class="mrow">
-            <span class="mthumb">🍮</span>
-            <span class="info"><span class="n">慢熟黃金焦糖布丁</span><span class="d">台南直送手作 · 參考價</span><span class="p"><small>NT$ </small>75</span></span>
-            <button class="add3" onclick="quickAdd('慢熟黃金焦糖布丁',75)" aria-label="加入烏龍綠茶">＋</button>
+            <span class="mthumb">{{M4_EMOJI}}</span>
+            <span class="info"><span class="n">{{M4_NAME}}</span><span class="d">{{M4_DESC}}</span><span class="p"><small>NT$ </small>{{M4_PRICE}}</span></span>
+            <button class="add3" onclick="quickAdd('{{M4_ADD}}',{{M4_APRICE}})" aria-label="加入烏龍綠茶">＋</button>
           </div>
-          <div class="nn-cat" style="opacity:.8">品項與價格擷取自公開食記（2026/08）· 以店內公告為準 · 示範預覽（非正式商店）</div>
+          <div class="nn-cat" style="opacity:.8">{{MENU_SOURCE}}</div>
         </div>
         <div class="cartbar" id="cart-nn">
           <div class="sum"><b id="cart-nn-amt">NT$ 0</b><small id="cart-nn-n">0 件</small></div>
@@ -1509,7 +1500,7 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
             </div>
             <div class="gx-card">
               <b style="font-size:13px;color:var(--ink)">📍 附近解毒站（板橋府中）</b>
-              <div class="dx-st f"><span class="lg">🥗</span><span class="in"><b>逸麵麵鍋燒專賣 <span class="dx-cross">✚ 認證解毒站</span></b><small>原型食物 · 溫沙拉 · 400m · 步行 6 分</small></span><span class="ac"><button class="go" onclick="launchMini('nuan')">去點餐</button><button onclick="dxVerify(0)">模擬到店核銷</button></span></div>
+              <div class="dx-st f"><span class="lg">🥗</span><span class="in"><b>{{BRAND_NAME}} <span class="dx-cross">✚ 認證解毒站</span></b><small>原型食物 · 溫沙拉 · 400m · 步行 6 分</small></span><span class="ac"><button class="go" onclick="launchMini('nuan')">去點餐</button><button onclick="dxVerify(0)">模擬到店核銷</button></span></div>
               <div class="dx-st"><span class="lg">🍱</span><span class="in"><b>原味時代健康餐盒 府中店 <span class="dx-cross">✚</span></b><small>低 GI · 舒肥 · 350m · 步行 5 分</small></span><span class="ac"><button onclick="dxVerify(1)">模擬到店核銷</button></span></div>
               <div class="dx-st"><span class="lg">🥤</span><span class="in"><b>果漾 Fresh 冷壓蔬果飲 <span class="dx-cross">✚</span></b><small>無加糖 · 650m · 步行 9 分</small></span><span class="ac"><button onclick="dxVerify(2)">模擬到店核銷</button></span></div>
               <div class="gx-note" style="margin-top:6px">解毒站＝通過審核的健康商家（只做正面認證）；名單與距離為示範。</div>
@@ -1626,7 +1617,7 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
 
       <!-- ============ STATUS ============ -->
       <section class="scene" id="status">
-        <div class="stat-hero" id="stat-hero" style="background:linear-gradient(150deg,#22381F,#4C6B3A)">
+        <div class="stat-hero" id="stat-hero" style="background:{{STAT_GRAD}}">
           <div class="lbl" id="stat-lbl">取餐碼</div>
           <div class="pickcode" id="stat-code">—</div>
           <div class="eta" id="stat-eta"></div>
@@ -1691,7 +1682,7 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
       <button class="tab" onclick="toast('個人（示範）：匯款帳戶 · 造型圖庫 · 設定')"><img class="ic imico" src="../assets/invoicemanager/svg/tab_icon_mine.svg" alt="">個人</button>
     </div>
     <div class="launch" id="launch" aria-hidden="true">
-      <div class="lg" id="ln-lg">逸</div>
+      <div class="lg" id="ln-lg">{{BRAND_CHAR}}</div>
       <div class="nm" id="ln-nm">…</div>
       <div class="tag">CMoney 商家小程序</div>
       <div class="dots"><i></i><i></i><i></i></div>
@@ -1707,7 +1698,7 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
         <button class="mt" onclick="mtOpen('me')"><span class="mi"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="16.5" r="6.5"/><path d="M11.5 38c1.5-7.5 6.5-11 12.5-11s11 3.5 12.5 11"/></svg></span>我的</button>
       </div>
       <div class="mtwrap nn">
-        <button class="mt on" onclick="mtOpen('menu')"><span class="mi"><span class="mk">逸</span></span>點餐</button>
+        <button class="mt on" onclick="mtOpen('menu')"><span class="mi"><span class="mk">{{BRAND_CHAR}}</span></span>點餐</button>
         <button class="mt" onclick="mtOpen('coupon')"><span class="mi"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 22c1.8 0 3.2 1.5 3.2 3.2s-1.4 3.3-3.2 3.3v5h29v-5c-1.8 0-3.2-1.5-3.2-3.3s1.4-3.2 3.2-3.2v-5h-29z"/><path d="M24 17v16.5" stroke-dasharray="2.5 3.5"/></svg></span>折扣券</button>
         
         <button class="mt" onclick="mtOpen('order')"><span class="mi"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 8.5h20V38l-3.3-2.2-3.4 2.2-3.3-2.2-3.4 2.2-3.3-2.2L14 38z"/><path d="M18.5 15.5h11M18.5 21h11M18.5 26.5h7"/></svg></span>訂單</button>
@@ -1735,7 +1726,7 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
       <div class="dr-t">最近使用的小程序</div>
       <div class="dr-grid">
         <button class="dr-app" onclick="openMini('louisa','路易莎咖啡')"><span class="ic" style="background:var(--louisa);font-size:13px">LC</span>路易莎咖啡</button>
-        <button class="dr-app" onclick="openMini('nuan','逸麵麵鍋燒專賣')"><span class="ic" style="background:var(--nn-olive)">逸</span>逸麵麵鍋燒專賣</button>
+        <button class="dr-app" onclick="openMini('nuan','{{BRAND_NAME}}')"><span class="ic" style="background:var(--nn-olive)">{{BRAND_CHAR}}</span>{{BRAND_NAME}}</button>
         <button class="dr-app" onclick="openMini('dtf','鼎泰豐')"><span class="ic" style="background:linear-gradient(150deg,#5E0F1D,#9E1B32)">鼎</span>鼎泰豐</button>
         <button class="dr-app" onclick="openMini('el','雅詩蘭黛')"><span class="ic" style="background:linear-gradient(150deg,#021530,#0A2E63);font-size:12px">EL</span>雅詩蘭黛</button>
         <button class="dr-app" onclick="openMerchant()"><span class="ic" style="background:var(--navy)">商</span>商家助手</button>
@@ -1762,7 +1753,7 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
     <div class="t">提案劇本 · 90 秒</div>
     <ol>
       <li><span class="n">01</span><span><b>真實 App 首頁</b>：對獎膠囊、小樹苗與快訊泡泡、功能架、恆亮條碼卡、六格底部列——照現行 App 重建；「小程序」以 NEW 磁貼＋下拉進入。</span></li>
-      <li><span class="n">02</span><span><b>沈浸式進場</b>：點任一店家，品牌開屏後整版接管——路易莎＝雜誌編輯風、逸麵麵鍋燒專賣＝夜色氛圍、鼎泰豐＝蒸籠紅金（排隊取號＋掃碼就座）、雅詩蘭黛＝深藍精品（零售宅配）；<b>App 底部按鈕自動隱藏</b>，右上膠囊「◉」隨時退出。</span></li>
+      <li><span class="n">02</span><span><b>沈浸式進場</b>：點任一店家，品牌開屏後整版接管——路易莎＝雜誌編輯風、{{BRAND_NAME}}＝夜色氛圍、鼎泰豐＝蒸籠紅金（排隊取號＋掃碼就座）、雅詩蘭黛＝深藍精品（零售宅配）；<b>App 底部按鈕自動隱藏</b>，右上膠囊「◉」隨時退出。</span></li>
       <li><span class="n">03</span><span><b>雙支付情境</b>：用手機殼上方的開關切換——已接第三方支付＝線上付款五合一；未接＝先預點、到店結帳。</span></li>
       <li><span class="n">04</span><span><b>下單</b>：觀看「點單即會員」動畫；同網域開著商家版時，訂單<b>即時同步到商家端</b>。</span></li>
       <li><span class="n">05</span><span><b>發券</b>：商家端發出的優惠券會即時掉進「券夾」；結帳時符合條件自動折抵。</span></li>
@@ -1811,7 +1802,7 @@ var history1 = [
 /* 效期一律用 daysFromNow() 算,不寫死日期——寫死的「7/31」隔天就變成過期券,跟開獎日是同一類坑 */
 function daysFromNow(n){ var d = new Date(); d.setDate(d.getDate() + n); return (d.getMonth() + 1) + "/" + d.getDate(); }
 var coupons = [
-  { id:"nn40", store:"nuan", storeName:"逸麵麵鍋燒專賣", title:"回頭客券｜套餐折 NT$40", sub:"單筆滿 200 可用 · 效期至 " + daysFromNow(14) + " · 首購後商家自動發送", tag:"-40", amt:40, min:200, used:false },
+  { id:"nn40", store:"nuan", storeName:"{{BRAND_NAME}}", title:"回頭客券｜套餐折 NT$40", sub:"單筆滿 200 可用 · 效期至 " + daysFromNow(14) + " · 首購後商家自動發送", tag:"-40", amt:40, min:200, used:false },
   { id:"lucky", store:"louisa", storeName:"路易莎咖啡", title:"槓龜安慰券｜第二杯半價", sub:"上期未中獎自動發放 · 效期至 " + daysFromNow(26) + "（限飲品，示範不折算）", tag:"5折", amt:0, min:0, used:false }
 ];
 
@@ -1852,7 +1843,7 @@ var darkScenes = { nuan:1, dtf:1, el:1, magic:1, status:1, detox:1, team:1 };
 var MINI = { louisa:1, nuan:1, dtf:1, el:1, checkout:1, magic:1, status:1, review:1, detox:1, team:1 };
 var BRAND = {
   louisa:{ n:"路易莎咖啡", c:"LC", bg:"linear-gradient(150deg,#2A1D15,#4A3527)", kind:"food" },
-  nuan:{ n:"逸麵麵鍋燒專賣", c:"逸", bg:"linear-gradient(150deg,#3F6B3F,#1F3B1F)", kind:"food" },
+  nuan:{ n:"{{BRAND_NAME}}", c:"{{BRAND_CHAR}}", bg:"{{LAUNCH_GRAD}}", kind:"food" },
   dtf:{ n:"鼎泰豐", c:"鼎", bg:"linear-gradient(150deg,#5E0F1D,#9E1B32)", kind:"food" },
   el:{ n:"雅詩蘭黛", c:"EL", bg:"linear-gradient(150deg,#021530,#0A2E63)", kind:"retail" }
 };
@@ -2205,7 +2196,7 @@ function comingSoon(n){ toast("示範：「" + n + "」等合作品牌小程序�
   if ($("pullHandle")) $("pullHandle").addEventListener("click", openDrawer);
 })();
 
-/* ================= 品牌首頁 v5.6（路易莎 × Ora 編輯風／逸麵麵鍋燒專賣 × NOW THAIA 氛圍風） ================= */
+/* ================= 品牌首頁 v5.6（路易莎 × Ora 編輯風／{{BRAND_NAME}} × NOW THAIA 氛圍風） ================= */
 var BSVG = { qr:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12.5" height="12.5" rx="1.6"/><rect x="27.5" y="8" width="12.5" height="12.5" rx="1.6"/><rect x="8" y="27.5" width="12.5" height="12.5" rx="1.6"/><path d="M27.5 27.5h5.5v5.6h-5.5zM36 30.5h4M30.5 36v4M36 40h4"/></svg>' };
 function cpCount(s){ var n=0; for (var i=0;i<coupons.length;i++) if (coupons[i].store===s && !coupons[i].used) n++; return n; }
 function brandGoMenu(k){ var el=$(k+"-menu"); if (el && el.scrollIntoView) el.scrollIntoView({behavior:"smooth",block:"start"}); }
@@ -2258,7 +2249,7 @@ function renderBrandHome(s){
         sub.textContent = "會員 No."+MEMBER_NO.nuan+" · 點數 "+PTS.nuan+" · 券 "+cpCount("nuan")+" 張";
         b.textContent = "我的會員卡"; b.onclick = function(){ openBrandMe(); };
       } else {
-        sub.textContent = "歡迎加入逸麵麵鍋燒專賣會員 · 手機號一鍵入會";
+        sub.textContent = "歡迎加入{{BRAND_NAME}}會員 · 手機號一鍵入會";
         b.textContent = "立即入會"; b.onclick = function(){ showAuth("nuan"); };
       }
     }
@@ -2514,8 +2505,8 @@ var SHEET = {
     groups:[{t:"杯型",o:["中杯","大杯 +15"]},{t:"冰量",o:["正常冰","少冰","去冰"]},{t:"甜度",o:["正常糖","微糖","無糖"]}]},
   oat:{ store:"louisa", name:"燕麥拿鐵", price:95,
     groups:[{t:"杯型",o:["中杯","大杯 +15"]},{t:"溫度",o:["冰","熱"]},{t:"濃度",o:["標準","加一份濃縮 +20"]}]},
-  pesto:{ store:"nuan", name:"特製青醬鍋燒意麵", price:175,
-    groups:[{t:"加料",o:["不加","豬肉叉燒 +65"]},{t:"麵體",o:["意麵","烏龍"]},{t:"份量",o:["正常","湯多"]}]},
+  pesto:{ store:"nuan", name:"{{OPT_NAME}}", price:{{OPT_PRICE}},
+    groups:[{{OPT_GROUPS}}]},
   xlb:{ store:"dtf", name:"小籠包 10 入", price:250,
     groups:[{t:"薑絲",o:["正常","加量"]},{t:"沾醬",o:["醋 3：醬油 1（招牌）","純醋","不沾"]}]},
   dtfr:{ store:"dtf", name:"排骨蛋炒飯", price:290,
@@ -2595,7 +2586,7 @@ function feeLabel(){ return cart.mode === "宅配" ? "運費（黑貓宅急便�
 /* ================= checkout（雙支付情境） ================= */
 function renderCheckout(){
   if (!cart.items.length){ cart.items=[{name:"西西里檸檬咖啡",price:80,qty:1}]; cart.store=cart.store||"louisa"; }
-  var SNAME = { louisa:"路易莎咖啡 復興門市", nuan:"逸麵麵鍋燒專賣 板橋店", dtf:"鼎泰豐 板橋店", el:"雅詩蘭黛 板橋大遠百專櫃" };
+  var SNAME = { louisa:"路易莎咖啡 復興門市", nuan:"{{BRAND_NAME}} 板橋店", dtf:"鼎泰豐 板橋店", el:"雅詩蘭黛 板橋大遠百專櫃" };
   var box = $("co-items"), html = "";
   for (var i=0;i<cart.items.length;i++){
     var it = cart.items[i];
@@ -2690,7 +2681,7 @@ function placeOrder(){
   }
   var needVow = (cart.mode === "自取" || cart.mode === "內用");
   if (needVow && !isOnline() && vowBlocked()){ toast("⛔ 到店付款已暫停 · 請綁定信用卡或改用線上付款"); return; }
-  var SNAME = { louisa:"路易莎咖啡 復興門市", nuan:"逸麵麵鍋燒專賣 板橋店", dtf:"鼎泰豐 板橋店", el:"雅詩蘭黛 板橋大遠百專櫃" };
+  var SNAME = { louisa:"路易莎咖啡 復興門市", nuan:"{{BRAND_NAME}} 板橋店", dtf:"鼎泰豐 板橋店", el:"雅詩蘭黛 板橋大遠百專櫃" };
   var cp = findApplicable(), disc = cp ? cp.amt : 0;
   if (cp) cp.used = true;
   var fee = calcFee();
@@ -2894,7 +2885,7 @@ function renderCoupons(){
 function receiveCoupon(c){
   coupons.unshift({
     id: "rx" + Date.now(), store: c.store || "nuan",
-    storeName: c.storeName || "逸麵麵鍋燒專賣", title: c.title || "限時優惠券",
+    storeName: c.storeName || "{{BRAND_NAME}}", title: c.title || "限時優惠券",
     sub: (c.sub || "商家剛剛發送") + " · 即時聯動送達", tag: c.tag || "券",
     amt: c.amt || 0, min: c.min || 0, used: false
   });
@@ -2963,7 +2954,7 @@ function dxFamily(){
   toast("已完成家人複驗（載具歸戶授權 · 示範）");
 }
 function dxVerify(i){
-  var names=["逸麵麵鍋燒專賣","原味時代健康餐盒","果漾 Fresh"];
+  var names=["{{BRAND_NAME}}","原味時代健康餐盒","果漾 Fresh"];
   dxDone++; var old=dxScore; dxScore=Math.max(40,dxScore-7);
   $("dxSc2").textContent=dxScore; $("dxTk").textContent=Math.min(2,dxDone);
   $("dxScNote").innerHTML="🎉 發票已核銷：綜合中毒 "+old+" → <b style='color:#177A4C'>"+dxScore+"</b>，T 線變淺了（糖毒 −5 · 油毒 −2）";
@@ -3114,7 +3105,7 @@ if (_gxStore && BRAND[_gxStore[1]]) setTimeout(function(){
    要上滑才看得到，現場等於白白浪費開場那十秒。
 
    行為：
-     預設（無參數）      → 直接進逸麵麵鍋燒專賣店內，捲到菜單，且不自動彈入會卡
+     預設（無參數）      → 直接進{{BRAND_NAME}}店內，捲到菜單，且不自動彈入會卡
      ?home=1            → 保留原本的沈浸式 App 首頁進場（對主管演「長在載具裡」用這個）
      ?store=<key>       → 指定品牌（louisa / nuan / dtf）
 
@@ -3152,46 +3143,6 @@ if (_gxStore && BRAND[_gxStore[1]]) setTimeout(function(){
 <div id="demo-disclaimer" style="position:fixed;top:0;left:0;width:100vw;box-sizing:border-box;z-index:2147483000;background:#7A5D14;color:#fff;font-size:12px;font-weight:800;text-align:center;padding:6px 10px;letter-spacing:.04em;font-family:inherit;line-height:1.4">⚠ 示範預覽・非正式商店｜菜單與價格以店內公告為準</div>
 
 <style id="brand-skin">
-:root{--nn-olive:#3F6B3F;--nn-deep:#24401F;--nn-ivory:#F6F8EE;--nn-line:#DCE5C8;--nuan:#3F6B3F;--nuan-bg:#EDF4E2}
-.nn-hero{background:radial-gradient(120% 90% at 30% 0%,#2E4526 0%,#1D2E18 55%,#111D0E 100%)}
-.nn-hero .wall{background:repeating-linear-gradient(90deg,rgba(8,14,6,.92) 0 3px,transparent 3px 52px),repeating-linear-gradient(0deg,rgba(8,14,6,.92) 0 3px,transparent 3px 56px),linear-gradient(160deg,#C9D98A 0%,#8FA45B 46%,#5F7A3E 100%);border-left-color:rgba(8,14,6,.92)}
-.nn-hero .glow{background:radial-gradient(circle,rgba(222,240,170,.5),transparent 62%)}
-.nn-hero .lamp .bulb{background:#F2FAC8;box-shadow:0 0 16px 5px rgba(222,240,170,.85)}
-.nn-hero .lamp .shade{box-shadow:0 12px 18px -4px rgba(222,240,170,.55)}
-.nn-hero .tblrow{background:#0B140A}
-.nn-sign .mark{border-color:rgba(240,250,220,.92);color:#F4FBE0;text-shadow:0 0 12px rgba(210,235,150,.95);box-shadow:0 0 14px rgba(210,235,150,.35),inset 0 0 10px rgba(210,235,150,.2)}
-.nn-sign b{color:#F8FCEC;text-shadow:0 0 14px rgba(215,240,160,.8);letter-spacing:.22em}
-.nn-sign small{color:#B9CB94}
-.nn-meta{color:#E3EBCF}
-.nn-hello .hl small{color:#6E7C5A}
-.nn-login{background:#3F6B3F;color:#F3F8E6;box-shadow:0 5px 14px rgba(63,107,63,.32)}
-.nn-entry .ent small{color:#8A9A70}
-.nn-perks .pk{color:#425234}
-.nn-perks .tag{background:#3F6B3F;color:#F3F8E6}.nn-perks .tag::after{background:#3F6B3F}
-.nn-perks .tag.dim{background:#A8B78E}.nn-perks .tag.dim::after{background:#A8B78E}
-.nn-more{color:#7E8E64}
-.nn-banner{background:#E4EDCB}
-.nn-banner .pic{background:radial-gradient(70% 60% at 70% 26%,rgba(244,250,224,.55),rgba(244,250,224,0) 70%),linear-gradient(160deg,#8FA45B 0%,#3F6B3F 100%)}
-.minitab.nn{background:#F0F4E0;border-top-color:#DCE5C8}
-.minitab.nn .mt{color:#93A075}
-.scanmt .ring{background:#3F6B3F;color:#F3F8E6;border-color:#F0F4E0;box-shadow:0 7px 15px rgba(63,107,63,.4)}
-.add3{background:#3F6B3F;color:#F3F8E6;box-shadow:0 3px 8px rgba(63,107,63,.32)}
-#nuan .nn-time button{background:#F0F4E0;border-color:#DCE5C8;color:#6E7C5A}
-#nuan .nn-time button.on{background:#3F6B3F;border-color:#3F6B3F;color:#F3F8E6}
-#nuan .scanbind{background:#3F6B3F;color:#F3F8E6}
-#cart-nn .go{background:#3F6B3F;color:#F3F8E6}
-/* 集點卡（示範） */
-.nn-stamp{display:block;width:calc(100% - 32px);margin:10px 16px 2px;background:#FFFDF6;border:1.5px solid #DCE5C8;
-  border-radius:14px;padding:12px 14px;text-align:left;font-family:inherit;cursor:pointer}
-.nn-stamp .sth{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-.nn-stamp .sth b{font-size:13.5px;color:#24401F;font-weight:800}
-.nn-stamp .sth small{font-size:10px;color:#7E8E64;font-weight:700}
-.nn-stamp .std{display:flex;gap:7px;margin-top:10px}
-.nn-stamp .sd{flex:1;aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  font-size:12px;font-weight:800;border:1.5px dashed #B9C79B;color:#B9C79B;background:#F6F8EE}
-.nn-stamp .sd.on{background:#3F6B3F;border:1.5px solid #3F6B3F;color:#F3F8E6}
-.nn-stamp .sd.gift{border:1.5px solid #F0A64A;color:#C77F1F;background:#FFF6E3;font-size:14px}
-.nn-stamp .stn{margin-top:9px;font-size:10.5px;color:#6E7C5A;font-weight:700}
-</style>
+{{SKIN_CSS}}</style>
 </body>
 </html>
