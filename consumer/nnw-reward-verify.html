@@ -26,10 +26,14 @@ body{margin:0;background:var(--cream);color:var(--ink);
 .reward{text-align:center;padding:6px 0 2px}
 .reward .t{font-size:20px;font-weight:800}
 .reward .s{font-size:13px;color:var(--ink2);margin-top:4px}
-.gifts{display:flex;gap:10px;margin-top:12px}
-.gifts .g{flex:1;background:linear-gradient(180deg,#FFF3DE,#FFE7C4);border:1px solid #F3DCB8;
-  border-radius:13px;padding:10px 6px;text-align:center;font-weight:800;color:var(--brown);font-size:15px}
-.gifts .g small{display:block;font-weight:400;font-size:11px;color:var(--ink2);margin-top:2px}
+.gifts{display:flex;margin-top:14px;background:#FFFCF4;
+  border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.gifts .g{flex:1;padding:13px 8px 12px;text-align:center;color:var(--brown);cursor:default}
+.gifts .g + .g{border-left:1px solid var(--line)}
+.gifts .g .e{display:block;font-size:25px;line-height:1;margin-bottom:5px}
+.gifts .g .nm{font-size:15px;font-weight:700;letter-spacing:.02em}
+.gifts .g small{display:block;font-weight:400;font-size:11px;color:var(--ink2);
+  margin-top:4px;line-height:1.5}
 .chk{display:flex;gap:9px;margin-bottom:9px;font-size:13.5px;line-height:1.55}
 .chk:last-child{margin-bottom:0}
 .chk .n{flex:none;width:20px;height:20px;border-radius:50%;background:var(--gold);color:#fff;
@@ -51,8 +55,8 @@ body{margin:0;background:var(--cream);color:var(--ink);
     <div class="t">用餐即贈｜二選一</div>
     <div class="s">內用消費即可兌換，隨餐提供</div>
     <div class="gifts">
-      <div class="g">🧅 洋蔥圈<small>售罄時同價餐點替代</small></div>
-      <div class="g">🍗 炸雞球<small>售罄時同價餐點替代</small></div>
+      <div class="g"><span class="e">🧅</span><span class="nm">洋蔥圈</span><small>售罄時同價餐點替代</small></div>
+      <div class="g"><span class="e">🍗</span><span class="nm">炸雞球</span><small>售罄時同價餐點替代</small></div>
     </div>
   </div>
 
