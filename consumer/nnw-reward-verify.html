@@ -70,7 +70,7 @@ body{margin:0;background:var(--cream);color:var(--ink);
   <div class="card" id="log-card" style="display:none">
     <h2>贈品交給客人後，店員按這裡</h2>
     <div style="display:flex;gap:9px;margin-bottom:10px">
-      <input id="log-tbl" inputmode="numeric" placeholder="桌號（選填）"
+      <input id="log-tbl" inputmode="numeric" placeholder="桌號（必填）"
         style="flex:1;min-width:0;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:14px;background:#fff;color:var(--ink);font-family:inherit">
       <select id="log-gift"
         style="flex:1.2;border:1px solid var(--line);border-radius:10px;padding:11px 8px;font-size:14px;background:#fff;color:var(--ink);font-family:inherit">
@@ -97,11 +97,23 @@ if (LOG_ENDPOINT) document.getElementById('log-card').style.display = '';
 
 function logRedeem(){
   var btn = document.getElementById('log-btn'), st = document.getElementById('log-st');
+  var tbl = document.getElementById('log-tbl');
   if (btn.disabled) return;
+  if (!tbl.value.trim()) {
+    tbl.style.borderColor = '#D6453D';
+    tbl.style.background = '#FFF6F5';
+    st.style.color = '#D6453D';
+    st.textContent = '請先填桌號再送出（贈品可先給，桌號用來對帳）';
+    tbl.focus();
+    return;
+  }
+  tbl.style.borderColor = 'var(--line)';
+  tbl.style.background = '#fff';
+  st.style.color = 'var(--ink2)';
   btn.disabled = true; btn.style.opacity = .55; st.textContent = '記錄中…';
   var payload = JSON.stringify({
     t: new Date().toISOString(),
-    table: document.getElementById('log-tbl').value.trim(),
+    table: tbl.value.trim(),
     gift: document.getElementById('log-gift').value.replace(/^[^一-鿿]+/, ''),
     note: ''
   });
