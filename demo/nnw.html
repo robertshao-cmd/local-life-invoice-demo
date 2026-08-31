@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>暖暖窩義式廚房｜商家小程序 Demo</title>
+<style>
+:root{
+  --c-brand:#016B4D; --c-brand-weak:#E6F7F6; --c-brand-line:#01AFA2;
+  --c-ink:#1A1F26; --c-ink-2:#5A6472; --c-ink-3:#6B7280;
+  --c-bg:#F5F7F7; --c-surface:#FFFFFF; --c-line:#E1E6EC;
+  --c-warn-bg:#FFF8E8; --c-warn-line:#F2E3B8; --c-warn-ink:#7A5D14;
+  --c-focus:#0B63CE;
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:24px; --s-6:32px; --s-7:48px;
+  --f-xs:11.5px; --f-sm:12.5px; --f-md:14px; --f-lg:16px; --f-xl:20px; --f-2xl:26px;
+  --r-sm:6px; --r-md:10px; --r-lg:14px;
+  --shadow:0 1px 2px rgba(16,24,40,.04),0 4px 12px rgba(16,24,40,.06);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+  background:var(--c-bg);color:var(--c-ink);line-height:1.7;-webkit-text-size-adjust:100%}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--c-focus);outline-offset:2px;border-radius:var(--r-sm)}
+
+.topbar{background:var(--c-surface);border-bottom:1px solid var(--c-line);position:sticky;top:0;z-index:20}
+.tin{max-width:1080px;margin:0 auto;padding:var(--s-3) var(--s-4);display:flex;align-items:center;gap:var(--s-3)}
+.brandmark{width:34px;height:34px;border-radius:9px;background:var(--c-brand);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:800;flex:none}
+.tt{min-width:0}
+.tt b{display:block;font-size:var(--f-md);line-height:1.3}
+.tt span{display:block;font-size:var(--f-xs);color:var(--c-ink-3)}
+.menubtn{margin-left:auto;display:none;background:var(--c-surface);border:1px solid var(--c-line);
+  border-radius:var(--r-sm);padding:8px 12px;font:inherit;font-size:var(--f-sm);cursor:pointer;min-height:40px}
+
+nav{background:var(--c-surface);border-bottom:1px solid var(--c-line)}
+.nin{max-width:1080px;margin:0 auto;padding:0 var(--s-4);display:flex;gap:var(--s-1);overflow-x:auto}
+nav a{padding:var(--s-3) var(--s-3);font-size:var(--f-sm);font-weight:700;color:var(--c-ink-2);
+  text-decoration:none;border-bottom:3px solid transparent;white-space:nowrap}
+nav a[aria-current="page"]{color:var(--c-brand);border-bottom-color:var(--c-brand)}
+nav a:hover{color:var(--c-ink)}
+
+.wrap{max-width:1080px;margin:0 auto;padding:var(--s-5) var(--s-4) var(--s-7)}
+.crumb{font-size:var(--f-xs);color:var(--c-ink-3);margin-bottom:var(--s-3)}
+.crumb a{color:var(--c-brand);text-decoration:none}
+h1{font-size:var(--f-2xl);font-weight:800;line-height:1.35}
+h2{font-size:var(--f-xl);font-weight:800;margin-bottom:var(--s-2)}
+.lead{font-size:var(--f-md);color:var(--c-ink-2);margin-top:var(--s-2);max-width:62ch}
+.card{background:var(--c-surface);border:1px solid var(--c-line);border-radius:var(--r-lg);
+  padding:var(--s-5);box-shadow:var(--shadow);margin-top:var(--s-4)}
+.note{background:var(--c-warn-bg);border:1px solid var(--c-warn-line);color:var(--c-warn-ink);
+  border-radius:var(--r-md);padding:var(--s-3) var(--s-4);font-size:var(--f-sm);margin-top:var(--s-4)}
+.cta{display:inline-block;background:var(--c-brand);color:#fff;text-decoration:none;font-weight:800;
+  border-radius:var(--r-md);padding:var(--s-3) var(--s-5);margin-top:var(--s-4);font-size:var(--f-md);min-height:44px}
+.cta.ghost{background:var(--c-surface);color:var(--c-brand);border:2px solid var(--c-brand)}
+ul{list-style:none}
+.feat{border-top:1px solid var(--c-line);padding:var(--s-3) 0}
+.feat:first-child{border-top:0}
+.fn{font-weight:800;display:flex;align-items:center;gap:var(--s-2);flex-wrap:wrap}
+.fs{font-size:var(--f-xs);font-weight:700;border-radius:99px;padding:1px var(--s-2)}
+.fs.try{background:var(--c-brand-weak);color:var(--c-brand)}
+.fs.soon{background:#F1F3F6;color:var(--c-ink-3)}
+.fd{font-size:var(--f-sm);color:var(--c-ink-2)}
+.flink{display:inline-block;margin-top:var(--s-1);font-size:var(--f-sm);font-weight:700;
+  color:var(--c-brand);text-decoration:none}
+.pr{display:flex;gap:var(--s-3);padding:var(--s-3) 0;border-top:1px solid var(--c-line)}
+.pr:first-child{border-top:0}
+.pr .dot{width:11px;height:11px;border-radius:50%;flex:none;margin-top:7px;background:#D3D9E2}
+.pr.done .dot{background:var(--c-brand)}
+.pr.doing .dot{background:var(--c-brand-line)}
+.pr b{font-size:var(--f-md)}
+.pl{font-size:var(--f-xs);color:var(--c-ink-3);margin-left:var(--s-2)}
+.pn{font-size:var(--f-sm);color:var(--c-ink-2)}
+.bar{height:8px;background:#E8ECF1;border-radius:99px;overflow:hidden;margin-top:var(--s-3)}
+.bar i{display:block;height:100%;background:var(--c-brand);border-radius:99px}
+.steps li{padding:var(--s-2) 0 var(--s-2) var(--s-5);position:relative;font-size:var(--f-md)}
+.steps li::before{content:"→";position:absolute;left:0;color:var(--c-brand);font-weight:800}
+.sec{display:none}
+.sec.on{display:block}
+footer{max-width:1080px;margin:0 auto;padding:var(--s-5) var(--s-4) var(--s-7);
+  font-size:var(--f-xs);color:var(--c-ink-3);border-top:1px solid var(--c-line)}
+@media(max-width:720px){
+  .menubtn{display:block}
+  .nin{display:none;flex-direction:column;padding-bottom:var(--s-2)}
+  .nin.open{display:flex}
+  nav a{border-bottom:1px solid var(--c-line);border-left:3px solid transparent;padding:var(--s-3)}
+  nav a[aria-current="page"]{border-left-color:var(--c-brand);border-bottom-color:var(--c-line)}
+  h1{font-size:var(--f-xl)}
+}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="tin">
+  <div class="brandmark">暖</div>
+  <div class="tt"><b>暖暖窩義式廚房</b><span>商家小程序・專屬 Demo</span></div>
+  <button class="menubtn" id="mb" aria-expanded="false" aria-controls="nav">選單</button>
+</div></div>
+
+<nav><div class="nin" id="nav">
+  <a href="#overview" data-sec="overview">Demo 總覽</a>
+  <a href="#user" data-sec="user">使用者端體驗</a>
+  <a href="#biz" data-sec="biz">商家端體驗</a>
+  <a href="#progress" data-sec="progress">合作進度</a>
+  <a href="#next" data-sec="next">下一步</a>
+</div></nav>
+
+<div class="wrap">
+  <div class="crumb"><a href="#overview">暖暖窩義式廚房 Demo</a> ／ <span id="crumb">Demo 總覽</span></div>
+
+  <section id="s-overview" class="sec on">
+    <h1>暖暖窩義式廚房　專屬體驗</h1>
+    <p class="lead">板橋・內用為主・已在線上營運。這一頁是為貴店做的，可以直接點開操作看看——
+      客人會看到什麼、單子怎麼進來、您這邊看得到什麼。</p>
+    <a class="cta" href="../consumer/nnw-demo.html">開啟貴店的體驗頁 →</a>
+    <div class="card">
+      <h2>可以試的功能</h2>
+      <ul><li class="feat"><div class="fn">掃碼點餐<span class="fs try">可體驗</span></div><div class="fd">客人掃桌上的碼就能點，不用下載 App、不用註冊</div></li><li class="feat"><div class="fn">送單到店<span class="fs try">可體驗</span></div><div class="fd">點完直接進到您的出單流程，不改變您現在的做法</div></li><li class="feat"><div class="fn">會員紀錄<span class="fs try">可體驗</span></div><div class="fd">客人的消費紀錄自動留存，回訪時看得到</div></li><li class="feat"><div class="fn">活動與優惠<span class="fs try">可體驗</span></div><div class="fd">檔期活動、兌換券與到店核銷</div></li><li class="feat"><div class="fn">商家工作台<span class="fs soon">示範中</span></div><div class="fd">看今天幾單、賣什麼最好、回頭客多少</div></li><li class="feat"><div class="fn">活動核銷頁<span class="fs try">可體驗</span></div><div class="fd">客人出示兌換碼，店員掃碼確認後核銷</div><a class="flink" href="../consumer/nnw-reward-verify.html">開啟這個畫面 →</a></li></ul>
+    </div>
+    <div class="note">畫面為示範預覽，資料是示意的，不是真實交易。實際上線內容會依貴店需求調整。</div>
+  </section>
+
+  <section id="s-user" class="sec">
+    <h1>使用者端體驗</h1>
+    <p class="lead">客人掃桌上的碼就進來了，不用下載 App、不用註冊。
+      點餐、送單、消費紀錄都在同一個流程裡。</p>
+    <a class="cta" href="../consumer/nnw-demo.html">開啟客人看到的畫面 →</a>
+    <div class="card">
+      <h2>客人會經過的步驟</h2>
+      <ul class="steps">
+        <li>掃碼進入貴店頁面</li>
+        <li>看菜單、選品項、送出</li>
+        <li>單子進到您的出單流程</li>
+        <li>消費紀錄留在他的會員裡，下次回來看得到</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="s-biz" class="sec">
+    <h1>商家端體驗</h1>
+    <p class="lead">您這邊會看到什麼：今天幾單、賣什麼最好、多少是回頭客。
+      現有的機器照用，這只是多一個入口。</p>
+    <a class="cta ghost" href="../merchant/merchant.html">開啟商家工作台（示範）→</a>
+    <div class="card">
+      <h2>不會改變的事</h2>
+      <ul class="steps">
+        <li>不用換掉現在的 POS 或出單機</li>
+        <li>不用改變現在的做單流程</li>
+        <li>可以只開一個時段先試，隨時關掉</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="s-progress" class="sec">
+    <h1>合作進度</h1>
+    <p class="lead">目前做到哪裡、接下來要一起確認什麼。</p>
+    <div class="card">
+      <div class="bar"><i style="width:50%"></i></div>
+      <p class="lead" style="margin-top:var(--s-2)">已完成 2 / 4 項</p>
+      <ul style="margin-top:var(--s-4)"><li class="pr done"><span class="dot"></span><div><b>專屬體驗頁</b><span class="pl">已完成</span><div class="pn">已上線，可直接操作</div></div></li><li class="pr done"><span class="dot"></span><div><b>掃碼點餐到出單</b><span class="pl">已完成</span><div class="pn">實地走通，真單已在跑</div></div></li><li class="pr doing"><span class="dot"></span><div><b>9/1 用餐即贈活動</b><span class="pl">進行中</span><div class="pn">9/1–12/31，掃碼核銷</div></div></li><li class="pr next"><span class="dot"></span><div><b>第二台出單機</b><span class="pl">接下來</span><div class="pn">尖峰分流，時程確認中</div></div></li></ul>
+    </div>
+  </section>
+
+  <section id="s-next" class="sec">
+    <h1>下一步</h1>
+    <p class="lead">接下來需要跟您一起確認的事，大概 15 分鐘。</p>
+    <div class="card"><ul class="steps"><li>一起確認菜單與營業時段</li><li>挑一個離峰時段先試跑</li><li>看實際狀況再決定要不要擴大</li></ul></div>
+    <div class="note">有任何想加的功能都可以提，我們會記錄下來安排版本，但不會口頭答應做不到的事。</div>
+  </section>
+</div>
+
+<footer>
+  CMoney 商家小程序・示範預覽　·　本頁內容為示範，非正式商店。<br>
+  頁面上的數字與交易均為示意資料。
+</footer>
+
+<script>
+(function(){
+  var SECS = ["overview","user","biz","progress","next"];
+  var TITLE = {overview:"Demo 總覽", user:"使用者端體驗", biz:"商家端體驗",
+                progress:"合作進度", next:"下一步"};
+  var nav = document.getElementById("nav");
+  var mb = document.getElementById("mb");
+
+  function show(id, push){
+    if (SECS.indexOf(id) < 0) id = "overview";
+    SECS.forEach(function(s){
+      var el = document.getElementById("s-" + s);
+      if (el) el.classList.toggle("on", s === id);
+    });
+    Array.prototype.forEach.call(nav.querySelectorAll("a"), function(a){
+      if (a.dataset.sec === id) a.setAttribute("aria-current", "page");
+      else a.removeAttribute("aria-current");
+    });
+    document.getElementById("crumb").textContent = TITLE[id];
+    document.title = "暖暖窩義式廚房｜" + TITLE[id];
+    nav.classList.remove("open");
+    mb.setAttribute("aria-expanded", "false");
+    if (push && location.hash !== "#" + id) history.pushState({sec:id}, "", "#" + id);
+    window.scrollTo(0, 0);
+  }
+
+  // 深連結：重新整理與直接貼網址都回到同一個區塊
+  show((location.hash || "#overview").slice(1), false);
+
+  // 上一頁／下一頁
+  window.addEventListener("popstate", function(){
+    show((location.hash || "#overview").slice(1), false);
+  });
+
+  nav.addEventListener("click", function(e){
+    var a = e.target.closest("a[data-sec]");
+    if (!a) return;
+    e.preventDefault();
+    show(a.dataset.sec, true);
+  });
+
+  mb.addEventListener("click", function(){
+    var open = nav.classList.toggle("open");
+    mb.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+})();
+</script>
+</body>
+</html>
