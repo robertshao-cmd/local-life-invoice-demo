@@ -320,25 +320,29 @@ button:focus-visible,a:focus-visible{outline:3px solid #7FD1CC;outline-offset:2p
 /* ===== BRAND HOME v5.6 —— 光東养茶 × NOW THAIA 氛圍風 ===== */
 #nuan{background:var(--nn-ivory)}
 .nn-hero{position:relative;height:232px;flex:none;overflow:hidden;background:
-  radial-gradient(120% 90% at 30% 0%,#1B2412 0%,#10140C 58%,#0B0E08 100%)}
+  radial-gradient(120% 90% at 30% 0%,#3E2A15 0%,#26180A 58%,#190F05 100%)}
+/* 真實餐點照插槽：heroPhoto 有值時蓋掉 CSS 場景，並加暖色壓暗讓招牌字仍讀得到 */
+.nn-hero .photo{position:absolute;inset:0;z-index:5;background-size:cover;background-position:center}
+.nn-hero .photo::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(32,19,8,.18) 0%,rgba(28,16,6,.50) 55%,rgba(24,14,5,.78) 100%)}
 .nn-back{position:absolute;left:6px;top:40px;font-size:22px;color:#fff;z-index:9;padding:4px 12px}
-.nn-hero .wall{position:absolute;right:0;top:20px;bottom:30px;width:60%;opacity:.95;
+.nn-hero .wall{position:absolute;right:0;top:14px;bottom:30px;width:74%;opacity:.97;
   background:
-    repeating-linear-gradient(90deg,rgba(9,11,6,.92) 0 3px,transparent 3px 52px),
-    repeating-linear-gradient(0deg,rgba(9,11,6,.92) 0 3px,transparent 3px 56px),
-    linear-gradient(160deg,#F3CC85 0%,#E2A857 46%,#C4863C 100%);
+    repeating-linear-gradient(90deg,rgba(38,22,8,.78) 0 3px,transparent 3px 52px),
+    repeating-linear-gradient(0deg,rgba(38,22,8,.78) 0 3px,transparent 3px 56px),
+    linear-gradient(160deg,#FFDDA2 0%,#F0B268 46%,#D4924A 100%);
   border-left:3px solid rgba(8,10,6,.92);
   -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 14%);mask-image:linear-gradient(90deg,transparent 0,#000 14%)}
-.nn-hero .glow{position:absolute;right:9%;top:24%;width:120px;height:120px;border-radius:50%;
-  background:radial-gradient(circle,rgba(255,226,166,.5),transparent 62%);filter:blur(5px)}
-.nn-hero .ls{position:absolute;width:170px;height:96px;background:radial-gradient(closest-side,rgba(5,9,3,.96),rgba(5,9,3,0));z-index:3}
+.nn-hero .glow{position:absolute;right:9%;top:20%;width:168px;height:168px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,214,140,.72),transparent 66%);filter:blur(6px)}
+.nn-hero .ls{position:absolute;width:170px;height:96px;background:radial-gradient(closest-side,rgba(26,15,5,.80),rgba(26,15,5,0));z-index:3}
 .nn-hero .ls1{left:-34px;top:-30px}
 .nn-hero .ls2{right:-44px;top:-38px;width:200px}
 .nn-hero .lamp{position:absolute;left:57%;top:0;z-index:4}
 .nn-hero .lamp .cord{display:block;width:2px;height:62px;background:#171C10;margin:0 auto}
 .nn-hero .lamp .shade{display:block;width:30px;height:15px;background:#14180E;border-radius:4px 4px 9px 9px;box-shadow:0 12px 18px -4px rgba(255,214,146,.55)}
 .nn-hero .lamp .bulb{display:block;width:8px;height:8px;border-radius:50%;background:#FFE2A6;margin:-3px auto 0;box-shadow:0 0 16px 5px rgba(255,222,158,.85)}
-.nn-hero .tblrow{position:absolute;left:0;right:0;bottom:0;height:32px;background:#080B05;z-index:2}
+.nn-hero .tblrow{position:absolute;left:0;right:0;bottom:0;height:32px;background:#1A1006;z-index:2}
 .nn-hero .set{position:absolute;bottom:12px;width:26px;height:7px;border-radius:99px;background:#E9E4D2;opacity:.85;box-shadow:0 2px 4px rgba(0,0,0,.5)}
 .nn-hero .s1{right:14%}
 .nn-hero .s2{right:34%;width:20px;opacity:.65}
@@ -371,6 +375,23 @@ button:focus-visible,a:focus-visible{outline:3px solid #7FD1CC;outline-offset:2p
 .nn-perks .ico{color:var(--nn-olive);display:flex}
 .nn-perks .ico svg{width:27px;height:27px}
 .nn-more{display:block;margin:13px auto 2px;font-size:11px;color:#7C8163;font-weight:700;letter-spacing:.08em;padding:4px 10px}
+/* ① 主 CTA：原本這頁沒有主要按鈕，使用者得自己滑到菜單。吃 --nn-olive → 各店自動用自己的品牌色 */
+.nn-cta{display:flex;align-items:center;justify-content:center;gap:7px;
+  margin:15px 16px 3px;width:calc(100% - 32px);min-height:50px;border-radius:14px;
+  background:var(--nn-olive);color:#FFFDF5;font-size:16.5px;font-weight:800;letter-spacing:.05em;
+  box-shadow:0 5px 15px -5px rgba(0,0,0,.4)}
+.nn-cta .ar{font-size:19px;opacity:.85;font-weight:700}
+.nn-cta:active{transform:translateY(1px);box-shadow:0 3px 9px -4px rgba(0,0,0,.4)}
+/* ③ 會員好康摺疊區：用原生 <details>，零 JS、WebView 相容、可鍵盤操作 */
+.nn-fold{margin:11px 16px 2px;border:1px solid #E4E7D6;border-radius:14px;background:#FBFBF5;overflow:hidden}
+.nn-fold summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:9px;
+  padding:13px 15px;font-size:13.5px;color:var(--nn-deep);font-weight:800;min-height:46px}
+.nn-fold summary::-webkit-details-marker{display:none}
+.nn-fold summary::after{content:"⌄";margin-left:auto;font-size:16px;color:#8A9070;transition:transform .18s}
+.nn-fold[open] summary::after{transform:rotate(180deg)}
+.nn-fold summary .ct{font-size:10.5px;font-weight:700;color:#6E7358;background:#EBEFDF;border-radius:99px;padding:2.5px 9px}
+.nn-fold .nn-perks{padding:4px 8px 2px}
+.nn-fold .nn-banner{margin:8px 12px 12px;width:calc(100% - 24px)}
 .nn-banner{margin:12px 16px 2px;width:calc(100% - 32px);display:flex;border-radius:14px;overflow:hidden;background:#DFE4CB;text-align:left}
 .nn-banner .t{flex:1;padding:15px 12px 15px 16px;font-size:12px;color:var(--nn-deep);font-weight:700;line-height:1.6}
 .nn-banner .t b{display:block;font-size:16.5px;margin-top:2px;letter-spacing:.03em}
@@ -1196,6 +1217,10 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
         </div>
         <div id="nn-ctx"></div>
 
+        <button class="nn-cta" onclick="brandGoMenu('nn')">開始點餐<span class="ar">›</span></button>
+
+        <details class="nn-fold">
+          <summary>會員好康與熟客群<span class="ct">5 項</span></summary>
         <div class="nn-perks">
           <button class="pk" onclick="openBrandCoupons()"><span class="tag" id="nn-pk-wel">入會即領</span><span class="ico"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9.5" y="20" width="29" height="17.5" rx="2"/><path d="M7.5 14.5h33v5.6h-33z"/><path d="M24 14.5v23"/><path d="M24 14.2c-6.6-8.6-14.6-2.4-6.2-.2M24 14.2c6.6-8.6 14.6-2.4 6.2-.2"/></svg></span>新客見面禮</button>
           <button class="pk" onclick="toast('🎂 生日有禮（示範）：完善生日資料，生日當月自動發 8 折券到券夾')"><span class="tag">完善資料領取</span><span class="ico"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 36.5V27c0-2 1.6-3.6 3.6-3.6h20.8c2 0 3.6 1.6 3.6 3.6v9.5"/><path d="M8 36.5h32"/><path d="M10 28.5q3.5 3.4 7 0t7 0 7 0 7 0"/><path d="M24 17.4v6"/><path d="M24 11.2c-1.5 1.6-1.5 3 0 4.4 1.5-1.4 1.5-2.8 0-4.4z"/></svg></span>生日有禮</button>
@@ -1203,12 +1228,11 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
           <button class="pk" onclick="toast('💳 儲值有禮（示範）：儲值金功能即將上線，敬請期待')"><span class="tag dim">敬請期待</span><span class="ico"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8.5" y="13.5" width="31" height="21.5" rx="3"/><path d="M8.5 20.5h31"/><path d="M13.5 28.5h8"/></svg></span>儲值有禮</button>
         </div>
 
-        <button class="nn-more" onclick="brandGoMenu('nn')">上滑查看主廚菜單與時段活動 ⌄</button>
-
         <button class="nn-banner" onclick="toast('🌿 示範：加入 LINE 熟客群——商家在群內發券、上新菜、辦活動，熟客經營第二現場')">
           <span class="t">加入 LINE 熟客群<b>美味優惠先知道</b><small>點我加入 ›</small></span>
           <span class="pic">🌿</span>
         </button>
+        </details>
 
         <div class="menu" id="nn-menu">
           <div class="nn-cat">燒臘飯 ─ 經典主食（外送平台參考價）</div>
