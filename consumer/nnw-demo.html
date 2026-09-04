@@ -1005,10 +1005,797 @@ body.embed .statusbar{visibility:hidden}
 /* tabbar 換成真圖示後的樣式修正 */
 .tab img.imico{width:26px;height:26px;display:block;margin:0 auto 2px;filter:none;opacity:1}
 
+/* ===== Roadmap P4 V1 Base（功能 fence；視覺由同步 contract 提供） ===== */
+body.p4-base.p4-gated .app{visibility:hidden}
+body.p4-base .paybar,body.p4-base .rail{display:none}
+body.p4-base .nn-hello,body.p4-base .nn-div,body.p4-base .nn-fold,body.p4-base #nng-dlv,body.p4-base .nn-entry i,body.p4-base .nn-back{display:none!important}
+body.p4-base #demo-fwd,body.p4-base #status .co-card .rw:nth-child(2){display:none!important}
+body.p4-base #minitab .mtwrap.nn .mt:nth-child(2),body.p4-base #minitab .mtwrap.nn .mt:nth-child(4){display:none!important}
+body.p4-base #status .syncnote{font-size:11px;background:#F8F9FB;border:1px solid var(--line);border-radius:12px;padding:10px}
+
+/* P4-DESIGN-CONTRACT:BEGIN sha256=741cff5c774e3acc6ca06d203493a2b08763744e11c3886a8b99142b93b3cd18 */
+/*
+ * P4 local clean-room design contract.
+ *
+ * This is a repo-owned, framework-neutral prototype layer. It is not an
+ * upstream Storybook package and carries no copied source, assets, fonts,
+ * logos, DOM, or runtime dependency. Publication remains blocked until the
+ * external observation and no-copy attestation gates are satisfied.
+ */
+body.p4-base {
+  --p4-sys-primary: #01AFA2;
+  --p4-sys-primary-soft: #E6F7F6;
+  --p4-sys-action: #017C73;
+  --p4-sys-action-hover: #016059;
+  --p4-sys-secondary: #FF9924;
+  --p4-sys-secondary-soft: #FFF5E9;
+  --p4-sys-secondary-deep: #6B400F;
+  --p4-sys-background: #F5F5F5;
+  --p4-sys-surface: #FFFFFF;
+  --p4-sys-outline: #F0F0F0;
+  --p4-sys-outline-strong: #D9D9D9;
+  --p4-sys-text: #262626;
+  --p4-sys-text-secondary: #454545;
+  --p4-sys-hint: #8C8C8C;
+  --p4-sys-error: #E83F19;
+  --p4-sys-error-soft: #FFECE8;
+  --p4-sys-error-deep: #6B1D0C;
+  --p4-sys-toast: #454545;
+  --p4-space-1: 4px;
+  --p4-space-2: 8px;
+  --p4-space-3: 12px;
+  --p4-space-4: 16px;
+  --p4-space-5: 20px;
+  --p4-space-6: 24px;
+  --p4-space-8: 32px;
+  --p4-radius-badge: 6px;
+  --p4-radius-compact: 8px;
+  --p4-radius-group: 10px;
+  --p4-radius-card: 12px;
+  --p4-radius-feature: 16px;
+  --p4-shadow-card: 0 2px 10px rgba(38, 38, 38, .06);
+  --p4-shadow-action: 0 6px 16px rgba(1, 96, 89, .18);
+  color: var(--p4-sys-text);
+}
+
+body.p4-base .screen-wrap,
+body.p4-base .stat-body,
+body.p4-base .body {
+  background: var(--p4-sys-background);
+}
+
+body.p4-base .card,
+body.p4-base .co-card,
+body.p4-base .ordcard,
+body.p4-base .order {
+  background: var(--p4-sys-surface);
+  border-radius: var(--p4-radius-card);
+  box-shadow: var(--p4-shadow-card);
+}
+
+body.p4-base .p4-install {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 300;
+  background: var(--p4-sys-background);
+  color: var(--p4-sys-text);
+  overflow-y: auto;
+  padding: 54px var(--p4-space-4) var(--p4-space-6);
+}
+
+body.p4-base.p4-gated .p4-install {
+  display: block;
+}
+
+body.p4-base #drawer {
+  display: none !important;
+}
+
+body.p4-base .p4-install.error .gate-valid {
+  display: none;
+}
+
+body.p4-base .p4-install.error .gate-error {
+  display: block;
+}
+
+body.p4-base .p4-install .gate-card {
+  width: 100%;
+  max-width: 344px;
+  margin: 0 auto;
+  padding: var(--p4-space-6) var(--p4-space-4);
+  background: var(--p4-sys-surface);
+  border: 1px solid var(--p4-sys-outline);
+  border-top: 4px solid var(--p4-sys-primary);
+  border-radius: var(--p4-radius-feature);
+  box-shadow: 0 12px 32px rgba(38, 38, 38, .1);
+}
+
+body.p4-base .p4-install .eyebrow {
+  color: var(--p4-sys-action);
+  font-size: 12px;
+  letter-spacing: .12em;
+}
+
+body.p4-base .p4-install h2 {
+  color: var(--p4-sys-text);
+  font-size: 24px;
+  line-height: 1.35;
+  margin-top: var(--p4-space-2);
+}
+
+body.p4-base .p4-install p {
+  color: var(--p4-sys-text-secondary);
+  font-size: 14px;
+  line-height: 1.7;
+  margin-top: var(--p4-space-2);
+}
+
+body.p4-base .p4-install .route {
+  margin-top: var(--p4-space-4);
+  padding: var(--p4-space-3);
+  background: var(--p4-sys-primary-soft);
+  border: 1px solid var(--p4-sys-outline);
+  border-radius: var(--p4-radius-card);
+  color: var(--p4-sys-text-secondary);
+  font-size: 12px;
+}
+
+body.p4-base .p4-install .route b {
+  display: block;
+  color: var(--p4-sys-text);
+  font-size: 14px;
+}
+
+body.p4-base .p4-install .gate-actions {
+  display: grid;
+  gap: var(--p4-space-2);
+  margin-top: var(--p4-space-4);
+}
+
+body.p4-base .p4-install .gate-actions a,
+body.p4-base .p4-install .gate-actions button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: var(--p4-space-3);
+  border-radius: var(--p4-radius-card);
+  font-size: 14px;
+  text-align: center;
+  text-decoration: none;
+}
+
+body.p4-base .p4-install .store-link,
+body.p4-base .p4-install .store-link.alt {
+  background: var(--p4-sys-surface);
+  border: 1.5px solid var(--p4-sys-action);
+  box-shadow: none;
+  color: var(--p4-sys-action);
+}
+
+body.p4-base .p4-install .store-link:hover,
+body.p4-base .p4-install .store-link.alt:hover {
+  background: var(--p4-sys-primary-soft);
+}
+
+body.p4-base .p4-install .qa-link {
+  background: var(--p4-sys-outline);
+  border: 1px dashed var(--p4-sys-outline-strong);
+  color: var(--p4-sys-text-secondary);
+}
+
+body.p4-base .p4-install .gate-note {
+  color: var(--p4-sys-text-secondary);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+body.p4-base .p4-install .gate-error {
+  display: none;
+  margin-top: var(--p4-space-4);
+  padding: 13px;
+  background: var(--p4-sys-error-soft);
+  border-left: 4px solid var(--p4-sys-error);
+  border-radius: var(--p4-radius-card);
+  color: var(--p4-sys-error-deep);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+body.p4-base .p4-store-note,
+body.p4-base .p4-biz-note {
+  padding: var(--p4-space-4);
+  background: var(--p4-sys-surface);
+  border: 1px solid var(--p4-sys-outline-strong);
+  border-left: 4px solid var(--p4-sys-primary);
+  border-radius: var(--p4-radius-card);
+  color: var(--p4-sys-text-secondary);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+body.p4-base .p4-store-note {
+  display: block;
+  margin: 0 14px var(--p4-space-3);
+}
+
+body.p4-base .p4-biz-note {
+  display: block;
+}
+
+body.p4-base .p4-store-note .top,
+body.p4-base .p4-biz-note .top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--p4-space-2);
+}
+
+body.p4-base .p4-biz-note .top {
+  margin-bottom: var(--p4-space-1);
+}
+
+body.p4-base .p4-store-note b,
+body.p4-base .p4-biz-note b {
+  color: var(--p4-sys-text);
+  font-size: 14px;
+}
+
+body.p4-base .p4-store-note .links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--p4-space-2);
+  margin-top: var(--p4-space-3);
+}
+
+body.p4-base .p4-store-note .links a,
+body.p4-base .p4-store-note .links button {
+  display: flex;
+  flex: 1 1 92px;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 7px;
+  background: var(--p4-sys-surface);
+  border: 1px solid var(--p4-sys-outline-strong);
+  border-radius: var(--p4-radius-group);
+  color: var(--p4-sys-action);
+  font-size: 12px;
+  text-align: center;
+  text-decoration: none;
+}
+
+body.p4-base .p4-menu-sync {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--p4-space-2);
+  margin-top: var(--p4-space-3);
+  padding-top: var(--p4-space-3);
+  border-top: 1px solid var(--p4-sys-outline);
+}
+
+body.p4-base .p4-menu-sync b {
+  color: var(--p4-sys-action);
+  font-size: 12px;
+}
+
+body.p4-base .mrow.p4-sold-out {
+  background: var(--p4-sys-background);
+}
+
+body.p4-base .mrow.p4-sold-out .mthumb,
+body.p4-base .mrow.p4-sold-out .info {
+  opacity: .58;
+}
+
+body.p4-base .p4-stock-state {
+  display: inline-flex;
+  width: fit-content;
+  margin-top: 5px;
+  padding: 3px 7px;
+  background: var(--p4-sys-secondary-soft);
+  border: 1px solid rgba(255, 153, 36, .35);
+  border-radius: var(--p4-radius-badge);
+  color: var(--p4-sys-secondary-deep);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+body.p4-base .p4-stock-state[hidden] {
+  display: none;
+}
+
+body.p4-base .p4-menu-warning {
+  margin-top: var(--p4-space-3);
+  padding: var(--p4-space-3);
+  background: var(--p4-sys-error-soft);
+  border-left: 4px solid var(--p4-sys-error);
+  border-radius: var(--p4-radius-card);
+  color: var(--p4-sys-error-deep);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+body.p4-base .p4-menu-card,
+body.p4-base .p4-summary-card {
+  display: none;
+  padding: var(--p4-space-4);
+  border: 1px solid var(--p4-sys-outline);
+  border-left: 4px solid var(--p4-sys-primary);
+}
+
+body.p4-base .p4-menu-card.p4-active,
+body.p4-base .p4-summary-card.p4-active {
+  display: block;
+}
+
+body.p4-base .p4-menu-card .p4-card-head,
+body.p4-base .p4-summary-card .p4-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--p4-space-2);
+  margin-bottom: var(--p4-space-3);
+}
+
+body.p4-base .p4-menu-card .p4-card-head b,
+body.p4-base .p4-summary-card .p4-card-head b {
+  color: var(--p4-sys-text);
+  font-size: 14px;
+}
+
+body.p4-base .p4-menu-card .p4-card-head small,
+body.p4-base .p4-summary-card .p4-card-head small {
+  display: block;
+  margin-top: 3px;
+  color: var(--p4-sys-text-secondary);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+body.p4-base .p4-menu-editor {
+  display: grid;
+  gap: var(--p4-space-2);
+}
+
+body.p4-base .p4-menu-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 92px;
+  align-items: center;
+  gap: var(--p4-space-2);
+  padding: var(--p4-space-3);
+  background: var(--p4-sys-background);
+  border: 1px solid var(--p4-sys-outline);
+  border-radius: var(--p4-radius-group);
+}
+
+body.p4-base .p4-menu-row .p4-product-name {
+  color: var(--p4-sys-text);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+body.p4-base .p4-menu-row .p4-product-controls {
+  display: grid;
+  gap: 5px;
+}
+
+body.p4-base .p4-menu-row input[type="number"] {
+  width: 100%;
+  min-height: 38px;
+  padding: 7px 8px;
+  background: var(--p4-sys-surface);
+  border: 1px solid var(--p4-sys-outline-strong);
+  border-radius: var(--p4-radius-compact);
+  color: var(--p4-sys-text);
+  font: inherit;
+}
+
+body.p4-base .p4-menu-stock {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--p4-sys-text-secondary);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+body.p4-base .p4-menu-stock input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--p4-sys-action);
+}
+
+body.p4-base .p4-menu-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--p4-space-2);
+  margin-top: var(--p4-space-3);
+}
+
+body.p4-base .p4-menu-actions .btn {
+  min-height: 44px;
+  padding: 8px;
+  font-size: 12px;
+}
+
+body.p4-base .p4-menu-feedback {
+  margin-top: var(--p4-space-2);
+  color: var(--p4-sys-text-secondary);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+body.p4-base .p4-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--p4-space-2);
+}
+
+body.p4-base .p4-summary-item {
+  padding: var(--p4-space-3) var(--p4-space-2);
+  background: var(--p4-sys-background);
+  border-radius: var(--p4-radius-group);
+  text-align: center;
+}
+
+body.p4-base .p4-summary-item b {
+  display: block;
+  color: var(--p4-sys-text);
+  font-size: 17px;
+}
+
+body.p4-base .p4-summary-item small {
+  display: block;
+  margin-top: 3px;
+  color: var(--p4-sys-text-secondary);
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+body.p4-base .p4-badge-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+body.p4-base .p4-badge,
+body.p4-base .p4-tag,
+body.p4-base .p4-biz-note .tag,
+body.p4-base .p4-stage-chip {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 24px;
+  padding: 3px 8px;
+  border: 1px solid transparent;
+  border-radius: var(--p4-radius-badge);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+body.p4-base .p4-badge--review,
+body.p4-base .p4-tag,
+body.p4-base .p4-biz-note .tag,
+body.p4-base .p4-stage-chip {
+  background: var(--p4-sys-secondary-soft);
+  border-color: rgba(255, 153, 36, .35);
+  color: var(--p4-sys-secondary-deep);
+}
+
+body.p4-base .p4-badge--order {
+  background: var(--p4-sys-primary-soft);
+  border-color: rgba(1, 175, 162, .25);
+  color: var(--p4-sys-action);
+}
+
+body.p4-base .p4-badge--payment {
+  background: var(--p4-sys-secondary-soft);
+  border-color: rgba(255, 153, 36, .35);
+  color: var(--p4-sys-secondary-deep);
+}
+
+body.p4-base .p4-badge--boundary,
+body.p4-base .p4-badge--local {
+  background: var(--p4-sys-background);
+  border-color: var(--p4-sys-outline-strong);
+  color: var(--p4-sys-text-secondary);
+}
+
+body.p4-base .p4-boundary-row {
+  background: var(--p4-sys-background);
+  border: 1px solid var(--p4-sys-outline-strong);
+  color: var(--p4-sys-text-secondary);
+}
+
+body.p4-base .p4-boundary-row b {
+  color: var(--p4-sys-text);
+}
+
+body.p4-base .btn.primary,
+body.p4-base .btn.navy,
+body.p4-base .co-cta,
+body.p4-base .cartbar .go {
+  min-height: 44px;
+  background: var(--p4-sys-action);
+  border-radius: var(--p4-radius-card);
+  box-shadow: var(--p4-shadow-action);
+  color: var(--p4-sys-surface);
+}
+
+body.p4-base .btn.primary:hover,
+body.p4-base .btn.navy:hover,
+body.p4-base .co-cta:hover,
+body.p4-base .cartbar .go:hover {
+  background: var(--p4-sys-action-hover);
+}
+
+body.p4-base .btn.ghost {
+  background: var(--p4-sys-surface);
+  border-color: var(--p4-sys-outline-strong);
+  color: var(--p4-sys-text);
+}
+
+body.p4-base button:disabled,
+body.p4-base a[aria-disabled="true"] {
+  background: var(--p4-sys-outline);
+  box-shadow: none;
+  color: var(--p4-sys-hint);
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+body.p4-base .cartbar {
+  padding: var(--p4-space-2) var(--p4-space-2) var(--p4-space-2) var(--p4-space-4);
+  background: var(--p4-sys-surface);
+  border: 1px solid var(--p4-sys-outline-strong);
+  border-radius: var(--p4-radius-feature);
+  box-shadow: 0 10px 28px rgba(38, 38, 38, .16);
+  color: var(--p4-sys-text);
+}
+
+body.p4-base .cartbar .sum small {
+  color: var(--p4-sys-text-secondary);
+}
+
+body.p4-base .paynote,
+body.p4-base #status .syncnote {
+  background: var(--p4-sys-secondary-soft);
+  border: 1px solid rgba(255, 153, 36, .35);
+  border-radius: var(--p4-radius-card);
+  color: var(--p4-sys-secondary-deep);
+}
+
+body.p4-base .stat-hero {
+  background: var(--p4-sys-primary-soft) !important;
+  color: var(--p4-sys-text);
+  padding: 48px var(--p4-space-4) var(--p4-space-6);
+}
+
+body.p4-base .stat-hero .lbl {
+  color: var(--p4-sys-action);
+  opacity: 1;
+}
+
+body.p4-base .stat-hero .eta {
+  color: var(--p4-sys-text-secondary);
+  opacity: 1;
+}
+
+body.p4-base .paypill {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: var(--p4-space-3);
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+}
+
+body.p4-base .tstep.done .tdot {
+  background: var(--p4-sys-action);
+  border-color: var(--p4-sys-action);
+}
+
+body.p4-base .tstep.now .tdot {
+  border-color: var(--p4-sys-primary);
+  box-shadow: 0 0 0 4px var(--p4-sys-primary-soft);
+}
+
+body.p4-base .tstep .tt,
+body.p4-base .tstep .ts,
+body.p4-base .syncnote {
+  color: var(--p4-sys-text-secondary);
+}
+
+body.p4-base .tstep.done .tt,
+body.p4-base .tstep.now .tt {
+  color: var(--p4-sys-text);
+}
+
+body.p4-base .apphead {
+  background: var(--p4-sys-surface);
+  border-bottom: 1px solid var(--p4-sys-outline);
+  color: var(--p4-sys-text);
+}
+
+body.p4-base.p4-biz-base .capsule {
+  display: none;
+}
+
+body.p4-base .statusbar {
+  background: var(--p4-sys-surface);
+  color: var(--p4-sys-text);
+}
+
+body.p4-base .apphead .brand {
+  color: var(--p4-sys-action);
+  font-size: 12px;
+  letter-spacing: .16em;
+}
+
+body.p4-base .apphead h2 {
+  color: var(--p4-sys-text);
+  font-size: 20px;
+}
+
+body.p4-base .apphead .st {
+  background: var(--p4-sys-secondary-soft);
+  border: 1px solid rgba(255, 153, 36, .35);
+  border-radius: var(--p4-radius-badge);
+  color: var(--p4-sys-secondary-deep);
+  font-size: 12px;
+}
+
+body.p4-base .apphead .st b {
+  color: inherit;
+}
+
+body.p4-base .apphead .sub {
+  color: var(--p4-sys-text-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+body.p4-base .p4-empty {
+  padding: var(--p4-space-6) var(--p4-space-4);
+  background: var(--p4-sys-surface);
+  border: 1px dashed var(--p4-sys-outline-strong);
+  border-radius: var(--p4-radius-card);
+  color: var(--p4-sys-text-secondary);
+  font-size: 12px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+body.p4-base .p4-empty a {
+  color: var(--p4-sys-action);
+}
+
+body.p4-base .order {
+  border: 1px solid var(--p4-sys-outline);
+  border-left: 4px solid var(--p4-sys-primary);
+  opacity: 1;
+}
+
+body.p4-base .order.done {
+  border-left-color: var(--p4-sys-primary);
+  opacity: 1;
+}
+
+body.p4-base .order .top {
+  align-items: flex-start;
+  gap: var(--p4-space-2);
+}
+
+body.p4-base .order .items {
+  color: var(--p4-sys-text);
+}
+
+body.p4-base .src-chip {
+  background: var(--p4-sys-background);
+  border: 1px solid var(--p4-sys-outline-strong);
+  border-radius: var(--p4-radius-badge);
+  color: var(--p4-sys-text-secondary);
+}
+
+body.p4-base .tabbar {
+  background: var(--p4-sys-surface);
+  border-color: var(--p4-sys-outline);
+}
+
+body.p4-base .tabbar .tab.on {
+  color: var(--p4-sys-action);
+}
+
+body.p4-base .toast {
+  max-width: calc(100% - 32px);
+  padding: var(--p4-space-3) var(--p4-space-4);
+  background: var(--p4-sys-toast);
+  border-radius: var(--p4-radius-compact);
+  color: var(--p4-sys-surface);
+  white-space: normal;
+}
+
+body.p4-base .p4-live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+body.p4-base .capsule [role="button"],
+body.p4-base .mcap [role="button"] {
+  border-radius: var(--p4-radius-compact);
+  cursor: pointer;
+}
+
+body.p4-base button:focus-visible,
+body.p4-base a:focus-visible,
+body.p4-base [role="button"]:focus-visible {
+  outline: 3px solid var(--p4-sys-text);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px var(--p4-sys-primary-soft);
+}
+
+@media (max-width: 390px) {
+  body.p4-base .p4-store-note .top,
+  body.p4-base .p4-biz-note .top,
+  body.p4-base .order .top {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  body.p4-base .p4-badge-row {
+    justify-content: flex-start;
+  }
+
+  body.p4-base .p4-menu-sync,
+  body.p4-base .p4-menu-card .p4-card-head,
+  body.p4-base .p4-summary-card .p4-card-head {
+    flex-direction: column;
+  }
+
+  body.p4-base .p4-menu-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.p4-base *,
+  body.p4-base *::before,
+  body.p4-base *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+
+  body.p4-base .btn:active {
+    transform: none;
+  }
+}
+/* P4-DESIGN-CONTRACT:END */
 </style>
 </head>
 <body>
 <script>
+window.P4_BASE=(new URLSearchParams(location.search||"")).get("scope")==="p4-v1";
+if(window.P4_BASE) document.body.classList.add("p4-base");
 window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.contains("embed")){return false;}var b=document.getElementById("errbox");if(!b){b=document.createElement("div");b.id="errbox";b.setAttribute("style","position:fixed;left:8px;right:8px;bottom:8px;z-index:99999;background:#7A1F1F;color:#fff;font:12px/1.6 Menlo,monospace;padding:10px 12px;border-radius:10px;white-space:pre-wrap;cursor:pointer");b.onclick=function(){try{b.remove();}catch(e){b.style.display="none";}};document.body.appendChild(b);}b.textContent="原型腳本異常（點擊關閉）："+m+"  @"+(l||"?")+":"+(c||"?");clearTimeout(b._h);b._h=setTimeout(function(){try{b.remove();}catch(e){b.style.display="none";}},8000);}catch(e){}return false;};
 </script>
 <noscript><div style="position:fixed;top:0;left:0;right:0;z-index:99999;background:#B8912F;color:#fff;font:13px/1.7 sans-serif;padding:12px 16px;text-align:center">此原型需要可執行 JavaScript 的瀏覽器：請用 Chrome／Edge／Safari 直接開啟本檔案；手機請改用部署後的網址體驗。</div></noscript>
@@ -1027,6 +1814,24 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
   </div>
 
   <div class="phone"><div class="screen-wrap">
+    <section class="p4-install" id="p4-install" aria-labelledby="p4-gate-title" hidden>
+      <div class="gate-card">
+        <div class="eyebrow">Roadmap P4 · Base local slice</div>
+        <h2 id="p4-gate-title">先安裝「發票載具」再點餐</h2>
+        <p id="p4-gate-copy">這個 QR 會保留店家與桌號。安裝完成後，請回到相機重掃同一個 QR；V1 不做自動 deferred deep link。</p>
+        <div class="gate-valid" id="p4-gate-valid">
+          <div class="route"><b id="p4-gate-store">暖暖窩義式廚房 · 板橋店</b><span id="p4-gate-table">桌號待解析</span></div>
+          <div class="gate-actions">
+            <a class="store-link" href="https://apps.apple.com/tw/app/id1434785043" target="_blank" rel="noopener noreferrer">iPhone：前往 App Store</a>
+            <a class="store-link alt" href="https://play.google.com/store/apps/details?id=money.com.invoicemanager&amp;hl=zh_TW" target="_blank" rel="noopener noreferrer">Android：前往 Google Play</a>
+            <button class="qa-link" type="button" onclick="p4SimulateRescan()">本機 QA：模擬安裝後重掃同一 QR</button>
+          </div>
+          <div class="gate-note">上方商店連結是官方下載頁；「本機 QA」只模擬 App 執行環境，不代表原生 App、Universal Link 或真機 UAT 已完成。</div>
+        </div>
+        <div class="gate-error" id="p4-gate-error" role="alert"></div>
+        <div class="gate-actions" id="p4-retry-wrap" hidden><button class="qa-link" type="button" onclick="location.reload()">重新檢查 QR</button></div>
+      </div>
+    </section>
     <div class="statusbar" id="sb"><span class="t">9:41</span><span class="icons">●●●&nbsp;&nbsp;5G&nbsp;▮</span></div>
     <div class="capsule" id="cap"><span onclick="capMenu()" style="cursor:pointer" title="小程序選單">•••</span><span class="dot" onclick="capHome()" style="cursor:pointer" title="回發票載具首頁">◉</span></div>
 
@@ -1199,6 +2004,13 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
           <div class="nn-meta"><span>★ 4.9 憑發票評價</span><span>回購榜 TOP 3</span><span class="chip" id="paychip-nn"></span></div>
         </div>
 
+        <div class="p4-store-note" id="p4-store-note" hidden>
+          <div class="top"><b id="p4-store-context">已從 QR 開啟正確店家</b><span class="p4-tag p4-badge p4-badge--review">BASE · 未驗收</span></div>
+          <div>只驗證菜單價格／售完、瀏覽下單與 Biz 接單／備餐／可取餐同步。付款、取餐核銷、會員、跨裝置與真正發票歸戶不在本切片。</div>
+          <div class="p4-menu-sync"><span><b id="p4-user-menu-version">本機菜單 v1</b><br><small id="p4-user-menu-note">等待 Biz 回覆；目前使用固定測試菜單</small></span><span class="p4-badge p4-badge--local">本機合成資料</span></div>
+          <div class="links"><a href="../merchant/merchant-app.html?scope=p4-v1&amp;v=3.8" target="_blank" rel="noopener noreferrer">先開 Biz 菜單／接單頁</a><button type="button" onclick="p4ResetLocalDemo(false)">重設雙邊測試</button><button type="button" onclick="p4ResetInstall()">重設安裝牆</button></div>
+        </div>
+
         <div class="nn-hello">
           <div class="hl"><b>HELLO~</b><small id="nn-hello-sub">歡迎加入暖暖窩會員</small></div>
           <button class="nn-login" id="nn-login">立即入會</button>
@@ -1233,26 +2045,26 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
 
         <div class="menu" id="nn-menu">
           <div class="nn-cat">PASTA · RISOTTO ─ 義大利麵 · 燉飯</div>
-          <div class="mrow">
+          <div class="mrow" data-p4-product="pesto">
             <span class="mthumb">🍝</span>
-            <span class="info"><span class="n">青醬雞腿義大利麵<span class="badge2">回購 TOP1</span></span><span class="d">九層塔手打青醬 · 可 +60 升級套餐</span><span class="p"><small>NT$ </small>240</span></span>
-            <button class="add3" onclick="openSheet('pesto')" aria-label="加入青醬雞腿義大利麵">＋</button>
+            <span class="info"><span class="n">青醬雞腿義大利麵<span class="badge2">回購 TOP1</span></span><span class="d">九層塔手打青醬 · 可 +60 升級套餐</span><span class="p"><small>NT$ </small><span data-p4-price="pesto">240</span></span><span class="p4-stock-state" data-p4-stock="pesto" hidden>本日售完</span></span>
+            <button class="add3" data-p4-add="pesto" onclick="openSheet('pesto')" aria-label="加入青醬雞腿義大利麵">＋</button>
           </div>
-          <div class="mrow">
+          <div class="mrow" data-p4-product="risotto">
             <span class="mthumb">🥘</span>
-            <span class="info"><span class="n">番茄海鮮燉飯</span><span class="d">白蝦 · 透抽 · 淡菜</span><span class="p"><small>NT$ </small>280</span></span>
-            <button class="add3" onclick="quickAdd('番茄海鮮燉飯',280)" aria-label="加入番茄海鮮燉飯">＋</button>
+            <span class="info"><span class="n">番茄海鮮燉飯</span><span class="d">白蝦 · 透抽 · 淡菜</span><span class="p"><small>NT$ </small><span data-p4-price="risotto">280</span></span><span class="p4-stock-state" data-p4-stock="risotto" hidden>本日售完</span></span>
+            <button class="add3" data-p4-add="risotto" onclick="quickAdd('番茄海鮮燉飯',280)" aria-label="加入番茄海鮮燉飯">＋</button>
           </div>
           <div class="nn-cat">INSALATA · DOLCE ─ 沙拉 · 甜點</div>
-          <div class="mrow">
+          <div class="mrow" data-p4-product="salad">
             <span class="mthumb">🥗</span>
-            <span class="info"><span class="n">舒肥雞胸溫沙拉</span><span class="d">油醋 / 凱薩 二選一</span><span class="p"><small>NT$ </small>220</span></span>
-            <button class="add3" onclick="quickAdd('舒肥雞胸溫沙拉',220)" aria-label="加入舒肥雞胸溫沙拉">＋</button>
+            <span class="info"><span class="n">舒肥雞胸溫沙拉</span><span class="d">油醋 / 凱薩 二選一</span><span class="p"><small>NT$ </small><span data-p4-price="salad">220</span></span><span class="p4-stock-state" data-p4-stock="salad" hidden>本日售完</span></span>
+            <button class="add3" data-p4-add="salad" onclick="quickAdd('舒肥雞胸溫沙拉',220)" aria-label="加入舒肥雞胸溫沙拉">＋</button>
           </div>
-          <div class="mrow">
+          <div class="mrow" data-p4-product="tiramisu">
             <span class="mthumb">🍰</span>
-            <span class="info"><span class="n">手作提拉米蘇</span><span class="d">店內限定 · 每日 20 份</span><span class="p"><small>NT$ </small>90</span></span>
-            <button class="add3" onclick="quickAdd('手作提拉米蘇',90)" aria-label="加入提拉米蘇">＋</button>
+            <span class="info"><span class="n">手作提拉米蘇</span><span class="d">店內限定 · 每日 20 份</span><span class="p"><small>NT$ </small><span data-p4-price="tiramisu">90</span></span><span class="p4-stock-state" data-p4-stock="tiramisu" hidden>本日售完</span></span>
+            <button class="add3" data-p4-add="tiramisu" onclick="quickAdd('手作提拉米蘇',90)" aria-label="加入提拉米蘇">＋</button>
           </div>
         </div>
         <div class="cartbar" id="cart-nn">
@@ -1653,7 +2465,7 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
           <button class="demo-fwd" id="demo-fwd" onclick="finishOrder()">▶ 示範：模擬店家完成製作</button>
           <div class="syncnote">同網域開啟「商家版」時，本單會即時出現在商家端；<br>商家按「完成」，這裡會自動跳到「請取餐」。</div>
           <div class="card co-card">
-            <div class="rw"><span>本單回饋</span><b style="color:var(--gold)" id="stat-cm"></b></div>
+            <div class="rw"><span id="stat-summary-label">本單回饋</span><b style="color:var(--gold)" id="stat-cm"></b></div>
             <div class="rw"><span>二次複購</span><b style="color:var(--teal);cursor:pointer" onclick="go('orders')">訂單頁「再來一單」 ›</b></div>
           </div>
         </div>
@@ -1707,8 +2519,8 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
       <div class="tag">發票載具 小程序</div>
       <div class="dots"><i></i><i></i><i></i></div>
     </div>
-    <div class="toast" id="toast"></div>
-    <div class="sheet-mask" id="sheet-mask" onclick="closeSheet(event)"><div id="sheet-host" style="width:100%"></div></div>
+    <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+    <div class="sheet-mask" id="sheet-mask" aria-hidden="true" onclick="closeSheet(event)"><div id="sheet-host" style="width:100%"></div></div>
     <div class="auth-mask" id="auth-mask"><div id="auth-host" style="width:100%;display:flex;justify-content:center"></div></div>
     <div class="minitab" id="minitab">
       <div class="mtwrap lz">
@@ -1720,7 +2532,7 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
       <div class="mtwrap nn">
         <button class="mt on" onclick="mtOpen('menu')"><span class="mi"><span class="mk">暖</span></span>點餐</button>
         <button class="mt" onclick="mtOpen('coupon')"><span class="mi"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 22c1.8 0 3.2 1.5 3.2 3.2s-1.4 3.3-3.2 3.3v5h29v-5c-1.8 0-3.2-1.5-3.2-3.3s1.4-3.2 3.2-3.2v-5h-29z"/><path d="M24 17v16.5" stroke-dasharray="2.5 3.5"/></svg></span>折扣券</button>
-        
+
         <button class="mt" onclick="mtOpen('order')"><span class="mi"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 8.5h20V38l-3.3-2.2-3.4 2.2-3.3-2.2-3.4 2.2-3.3-2.2L14 38z"/><path d="M18.5 15.5h11M18.5 21h11M18.5 26.5h7"/></svg></span>訂單</button>
         <button class="mt" onclick="mtOpen('me')"><span class="mi"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M30.5 10.5a7 7 0 0 0-11 5.6c0 1.4.4 2.7 1.1 3.8-4.6 3-6.4 9.1-2.9 13.6h7.6c6.1-2 9.3-8.6 6.6-14.6"/><circle cx="27.4" cy="15" r="1.2" fill="currentColor" stroke="none"/><path d="M32 12.4l6.3 1.8-4.8 3.3"/><path d="M17.6 33.5h-4.1"/></svg></span>我的</button>
       </div>
@@ -1789,8 +2601,24 @@ window.onerror=function(m,s,l,c){try{if(document.body&&document.body.classList.c
 
 <script>
 /* ================= state（純記憶體，無任何儲存 API） ================= */
-var PAY = !(location.hash.indexOf("nopay") > -1); /* true=已接第三方支付 */
+var P4_BASE = window.P4_BASE === true;
+var P4_ENTRY = null;
+var P4_SCOPE = "p4-v1";
+var PAY = P4_BASE ? false : !(location.hash.indexOf("nopay") > -1); /* true=已接第三方支付 */
 var cart = { store:null, items:[], mode:"自取", table:null };
+var P4_MENU_DEFAULTS = [
+  {id:"pesto",name:"青醬雞腿義大利麵",price:240,available:true},
+  {id:"risotto",name:"番茄海鮮燉飯",price:280,available:true},
+  {id:"salad",name:"舒肥雞胸溫沙拉",price:220,available:true},
+  {id:"tiramisu",name:"手作提拉米蘇",price:90,available:true}
+];
+var p4Menu=P4_MENU_DEFAULTS.map(function(x){return {id:x.id,name:x.name,price:x.price,available:x.available};});
+var p4MenuVersion="menu-v1";
+var p4OrderSequence=1;
+var p4BoundPublisherId=null;
+var p4RunId=null;
+var p4RetiredRunIds=Object.create(null);
+var p4RunNonce=0;
 var lastStore = "louisa";
 var reviewed = 0;
 var CM = 268;
@@ -1798,9 +2626,8 @@ var PTS = { louisa:218, nuan:218, dtf:186, el:2680 };
 /* ==================================================================
    DEMO 設定 —— 這支是「中小型連鎖」的通用底版，要換一家店只改這一塊
    ------------------------------------------------------------------
-   PERSONA  demo 時螢幕上顯示的「我」。
-            ⚠️ 手機一律只放**遮罩後**的字串，完整號碼不進 repo（個資，
-               且 git 歷史刪不掉）。畫面本來就只顯示遮罩，不影響效果。
+   PERSONA  demo 時螢幕上顯示的「我」。只可使用明確虛構的測試識別，
+            不放真實姓名、電話片段或可定位地址。
 
    要新增一家連鎖時：
      ① 在 BRAND 加一筆（代號／店名／主色）
@@ -1808,9 +2635,9 @@ var PTS = { louisa:218, nuan:218, dtf:186, el:2680 };
      ③ 取餐方式、購物車、結帳、券夾、訂單、會員授權全部共用，不必重寫
    ================================================================== */
 var PERSONA = {
-  name : "邵士銓",
-  phone: "0968***503",   /* 遮罩顯示用，非完整號碼 */
-  addr : "新北市板橋區文化路一段 100 號 5F"
+  name : "測試會員 A",
+  phone: "DEMO-MEMBER-001",
+  addr : "測試地址（非真實地點）"
 };
 
 var ADDR = { name:PERSONA.name, phone:PERSONA.phone, addr:PERSONA.addr };
@@ -1832,10 +2659,339 @@ function toast(msg){
   var t = $("toast"); t.textContent = msg; t.classList.add("show");
   clearTimeout(t._h); t._h = setTimeout(function(){ t.classList.remove("show"); }, 2100);
 }
+function p4Today(){
+  var d=new Date(), m=String(d.getMonth()+1).padStart(2,"0"), day=String(d.getDate()).padStart(2,"0");
+  return d.getFullYear()+"-"+m+"-"+day;
+}
+function p4CreateRunId(){
+  p4RunNonce++;
+  var random="";
+  try{
+    var values=new Uint32Array(2); crypto.getRandomValues(values);
+    random=values[0].toString(36)+values[1].toString(36);
+  }catch(e){random=Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2);}
+  return "user-"+Date.now().toString(36)+"-"+p4RunNonce.toString(36)+"-"+random;
+}
+function p4RetireRun(runId){
+  if(runId) p4RetiredRunIds[String(runId)]=true;
+}
+function p4UseRun(runId, retirePrevious){
+  if(!runId||p4RetiredRunIds[String(runId)]) return false;
+  if(retirePrevious&&p4RunId&&p4RunId!==runId) p4RetireRun(p4RunId);
+  p4RunId=String(runId);
+  return true;
+}
+function p4ConfigureVisibleShell(){
+  if(!P4_BASE) return;
+  var eyebrow=document.querySelector(".stage-head .eyebrow");
+  if(eyebrow) eyebrow.textContent="Roadmap P4 V1 Base · 本機驗證";
+  var title=document.querySelector(".stage-head h1");
+  if(title) title.textContent="User 端｜固定菜單到 Biz 備餐狀態";
+  var subtitle=document.querySelector(".stage-head p");
+  if(subtitle) subtitle.textContent="只驗證本機合成資料；不是正式串接或上線版本";
+  var foot=document.querySelector(".foot");
+  if(foot) foot.innerHTML="Roadmap P4 V1 Base｜User 本機驗證<br>店家與資料皆為固定測試內容，非正式服務";
+  var cap=$("cap");
+  if(cap&&cap.getAttribute("data-p4-simple")!=="1"){
+    cap.setAttribute("data-p4-simple","1");
+    cap.innerHTML='<span onclick="p4ReturnToMenu()" style="cursor:pointer;width:auto;padding:0 12px" title="回到菜單">回到菜單</span>';
+  }
+}
+function p4ReturnToMenu(){
+  if(!P4_BASE){capHome();return;}
+  if($("sheet-mask")&&$("sheet-mask").classList.contains("show")) closeSheet();
+  go("nuan");
+}
+function p4ReadEntry(){
+  var q=new URLSearchParams(location.search||""), store=q.get("store")||"", table=q.get("table")||"", expires=q.get("expires")||"";
+  var out={state:"valid",store:store,table:table,mode:table?"內用":"自取",message:""};
+  if(!navigator.onLine){ out.state="offline"; out.message="目前離線，無法確認這個 QR 的店家與桌號。恢復網路後再重試。"; return out; }
+  if(!store){ out.state="invalid"; out.message="QR 缺少店家識別，無法安全開啟點餐頁。請向店員索取新的桌卡。"; return out; }
+  if(store!=="nuan"){ out.state="wrong-store"; out.message="這個 Base 只核准暖暖窩測試店；目前 QR 指向未核准的店家，已停止導流。"; return out; }
+  if(expires && (!/^\d{4}-\d{2}-\d{2}$/.test(expires) || expires<p4Today())){
+    out.state="expired"; out.message="這個 QR 已過期或效期格式不正確，請向店員索取新的桌卡。"; return out;
+  }
+  if(table && ["3桌","5桌","7桌"].indexOf(table)<0){
+    out.state="invalid"; out.message="QR 內的桌號不屬於此測試店，已停止導流，避免把訂單送到錯桌。"; return out;
+  }
+  return out;
+}
+function p4HasAppContext(){
+  if(window.__INVOICEMANAGER_APP__===true) return true; /* 原生 App 後續可注入的明確 hook */
+  try{return sessionStorage.getItem("p4-v1-app-context")==="1";}catch(e){return false;}
+}
+function p4SetAppInert(on){
+  var ids=["app","cap","minitab","tabbar","drawer"];
+  for(var i=0;i<ids.length;i++){
+    var el=$(ids[i]); if(!el) continue;
+    if(P4_BASE&&ids[i]==="drawer"){
+      el.hidden=true;
+      el.setAttribute("inert","");
+      el.setAttribute("aria-hidden","true");
+      continue;
+    }
+    if(on){ el.setAttribute("inert",""); el.setAttribute("aria-hidden","true"); }
+    else { el.removeAttribute("inert"); el.removeAttribute("aria-hidden"); }
+  }
+}
+function p4FocusGate(){
+  var install=$("p4-install"); if(!install||install.hidden) return;
+  install.setAttribute("tabindex","-1");
+  try{install.focus({preventScroll:true});}catch(e){try{install.focus();}catch(ignore){}}
+}
+function p4InitGate(){
+  if(!P4_BASE) return;
+  p4ConfigureVisibleShell();
+  P4_ENTRY=p4ReadEntry();
+  document.title="Roadmap P4 V1 Base｜User 本機驗證";
+  var install=$("p4-install"), retry=$("p4-retry-wrap"), err=$("p4-gate-error");
+  var valid=P4_ENTRY.state==="valid";
+  if($("p4-gate-store")) $("p4-gate-store").textContent="暖暖窩義式廚房 · 板橋店";
+  if($("p4-gate-table")) $("p4-gate-table").textContent=P4_ENTRY.table?("內用 · "+P4_ENTRY.table):"自取 · 無桌號";
+  if($("p4-store-context")) $("p4-store-context").textContent=valid
+    ? (P4_ENTRY.table?("QR 已綁定暖暖窩 · "+P4_ENTRY.table):"QR 已綁定暖暖窩 · 自取")
+    : "QR 驗證未通過";
+  install.classList.toggle("error",!valid);
+  retry.hidden=valid;
+  err.textContent=valid?"":P4_ENTRY.message;
+  var gate=!valid || !p4HasAppContext();
+  document.body.classList.toggle("p4-gated",gate);
+  install.hidden=!gate;
+  var note=$("p4-store-note"); if(note) note.hidden=false;
+  if(gate&&$("sheet-mask")&&$("sheet-mask").classList.contains("show")) closeSheet();
+  p4SetAppInert(gate);
+  if(gate) setTimeout(p4FocusGate,0);
+  p4EnhanceInteractive();
+}
+function p4SimulateRescan(){
+  P4_ENTRY=p4ReadEntry();
+  if(P4_ENTRY.state!=="valid"){ p4InitGate(); return; }
+  try{sessionStorage.setItem("p4-v1-app-context","1");}catch(e){toast("瀏覽器禁止本機 QA 狀態，請改用一般分頁");return;}
+  location.reload(); /* URL 不變，模擬安裝後重掃同一 QR */
+}
+function p4ResetInstall(){
+  try{sessionStorage.removeItem("p4-v1-app-context");}catch(e){}
+  location.reload();
+}
+function p4Announce(msg){
+  if(!P4_BASE) return;
+  var live=$("p4-live");
+  if(!live){
+    live=document.createElement("div"); live.id="p4-live"; live.className="p4-live";
+    live.setAttribute("role","status"); live.setAttribute("aria-live","polite"); live.setAttribute("aria-atomic","true");
+    document.body.appendChild(live);
+  }
+  live.textContent="";
+  setTimeout(function(){live.textContent=msg;},20);
+}
+function p4EnhanceInteractive(){
+  if(!P4_BASE) return;
+  var controls=document.querySelectorAll("#cap span[onclick]");
+  for(var i=0;i<controls.length;i++)(function(el){
+    if(el.getAttribute("data-p4-keyboard")==="1") return;
+    el.setAttribute("data-p4-keyboard","1"); el.setAttribute("role","button"); el.setAttribute("tabindex","0");
+    el.setAttribute("aria-label",el.getAttribute("title")||"小程序操作");
+    el.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();el.click();}});
+  })(controls[i]);
+}
+function p4FocusScene(id){
+  if(!P4_BASE||document.body.classList.contains("p4-gated")) return;
+  var scene=$(id); if(!scene) return;
+  scene.setAttribute("tabindex","-1");
+  var label=scene.querySelector("h1,h2,.stat-lbl");
+  if(label&&label.textContent.trim()) scene.setAttribute("aria-label",label.textContent.trim());
+  try{scene.focus({preventScroll:true});}catch(e){try{scene.focus();}catch(ignore){}}
+}
 function pick(btn){
   var sib = btn.parentNode.children;
   for (var i=0;i<sib.length;i++) sib[i].classList.remove("on");
   btn.classList.add("on");
+}
+
+/* ================= P4 本機菜單真實一致（只用固定合成品項） ================= */
+function p4MenuProduct(id){
+  for(var i=0;i<p4Menu.length;i++) if(p4Menu[i].id===id) return p4Menu[i];
+  return null;
+}
+function p4MenuProductByName(name){
+  for(var i=0;i<p4Menu.length;i++) if(p4Menu[i].name===name) return p4Menu[i];
+  return null;
+}
+function p4MenuVersionNumber(version){
+  var match=/^menu-v([1-9][0-9]{0,5})$/.exec(String(version||""));
+  return match?Number(match[1]):null;
+}
+function p4MenuSnapshotProblem(snapshot){
+  if(!snapshot||snapshot.scope!==P4_SCOPE||snapshot.store!=="nuan"||snapshot.synthetic!==true) return "不是核准的本機菜單";
+  if(p4MenuVersionNumber(snapshot.version)===null) return "菜單版本不正確";
+  if(typeof snapshot.publisherId!=="string"||!snapshot.publisherId) return "缺少 Biz 發布者識別";
+  if(typeof snapshot.runId!=="string"||!snapshot.runId) return "缺少本次測試識別";
+  if(!Array.isArray(snapshot.products)||snapshot.products.length!==P4_MENU_DEFAULTS.length) return "菜單品項不完整";
+  for(var i=0;i<P4_MENU_DEFAULTS.length;i++){
+    var expected=P4_MENU_DEFAULTS[i], found=null;
+    for(var j=0;j<snapshot.products.length;j++) if(snapshot.products[j]&&snapshot.products[j].id===expected.id) found=snapshot.products[j];
+    if(!found) return "缺少固定測試品項";
+    if(!Number.isInteger(found.price)||found.price<1||found.price>9999) return "商品價格不在測試範圍";
+    if(typeof found.available!=="boolean") return "商品供應狀態不正確";
+  }
+  return "";
+}
+function p4AcceptMenuSource(snapshot){
+  var publisherId=String(snapshot.publisherId), runId=String(snapshot.runId);
+  if(p4RetiredRunIds[runId]) return {accepted:false,reason:"這是已結束測試的延遲菜單"};
+  if(!p4BoundPublisherId){
+    p4BoundPublisherId=publisherId;
+    if(!p4UseRun(runId,false)){p4BoundPublisherId=null;return {accepted:false,reason:"本次測試識別無效"};}
+    return {accepted:true,switched:false};
+  }
+  if(publisherId===p4BoundPublisherId){
+    if(runId!==p4RunId) return {accepted:false,reason:"這不是目前這一輪的菜單"};
+    if(p4MenuVersionNumber(snapshot.version)<p4MenuVersionNumber(p4MenuVersion)) return {accepted:false,reason:"這是較舊的延遲菜單"};
+    return {accepted:true,switched:false};
+  }
+  if(p4MenuVersionNumber(snapshot.version)<=p4MenuVersionNumber(p4MenuVersion)){
+    return {accepted:false,reason:"其他 Biz 的菜單版本沒有比較新"};
+  }
+  var previousPublisherId=p4BoundPublisherId;
+  p4BoundPublisherId=publisherId;
+  if(!p4UseRun(runId,false)){
+    p4BoundPublisherId=previousPublisherId;
+    return {accepted:false,reason:"新的 Biz 測試識別無效"};
+  }
+  return {accepted:true,switched:true};
+}
+function p4RenderMenu(){
+  if(!P4_BASE) return;
+  for(var i=0;i<p4Menu.length;i++){
+    var item=p4Menu[i];
+    var row=document.querySelector('[data-p4-product="'+item.id+'"]');
+    var price=document.querySelector('[data-p4-price="'+item.id+'"]');
+    var stock=document.querySelector('[data-p4-stock="'+item.id+'"]');
+    var add=document.querySelector('[data-p4-add="'+item.id+'"]');
+    if(row) row.classList.toggle("p4-sold-out",!item.available);
+    if(price) price.textContent=fmtN(item.price);
+    if(stock) stock.hidden=item.available;
+    if(add){
+      add.disabled=!item.available;
+      add.setAttribute("aria-label",item.available?("加入"+item.name):(item.name+"本日售完"));
+    }
+    if(row&&item.id==="pesto"){
+      var description=row.querySelector(".info .d");
+      if(description) description.textContent="九層塔手打青醬 · 固定單一價格";
+    }
+  }
+  var version=$("p4-user-menu-version");
+  if(version) version.textContent="本機菜單 "+p4MenuVersion.replace("menu-","");
+}
+function p4ReconcileCart(){
+  if(!P4_BASE) return;
+  for(var i=0;i<cart.items.length;i++){
+    var line=cart.items[i], product=line.productId?p4MenuProduct(line.productId):p4MenuProductByName(line.name);
+    if(!product) continue;
+    line.productId=product.id;
+    line.name=product.name;
+    line.price=product.price;
+  }
+  updateCartbar();
+}
+function p4CartProblem(){
+  if(!P4_BASE) return "";
+  if(!p4BoundPublisherId||!p4RunId) return "尚未取得 Biz 本輪菜單，請先開啟 Biz 菜單／接單頁";
+  if(cart.store!=="nuan"||!cart.items.length) return "請先從暖暖窩菜單選擇商品";
+  for(var i=0;i<cart.items.length;i++){
+    var line=cart.items[i], product=line.productId?p4MenuProduct(line.productId):p4MenuProductByName(line.name);
+    if(!product) return "購物車含有不在測試菜單的商品";
+    if(!product.available) return product.name+"已售完，請移除後再送單";
+    if(line.price!==product.price) return product.name+"價格已更新，請確認新金額";
+  }
+  return "";
+}
+function p4RemoveUnavailable(){
+  if(!P4_BASE) return;
+  var kept=[];
+  for(var i=0;i<cart.items.length;i++){
+    var product=cart.items[i].productId?p4MenuProduct(cart.items[i].productId):p4MenuProductByName(cart.items[i].name);
+    if(product&&product.available) kept.push(cart.items[i]);
+  }
+  cart.items=kept; updateCartbar();
+  if(cart.items.length){renderCheckout();toast("已移除售完商品，請確認剩餘金額");}
+  else{go("nuan");toast("售完商品已移除，請重新選擇餐點");}
+}
+function p4ApplyMenuSnapshot(snapshot, quiet){
+  if(!P4_BASE) return false;
+  var problem=p4MenuSnapshotProblem(snapshot);
+  if(problem){
+    var badNote=$("p4-user-menu-note"); if(badNote) badNote.textContent="Biz 回覆無效，已保留安全的固定測試菜單";
+    if(!quiet) toast("已擋下無效菜單："+problem);
+    return false;
+  }
+  var source=p4AcceptMenuSource(snapshot);
+  if(!source.accepted) return false;
+  if(source.switched&&curOrder&&!curOrder.baseTerminal){
+    curOrder=null;
+    if(typeof curScene!=="undefined") go(cart.items.length?"checkout":"nuan");
+    p4Announce("已切換到版本較新的 Biz 菜單；先前尚未完成的訂單已停止處理，請重新確認。 ");
+  }
+  var changed=p4MenuVersion!==snapshot.version, next=[];
+  for(var i=0;i<P4_MENU_DEFAULTS.length;i++){
+    var expected=P4_MENU_DEFAULTS[i], found=null;
+    for(var j=0;j<snapshot.products.length;j++) if(snapshot.products[j].id===expected.id) found=snapshot.products[j];
+    var old=p4MenuProduct(expected.id);
+    if(!old||old.price!==found.price||old.available!==found.available) changed=true;
+    next.push({id:expected.id,name:expected.name,price:found.price,available:found.available});
+  }
+  p4Menu=next; p4MenuVersion=snapshot.version;
+  p4ReconcileCart(); p4RenderMenu();
+  var note=$("p4-user-menu-note"); if(note) note.textContent="已綁定 Biz 菜單；結帳會再次核對價格與售完狀態";
+  if(typeof curScene!=="undefined"&&curScene==="checkout") renderCheckout();
+  if(changed&&!quiet){toast("Biz 菜單已更新；購物車金額已重新核對");p4Announce("菜單已更新，請確認價格與售完狀態。");}
+  return true;
+}
+function p4ResetLocalDemo(fromRemote){
+  if(!P4_BASE) return;
+  var nextRunId=arguments.length>1?arguments[1]:null;
+  var publisherId=arguments.length>2?arguments[2]:null;
+  if(fromRemote){
+    if(typeof publisherId!=="string"||!publisherId||typeof nextRunId!=="string"||!nextRunId) return;
+    if(p4RetiredRunIds[nextRunId]) return;
+    if(nextRunId!==p4RunId){
+      if(!p4UseRun(nextRunId,true)) return;
+      p4BoundPublisherId=publisherId;
+    }else if(!p4BoundPublisherId){
+      p4BoundPublisherId=publisherId;
+    }else if(publisherId!==p4BoundPublisherId){
+      return;
+    }
+  }else{
+    p4BoundPublisherId=null;
+    if(!p4UseRun(p4CreateRunId(),true)) return;
+  }
+  p4Menu=P4_MENU_DEFAULTS.map(function(x){return {id:x.id,name:x.name,price:x.price,available:x.available};});
+  p4MenuVersion="menu-v1"; p4OrderSequence=1; curOrder=null;
+  cart={store:"nuan",items:[],mode:(P4_ENTRY&&P4_ENTRY.mode)||"自取",table:(P4_ENTRY&&P4_ENTRY.table)||null};
+  if($("sheet-mask")&&$("sheet-mask").classList.contains("show")) closeSheet();
+  p4RenderMenu(); updateCartbar();
+  if(typeof curScene!=="undefined") go("nuan");
+  var note=$("p4-user-menu-note"); if(note) note.textContent=fromRemote?"雙邊測試已回到固定起點":"本頁已回到固定起點；正在通知 Biz";
+  if(!fromRemote){
+    var resetMessage={type:"demo:reset-request",scope:P4_SCOPE,runId:p4RunId};
+    send(resetMessage);
+  }
+  toast(fromRemote?"User／Biz 已重設，可從第一步重跑":"User 已重設；Biz 開啟時會同步重設");
+  p4Announce("本機測試資料已重設。");
+}
+function p4RequestMenu(){
+  if(!P4_BASE) return;
+  var request={type:"menu-request",scope:P4_SCOPE,store:"nuan"};
+  if(p4BoundPublisherId) request.targetPublisherId=p4BoundPublisherId;
+  if(p4RunId) request.runId=p4RunId;
+  send(request);
+}
+function p4ReplyMatchesCurrentOrder(d){
+  return !!(P4_BASE&&curOrder&&d&&d.scope===P4_SCOPE&&
+    d.code===curOrder.code&&d.idempotencyKey===curOrder.idempotencyKey&&
+    d.publisherId===curOrder.targetPublisherId&&d.publisherId===p4BoundPublisherId&&
+    d.runId===curOrder.runId&&d.runId===p4RunId);
 }
 
 /* ================= 聯動通道（同網域跨分頁；不可用時自動降級） ================= */
@@ -1844,13 +3000,33 @@ try {
   ch = new BroadcastChannel("fapiao-demo");
   ch.onmessage = function(e){
     var d = e && e.data; if (!d || !d.type) return;
-    if (d.type === "status" && curOrder && d.code === curOrder.code && !curOrder.doneFlag){
+    if (d.type === "status" && P4_BASE && p4ReplyMatchesCurrentOrder(d) && !curOrder.doneFlag){
+      applyBaseOrderStatus(d.stage, true);
+    } else if (d.type === "status" && !P4_BASE && curOrder && d.code === curOrder.code && !curOrder.doneFlag){
       finishOrder(true);
-    } else if (d.type === "coupon"){
+    } else if (P4_BASE && d.type === "order-received" && p4ReplyMatchesCurrentOrder(d)){
+      curOrder.received = true;
+      applyBaseOrderStatus(curOrder.status === "submitted" ? "received" : curOrder.status, true);
+    } else if (P4_BASE && d.type === "order-rejected" && p4ReplyMatchesCurrentOrder(d)){
+      if(d.menu&&d.menu.publisherId===d.publisherId&&d.menu.runId===d.runId) p4ApplyMenuSnapshot(d.menu,true);
+      curOrder=null;
+      go("checkout");
+      toast("Biz 已擋下訂單："+(d.reason||"菜單已變更，請重新確認"));
+      p4Announce("訂單未成立。菜單已更新，請重新確認後再送出。");
+    } else if (P4_BASE && d.type === "menu-snapshot" && d.scope === P4_SCOPE && d.menu && d.publisherId===d.menu.publisherId && d.runId===d.menu.runId){
+      p4ApplyMenuSnapshot(d.menu,false);
+    } else if (P4_BASE && (d.type === "demo:reset"||d.type === "demo:reset-request") && d.scope === P4_SCOPE){
+      p4ResetLocalDemo(true,d.runId,d.publisherId);
+    } else if (P4_BASE && d.type === "merchant-ready" && d.scope === P4_SCOPE && typeof d.publisherId==="string" && !!d.publisherId && typeof d.runId==="string" && !!d.runId){
+      if(!p4BoundPublisherId||(d.publisherId===p4BoundPublisherId&&d.runId===p4RunId)){
+        p4RequestMenu();
+        if(curOrder&&!curOrder.baseTerminal&&p4ReplyMatchesCurrentOrder({scope:P4_SCOPE,code:curOrder.code,idempotencyKey:curOrder.idempotencyKey,publisherId:d.publisherId,runId:d.runId})) dispatchBaseOrder();
+      }
+    } else if (!P4_BASE && d.type === "coupon"){
       receiveCoupon(d.c || {});
-    } else if (d.type === "redeem"){
+    } else if (!P4_BASE && d.type === "redeem"){
       markRedeemed(d.id);
-    } else if (d.type === "paymode"){
+    } else if (!P4_BASE && d.type === "paymode"){
       setPay(!!d.on, true);
     }
   };
@@ -1874,10 +3050,11 @@ var MENU_ANCHOR = { louisa:"lz-menu", nuan:"nn-menu", dtf:"dtf-menu" };
 var _skipAuthOnce = false;
 function isRetail(s){ return !!(BRAND[s] && BRAND[s].kind === "retail"); }
 var curScene = "home";
-var payHere = false; /* 已接支付情境下的付款方式：false=線上付款, true=到店付款 */
+var payHere = P4_BASE; /* 已接支付情境下的付款方式：false=線上付款, true=到店付款 */
 function isOnline(){ return PAY && !payHere; }
 var _lt = null; /* pending launch timer */
 function go(id){
+  if (P4_BASE && !({nuan:1,checkout:1,status:1,orders:1})[id]) id="nuan";
   if (_lt){ clearTimeout(_lt); _lt = null; $("launch").classList.remove("show"); }
   var sc = document.querySelectorAll(".scene");
   for (var i=0;i<sc.length;i++) sc[i].classList.remove("on");
@@ -1904,6 +3081,7 @@ function go(id){
   if (id==="checkout") renderCheckout();
   if (id==="orders") renderOrders();
   if (id==="coupons"){ renderCoupons(); $("cdot").classList.remove("show"); }
+  if (P4_BASE) setTimeout(function(){p4FocusScene(id);},0);
 }
 function backFromCheckout(){ go(lastStore); }
 function setHere(v){ payHere = !!v; renderCheckout(); toast(v ? "已選：到店付款（現金／店內刷卡）" : "已選：線上付款（付款＋開票＋對獎一次完成）"); }
@@ -1919,7 +3097,7 @@ function launchMini(scene){
   _lt = setTimeout(function(){
     _lt = null; $("launch").classList.remove("show"); go(scene);
     var skip = _skipAuthOnce; _skipAuthOnce = false;   /* 只擋這一次 */
-    if (!authed[scene] && !skip) setTimeout(function(){ showAuth(scene); }, 380);
+    if (!P4_BASE && !authed[scene] && !skip) setTimeout(function(){ showAuth(scene); }, 380);
   }, 850);
 }
 function capHome(){
@@ -1933,6 +3111,7 @@ var authed = {};
 var USER_ME = { name:PERSONA.name, phone:PERSONA.phone };
 var MEMBER_NO = { louisa:"L-2043", nuan:"N-1287", dtf:"D-0356", el:"E-8021" };
 function showAuth(s){
+  if (P4_BASE) return;
   var b = BRAND[s]; if (!b) return;
   var html = '<div class="auth" role="dialog" aria-label="會員授權">'
     + '<div class="hd"><span class="lg" style="background:' + b.bg + '">' + b.c + '</span>'
@@ -2020,6 +3199,10 @@ function cancelScan(){}
 var claimedWel = {};
 function miniStore(){ return BRAND[curScene] ? curScene : (cart.store || lastStore); }
 function mtOpen(k){
+  if (P4_BASE && k!=="menu" && k!=="order"){
+    toast("此入口不在 P4 V1 Base");
+    return;
+  }
   if (k === "menu"){ $("app").scrollTop = 0; return; }
   if (k === "coupon") openBrandCoupons();
   else if (k === "order") openBrandOrders();
@@ -2028,9 +3211,11 @@ function mtOpen(k){
   else if (k === "mall") openMall();
 }
 function sheetWrap(title, inner){
-  $("sheet-host").innerHTML = '<div class="sheet" role="dialog"><h3>' + title + '</h3>' + inner
+  $("sheet-host").innerHTML = '<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="p4-sheet-title"><h3 id="p4-sheet-title">' + title + '</h3>' + inner
     + '<button class="cap-cancel" onclick="closeSheet()" style="margin-top:14px">關閉</button></div>';
   $("sheet-mask").classList.add("show");
+  $("sheet-mask").setAttribute("aria-hidden","false");
+  if(P4_BASE) p4OpenSheetA11y();
 }
 /* 消費者完整鏈路：掃碼點餐 → 結帳「自動折抵」(findApplicable，見下)才是主線,不用任何額外動作。
    「到店出示」只留給沒走 App 點餐、現金付款的客人 —— 那才需要店員手動核銷、記一筆。
@@ -2133,13 +3318,14 @@ function miniCtx(){
   return (s && BRAND[s]) ? s : null;
 }
 function capMenu(){
+  if(P4_BASE){p4ReturnToMenu();return;}
   var s = miniCtx();
   if (!s){ toast("此頁為發票載具原生頁 · 「⋯」選單僅在品牌小程序內"); return; }
   var b = BRAND[s], fav = !!favs[s];
-  var html = '<div class="sheet" role="dialog" aria-label="小程序選單">'
+  var html = '<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="p4-sheet-title">'
     + '<div style="display:flex;align-items:center;gap:12px">'
     +   '<span style="width:44px;height:44px;border-radius:12px;background:' + b.bg + ';color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex:none">' + b.c + '</span>'
-    +   '<div><h3 style="font-size:15px">' + b.n + '</h3><div style="font-size:11px;color:#8B96A3;margin-top:2px">發票載具 · 小程序</div></div>'
+    +   '<div><h3 id="p4-sheet-title" style="font-size:15px">' + b.n + '</h3><div style="font-size:11px;color:#8B96A3;margin-top:2px">發票載具 · 小程序</div></div>'
     + '</div>'
     + '<div class="cap-grid">'
     +   '<button class="cap-act" onclick="shareLine()"><span class="ico" style="background:#E4F6E9">💬</span>分享到 LINE</button>'
@@ -2152,6 +3338,8 @@ function capMenu(){
     + '</div>';
   $("sheet-host").innerHTML = html;
   $("sheet-mask").classList.add("show");
+  $("sheet-mask").setAttribute("aria-hidden","false");
+  if(P4_BASE) p4OpenSheetA11y();
 }
 function favMini(){
   var s = miniCtx(); if (!s) return;
@@ -2477,23 +3665,32 @@ function openStamps(){
 
 /* ================= 支付情境切換 ================= */
 function setPay(on, fromRemote){
+  if (P4_BASE) on=false;
   PAY = !!on;
-  payHere = false;
+  payHere = P4_BASE;
   $("pb-on").className = PAY ? "on" : "";
   $("pb-off").className = PAY ? "" : "on off";
-  var lbl = PAY ? "線上支付 ✓" : "到店付款";
+  var lbl = P4_BASE ? "付款未納入 Base" : (PAY ? "線上支付 ✓" : "到店付款");
   $("paychip-lz").textContent = lbl; $("paychip-nn").textContent = lbl;
   var dch = $("paychip-dtf"); if (dch) dch.textContent = lbl;
   var ech = $("paychip-el"); if (ech) ech.textContent = PAY ? "線上支付 ✓" : "貨到付款";
   if (curScene === "checkout") renderCheckout();
-  if (setPay._init) toast(fromRemote ? "（聯動）商家端已設定：" + (PAY ? "已接第三方支付" : "到店付款") 
+  if (setPay._init && !P4_BASE) toast(fromRemote ? "（聯動）商家端已設定：" + (PAY ? "已接第三方支付" : "到店付款")
                    : "情境切換：" + (PAY ? "已接第三方支付（線上付款五合一）" : "未接支付（預點 → 到店付款嗶載具）"));
   setPay._init = 1;
-  try { history.replaceState(null, "", PAY ? "#pay" : "#nopay"); } catch(e){}
+  if(!P4_BASE){ try { history.replaceState(null, "", PAY ? "#pay" : "#nopay"); } catch(e){} }
 }
 
 /* ================= mode / timerow ================= */
 function setMode(btn, m){
+  if (P4_BASE && m!=="自取" && m!=="內用"){
+    toast("此功能不在 P4 V1 Base；目前只開放內用與自取");
+    return;
+  }
+  if (P4_BASE && m==="內用" && (!P4_ENTRY || !P4_ENTRY.table)){
+    toast("這個 QR 沒有桌號，不能在 Base 內自行補一個桌位");
+    return;
+  }
   cart.mode = m;
   if (btn && btn.parentNode) pick(btn);
   var here = BRAND[curScene] ? curScene : (cart.store || lastStore);
@@ -2538,13 +3735,18 @@ var SHEET = {
   lip:{ store:"el", name:"傾慕唇膏（絲絨霧面）", price:1250,
     groups:[{t:"色號",o:["#333 乾燥玫瑰","#420 楓葉紅棕","#557 正紅顯白"]}]}
 };
-var curSheet = null;
+var curSheet = null, p4SheetReturnFocus = null;
 function openSheet(key){
   curSheet = SHEET[key];
+  if(P4_BASE&&curSheet&&curSheet.store==="nuan"){
+    var product=p4MenuProduct(key);
+    if(!product||!product.available){toast((product?product.name:"此商品")+"已售完，不能加入購物車");return;}
+    curSheet={store:curSheet.store,name:product.name,price:product.price,groups:[],productId:product.id};
+  }
   cart.store = curSheet.store; lastStore = curSheet.store;
   var host = $("sheet-host");
-  var html = '<div class="sheet" role="dialog" aria-label="客製化選項">'
-    + '<h3>' + curSheet.name + '</h3><div class="pr">NT$ ' + curSheet.price + '</div>';
+  var html = '<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="p4-sheet-title">'
+    + '<h3 id="p4-sheet-title">' + curSheet.name + '</h3><div class="pr">NT$ ' + curSheet.price + '</div>';
   for (var g=0; g<curSheet.groups.length; g++){
     var gr = curSheet.groups[g];
     html += '<div class="optg"><div class="t">' + gr.t + '</div><div class="opts">';
@@ -2555,19 +3757,91 @@ function openSheet(key){
   html += '<button class="btn primary" onclick="confirmSheet()">加入 · NT$ ' + curSheet.price + '</button></div>';
   host.innerHTML = html;
   $("sheet-mask").classList.add("show");
+  $("sheet-mask").setAttribute("aria-hidden","false");
+  if(P4_BASE) p4OpenSheetA11y();
 }
-function closeSheet(e){ if(!e || e.target.id==="sheet-mask") $("sheet-mask").classList.remove("show"); }
-function confirmSheet(){ addItem(curSheet.name, curSheet.price); $("sheet-mask").classList.remove("show"); }
+function p4SheetFocusable(){
+  return Array.prototype.slice.call($("sheet-mask").querySelectorAll("button,[href],[tabindex]:not([tabindex='-1'])"))
+    .filter(function(el){return !el.disabled&&el.getAttribute("aria-hidden")!=="true";});
+}
+function p4SetSheetBackgroundInert(on){
+  var ids=["app","tabbar","cap","minitab","drawer"];
+  for(var i=0;i<ids.length;i++){
+    var el=$(ids[i]); if(!el) continue;
+    if(on) el.setAttribute("inert","");
+    else if(!document.body.classList.contains("p4-gated")) el.removeAttribute("inert");
+  }
+}
+function p4SheetKeydown(e){
+  if(!P4_BASE||!$("sheet-mask").classList.contains("show")) return;
+  if(e.key==="Escape"){e.preventDefault();closeSheet();return;}
+  if(e.key!=="Tab") return;
+  var nodes=p4SheetFocusable(); if(!nodes.length){e.preventDefault();return;}
+  var first=nodes[0],last=nodes[nodes.length-1];
+  if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+  else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+}
+function p4OpenSheetA11y(){
+  var mask=$("sheet-mask");
+  p4SheetReturnFocus=document.activeElement;
+  mask.setAttribute("aria-hidden","false");
+  p4SetSheetBackgroundInert(true);
+  mask.addEventListener("keydown",p4SheetKeydown);
+  setTimeout(function(){var nodes=p4SheetFocusable();if(nodes.length) nodes[0].focus();},0);
+}
+function p4CloseSheetA11y(){
+  var mask=$("sheet-mask");
+  mask.setAttribute("aria-hidden","true");
+  mask.removeEventListener("keydown",p4SheetKeydown);
+  p4SetSheetBackgroundInert(false);
+  if(!document.body.classList.contains("p4-gated")&&p4SheetReturnFocus&&p4SheetReturnFocus.isConnected&&p4SheetReturnFocus.focus){
+    try{p4SheetReturnFocus.focus({preventScroll:true});}catch(e){p4SheetReturnFocus.focus();}
+  }
+  if(document.body.classList.contains("p4-gated")) setTimeout(p4FocusGate,0);
+  p4SheetReturnFocus=null;
+}
+function closeSheet(e){
+  if(!e || e.target.id==="sheet-mask"){
+    $("sheet-mask").classList.remove("show");
+    $("sheet-mask").setAttribute("aria-hidden","true");
+    if(P4_BASE) p4CloseSheetA11y();
+  }
+}
+function confirmSheet(){
+  if(P4_BASE&&curSheet&&curSheet.store==="nuan"){
+    var latest=p4MenuProduct(curSheet.productId);
+    if(!latest||!latest.available){
+      closeSheet(); p4RenderMenu();
+      toast((latest?latest.name:curSheet.name)+"已售完，這次沒有加入購物車");
+      return;
+    }
+    if(latest.name!==curSheet.name||latest.price!==curSheet.price){
+      var key=latest.id;
+      closeSheet(); openSheet(key);
+      toast("價格剛更新為 NT$ "+fmtN(latest.price)+"，請確認後再加入");
+      return;
+    }
+  }
+  addItem(curSheet.name, curSheet.price, curSheet.productId||null); closeSheet();
+}
 function quickAdd(name, price){
   var here = document.querySelector(".scene.on").id;
   if (BRAND[here]){ cart.store = here; lastStore = here; }
-  addItem(name, price);
-}
-function addItem(name, price){
-  for (var i=0;i<cart.items.length;i++){
-    if (cart.items[i].name===name){ cart.items[i].qty++; updateCartbar(); toast("已加入：" + name); return; }
+  var productId=null;
+  if(P4_BASE&&here==="nuan"){
+    var product=p4MenuProductByName(name);
+    if(!product||!product.available){toast((product?product.name:name)+"已售完，不能加入購物車");return;}
+    price=product.price; productId=product.id;
   }
-  cart.items.push({name:name, price:price, qty:1});
+  addItem(name, price, productId);
+}
+function addItem(name, price, productId){
+  for (var i=0;i<cart.items.length;i++){
+    if ((productId&&cart.items[i].productId===productId)||(!productId&&cart.items[i].name===name)){
+      cart.items[i].price=price; cart.items[i].qty++; updateCartbar(); toast("已加入：" + name); return;
+    }
+  }
+  cart.items.push({productId:productId||null,name:name, price:price, qty:1});
   updateCartbar(); toast("已加入：" + name);
 }
 function cartTotal(){ var s=0; for (var i=0;i<cart.items.length;i++) s += cart.items[i].price*cart.items[i].qty; return s; }
@@ -2582,7 +3856,7 @@ function updateCartbar(){
   }
   var a = $("cart-" + cur + "-amt"), c = $("cart-" + cur + "-n");
   if (a) a.textContent = "NT$ " + fmtN(amt);
-  if (c) c.textContent = n + " 件 · 預估回饋 CM 幣 +" + Math.round(amt*0.03);
+  if (c) c.textContent = P4_BASE ? (n + " 件 · 本機測試訂單") : (n + " 件 · 預估回饋 CM 幣 +" + Math.round(amt*0.03));
 }
 
 /* ================= 券：套用邏輯 ================= */
@@ -2605,14 +3879,18 @@ function feeLabel(){ return cart.mode === "宅配" ? "運費（黑貓宅急便�
 
 /* ================= checkout（雙支付情境） ================= */
 function renderCheckout(){
-  if (!cart.items.length){ cart.items=[{name:"西西里檸檬咖啡",price:80,qty:1}]; cart.store=cart.store||"louisa"; }
+  if(P4_BASE) p4ReconcileCart();
+  if (!cart.items.length){
+    if(P4_BASE){go("nuan");toast("請先從菜單選擇商品");return;}
+    cart.items=[{name:"西西里檸檬咖啡",price:80,qty:1}]; cart.store=cart.store||"louisa";
+  }
   var SNAME = { louisa:"路易莎咖啡 復興門市", nuan:"暖暖窩義式廚房 板橋店", dtf:"鼎泰豐 板橋店", el:"雅詩蘭黛 板橋大遠百專櫃" };
   var box = $("co-items"), html = "";
   for (var i=0;i<cart.items.length;i++){
     var it = cart.items[i];
     html += '<div class="rw"><span>' + it.name + ' × ' + it.qty + '</span><b>NT$ ' + fmtN(it.price*it.qty) + '</b></div>';
   }
-  var total = cartTotal(), cp = findApplicable(), disc = cp ? cp.amt : 0;
+  var total = cartTotal(), cp = P4_BASE ? null : findApplicable(), disc = cp ? cp.amt : 0;
   var fee = calcFee(), pay = total - disc + fee;
   if (cp) html += '<div class="rw" style="color:#8A6A1B"><span>🎟 ' + cp.title + '（已自動套用）</span><b>− NT$ ' + disc + '</b></div>';
   if (cart.mode === "外送" || cart.mode === "宅配"){
@@ -2639,6 +3917,20 @@ function renderCheckout(){
   } else if (cart.mode === "專櫃取貨"){
     $("co-table").innerHTML = '<div class="rw"><span>🏬 取貨門市</span><b>板橋大遠百 2F 專櫃 · 免運</b></div>';
   } else { $("co-table").innerHTML = ""; }
+
+  if (P4_BASE){
+    var menuProblem=p4CartProblem();
+    if(menuProblem) box.innerHTML+='<div class="p4-menu-warning"><b>這筆訂單目前不能送出</b><br>'+menuProblem+'<br><button class="btn ghost" style="margin-top:8px;width:100%" onclick="p4RemoveUnavailable()">移除售完商品</button></div>';
+    $("co-pay").innerHTML = '<div class="paynote"><b>付款不在這個 Base 切片</b><br>本次只送出未付款訂單，店家可接單、開始製作並標示可取餐；不會收款，也不會模擬付款成功。</div>';
+    $("co-hl").innerHTML = '<div class="hlrow p4-boundary-row"><span>🧾 電子發票</span><b>不適用 · 此測試店不支援歸戶</b></div>'
+      + '<div class="syncnote" style="margin-top:9px">付款、取餐核銷、會員、點數與真正發票開立均維持未執行。</div>';
+    $("co-cta").className = "btn primary co-cta";
+    $("co-cta").disabled=!!menuProblem;
+    $("co-cta").innerHTML = menuProblem
+      ? '<span>請先處理菜單變更<br><small>不會用舊價格或售完品項送單</small></span>'
+      : '<span>送出未付款訂單<br><small>Biz 會再核對價格／售完，再同步備餐狀態</small></span>';
+    return;
+  }
 
   var wd;
   if (cart.mode === "外送") wd = { here:"送達付款", hereDesc:"外送員送達時以現金／行動支付付款，<b>出示載具嗶一下</b>，發票即自動歸戶、照常對獎。", cta1:"送出外送單（送達付款）", cta1s:"先鎖餐點與運能 · 送達付款嗶載具", rebate:"送達結帳後入帳", inv:"送達結帳嗶載具 → 自動歸戶" };
@@ -2687,6 +3979,7 @@ function renderCheckout(){
 
 /* ================= 下單 → 動畫 → 進度 ================= */
 function newCode(){
+  if (P4_BASE){var code="P4-"+("000"+p4OrderSequence).slice(-3);p4OrderSequence++;return code;}
   if (cart.mode === "內用") return "桌 " + (cart.table || "B4");
   if (cart.mode === "外送") return "D-1" + (10 + Math.floor(Math.random()*80));
   if (cart.mode === "宅配") return "EL-9" + (1000 + Math.floor(Math.random()*8000));
@@ -2695,6 +3988,15 @@ function newCode(){
   return cart.store === "nuan" ? "N-B" + (10 + Math.floor(Math.random()*80)) : "L-A" + (10 + Math.floor(Math.random()*80));
 }
 function placeOrder(){
+  if (P4_BASE && curOrder && !curOrder.baseTerminal){
+    toast("此 Base 已有一筆進行中訂單，不會重複建立");
+    setupBaseStatus(); go("status"); return;
+  }
+  if(P4_BASE){
+    p4ReconcileCart();
+    var menuProblem=p4CartProblem();
+    if(menuProblem){toast("訂單未送出："+menuProblem);renderCheckout();go("checkout");return;}
+  }
   if (cart.mode === "內用" && !cart.table){
     if (cart.store === "dtf" && !dtfTicket){ toast("🎫 鼎泰豐內用請先取號 · 叫號後掃桌碼就座"); go("dtf"); return; }
     toast("🍽️ 內用請先掃描桌碼綁定桌位"); openScanner(); return;
@@ -2702,21 +4004,100 @@ function placeOrder(){
   var needVow = (cart.mode === "自取" || cart.mode === "內用");
   if (needVow && !isOnline() && vowBlocked()){ toast("⛔ 到店付款已暫停 · 請綁定信用卡或改用線上付款"); return; }
   var SNAME = { louisa:"路易莎咖啡 復興門市", nuan:"暖暖窩義式廚房 板橋店", dtf:"鼎泰豐 板橋店", el:"雅詩蘭黛 板橋大遠百專櫃" };
-  var cp = findApplicable(), disc = cp ? cp.amt : 0;
+  var cp = P4_BASE ? null : findApplicable(), disc = cp ? cp.amt : 0;
   if (cp) cp.used = true;
   var fee = calcFee();
+  var nextCode=newCode();
   curOrder = {
-    code: newCode(), store: cart.store,
+    code: nextCode, store: cart.store,
     storeName: SNAME[cart.store] || SNAME.louisa,
     mode: cart.mode,
-    items: cart.items.map(function(x){ return {name:x.name, price:x.price, qty:x.qty}; }),
-    total: cartTotal() - disc + fee, discount: disc, fee: fee, paid: isOnline(), doneFlag: false,
+    items: cart.items.map(function(x){ return {productId:x.productId||null,name:x.name, price:x.price, qty:x.qty}; }),
+    total: cartTotal() - disc + fee, discount: disc, fee: fee, paid: P4_BASE ? false : isOnline(), doneFlag: false,
     table: cart.mode === "內用" ? cart.table : null,
-    inv: isOnline() ? "AB-58814920" : null
+    inv: P4_BASE ? null : (isOnline() ? "AB-58814920" : null),
+    scope: P4_BASE ? P4_SCOPE : null,
+    targetPublisherId: P4_BASE ? p4BoundPublisherId : null,
+    publisherId: P4_BASE ? p4BoundPublisherId : null,
+    runId: P4_BASE ? p4RunId : null,
+    menuSnapshotVersion: P4_BASE ? p4MenuVersion : null,
+    idempotencyKey: P4_BASE ? (P4_SCOPE+":"+p4RunId+":"+p4BoundPublisherId+":"+p4MenuVersion+":"+nextCode) : null,
+    paymentStatus: P4_BASE ? "unpaid" : (isOnline() ? "paid" : "unpaid"),
+    invoiceStatus: P4_BASE ? "not-applicable" : (isOnline() ? "resolved" : "unavailable"),
+    status: P4_BASE ? "submitted" : null,
+    received: false,
+    baseTerminal: false
   };
+  if (P4_BASE){
+    dispatchBaseOrder();
+    setupBaseStatus();
+    go("status");
+    return;
+  }
   send({ type:"order", o:{ code:curOrder.code, store:curOrder.store, storeName:curOrder.storeName,
         mode:curOrder.mode, table:curOrder.table, items:curOrder.items, total:curOrder.total, fee:fee, paid:isOnline(), coupon: cp ? cp.title : null }});
   startMagic();
+}
+function baseOrderPayload(){
+  if (!curOrder || !P4_BASE) return null;
+  /* menuSnapshotVersion:p4MenuVersion 會在送出當下存入 curOrder，重送仍維持原版本，避免把舊品項冒充成新菜單。 */
+  return {
+    scope:P4_SCOPE, synthetic:true, code:curOrder.code, idempotencyKey:curOrder.idempotencyKey,
+    targetPublisherId:curOrder.targetPublisherId, publisherId:curOrder.publisherId, runId:curOrder.runId,
+    store:curOrder.store, storeName:curOrder.storeName, mode:curOrder.mode, table:curOrder.table,
+    items:curOrder.items, total:curOrder.total, paymentStatus:"unpaid", paid:false,
+    invoiceStatus:"not-applicable", menuSnapshotVersion:curOrder.menuSnapshotVersion
+  };
+}
+function dispatchBaseOrder(){
+  var o=baseOrderPayload(); if(!o) return;
+  if(curOrder.targetPublisherId!==p4BoundPublisherId||curOrder.runId!==p4RunId) return;
+  curOrder.dispatchCount=(curOrder.dispatchCount||0)+1;
+  send({
+    type:"order",scope:P4_SCOPE,code:curOrder.code,idempotencyKey:curOrder.idempotencyKey,
+    targetPublisherId:curOrder.targetPublisherId,publisherId:curOrder.publisherId,runId:curOrder.runId,o:o
+  });
+}
+function setupBaseStatus(){
+  if (!curOrder || !P4_BASE) return;
+  var stage=curOrder.status||"submitted", received=!!curOrder.received;
+  var orderLab={submitted:"等待 Biz 接收",received:"Biz 已收到",preparing:"製作中",ready:"可取餐"}[stage];
+  $("stat-hero").style.background="linear-gradient(150deg,#242D18,#55613C)";
+  $("stat-lbl").textContent=curOrder.mode==="內用" ? "內用訂單" : "自取訂單";
+  $("stat-code").textContent=curOrder.code;
+  $("stat-eta").textContent=stage==="ready" ? "餐點可取 · 請依店家現場流程付款"
+    : (stage==="preparing" ? "店家已接單 · 製作中" : (received ? "Biz 已收到訂單 · 等待接單" : "訂單已送出 · 等待 Biz 回覆"));
+  $("stat-pill").innerHTML='<span class="p4-badge p4-badge--order">'+orderLab+'</span><span class="p4-badge p4-badge--payment">未付款</span><span class="p4-badge p4-badge--boundary">發票不適用</span>';
+  $("tl1").className="tstep done";
+  $("tl1-t").textContent="未付款訂單已送出";
+  $("tl1-s").textContent=received ? "Biz 已去重接收 1 筆（local demo transport）" : "等待 Biz 接收；請先在另一分頁開啟 Biz 接單頁";
+  $("tl2").className=stage==="ready" ? "tstep done" : (stage==="preparing" ? "tstep now" : "tstep");
+  $("tl2-t").textContent="店家接單 · 製作中";
+  $("tl2-s").textContent=stage==="preparing"||stage==="ready" ? "Biz 狀態已同步" : "等待店家按下「接單」";
+  $("tl3").className=stage==="ready" ? "tstep now" : "tstep";
+  $("tl3-t").textContent="餐點可取";
+  $("tl3-s").textContent=stage==="ready" ? "付款與取餐核銷仍未執行" : "完成製作後通知你";
+  $("tl4").className="tstep hide";
+  $("stat-summary-label").textContent="權限邊界";
+  $("stat-cm").textContent="未付款 · 不開票";
+  var sync=$("status").querySelector(".syncnote");
+  if(sync) sync.innerHTML='此頁只證明同一瀏覽器的 User／Biz 狀態同步；BroadcastChannel 不是正式 SOR，也不是 exactly-once 或真機 UAT 證據。';
+  p4Announce("訂單狀態："+orderLab+"。付款狀態：未付款。發票狀態：不適用。");
+}
+function applyBaseOrderStatus(stage, fromRemote){
+  if (!P4_BASE || !curOrder) return;
+  var current=curOrder.status||"submitted";
+  var allowed=(stage==="received"&&current==="submitted")||
+    (stage==="preparing"&&(current==="submitted"||current==="received"))||
+    (stage==="ready"&&current==="preparing");
+  if(stage===current){setupBaseStatus();return;}
+  if(!allowed) return;
+  curOrder.status=stage;
+  if(stage==="ready") curOrder.baseTerminal=true;
+  setupBaseStatus();
+  if(curScene!=="status") go("status");
+  if(fromRemote && stage==="preparing") toast("Biz 已接單 · 製作中");
+  if(fromRemote && stage==="ready") toast("餐點可取；付款、取餐核銷與發票仍未執行");
 }
 function startMagic(){
   go("magic");
@@ -2804,6 +4185,7 @@ function setupStatus(){
   $("stat-cm").textContent = "CM 幣 +" + Math.round(o.total*0.03) + (o.paid ? " 已入帳" : (ship ? "（簽收後入帳）" : (dlv ? "（送達後入帳）" : "（結帳後入帳）")));
 }
 function finishOrder(fromRemote){
+  if (P4_BASE){ applyBaseOrderStatus("ready", fromRemote===true); return; }
   if (!curOrder){ setupStatus(); }
   if (curOrder) curOrder.doneFlag = true;
   if (curScene !== "status"){ setupStatus(); go("status"); }
@@ -2864,6 +4246,20 @@ function submitReview(){
 /* ================= 訂單頁（二次複購） ================= */
 function renderOrders(){
   var html = "";
+  if (P4_BASE){
+    if (curOrder){
+      var lab={submitted:"等待 Biz 接收",received:"Biz 已收到",preparing:"製作中",ready:"可取餐"}[curOrder.status||"submitted"];
+      html='<div class="sec-label">P4 V1 Base · 進行中</div>'
+        +'<div class="card ordcard"><div class="top"><span class="oc">'+curOrder.code+'</span><span class="p4-badge-row"><span class="p4-badge p4-badge--order">'+lab+'</span><span class="p4-badge p4-badge--payment">未付款</span><span class="p4-badge p4-badge--boundary">發票不適用</span></span></div>'
+        +'<div class="items">'+curOrder.items.map(function(x){return x.name+' ×'+x.qty;}).join(' · ')+'</div>'
+        +'<div class="syncnote" style="margin-top:9px">local demo transport · 未執行付款、開票或取餐核銷</div>'
+        +'<div class="act"><button class="btn ghost" onclick="setupBaseStatus();go(\'status\')">查看安全狀態 ›</button></div></div>';
+    } else {
+      html='<div class="syncnote">尚無 P4 Base 訂單。請從 QR 店家頁選品後下單。</div>';
+    }
+    $("ord-body").innerHTML=html;
+    return;
+  }
   if (curOrder){
     html += '<div class="sec-label">進行中</div>'
       + '<div class="card ordcard"><div class="top"><span class="oc">' + curOrder.code + '</span>'
@@ -3035,14 +4431,20 @@ function tmAns(i){
 function tmQuizClose(){ $("tmQz").classList.remove("show"); }
 function tmKnock(){ tmKn++; $("tmKn").textContent=tmKn; toast("已敲碗（示範）：BD 名單 +1——「已有 "+tmKn+" 次敲碗在等大蔬鍋」"); }
 
+p4InitGate();
+if(P4_BASE){
+  window.addEventListener("online",p4InitGate);
+  window.addEventListener("offline",p4InitGate);
+  p4RenderMenu();
+  setTimeout(p4RequestMenu,80);
+}
 setPay(PAY, false);
-go("home");
+go(P4_BASE ? "nuan" : "home");
 /* ===== v5.9：embed 模式 ＋ 品牌店直達（供商家工作台嵌入） ===== */
 if (/[?&]embed=1/.test(location.search)) document.body.classList.add("embed");
 var _gxStore = location.search.match(/[?&]store=([a-z]+)/);
-/* 桌碼 QR 印的就是這個網址(?store=..&table=..)——任何手機相機掃了都直接開瀏覽器落地，
-   不用先開我們的 App、不需要用到 in-app 掃描器；in-app 掃描器(openScanner)是另一條路，
-   給「已經在點餐、想換桌/沒事先掃到」的人用，兩條路吃同一個 table 格式，互不衝突 */
+/* 桌碼 QR 印的就是這個網址(?store=..&table=..)。legacy／sandbox 仍可瀏覽器直達；
+   scope=p4-v1 則由 p4InitGate 先做瀏覽前安裝牆，安裝後必須重掃同一 URL 才開店。 */
 var _gxTable = location.search.match(/[?&]table=([^&]+)/i);
 if (_gxStore && BRAND[_gxStore[1]]) setTimeout(function(){
   try{
@@ -3060,7 +4462,7 @@ if (_gxStore && BRAND[_gxStore[1]]) setTimeout(function(){
       }
     }
   }catch(e){}
-}, 550);
+}, P4_BASE ? 0 : 550);
 
 </script>
 <script>
@@ -3136,6 +4538,7 @@ if (_gxStore && BRAND[_gxStore[1]]) setTimeout(function(){
   function boot(){
     try{
       var q = new URLSearchParams(location.search || "");
+      if (P4_BASE) return;                              /* P4 入口只由上方同一 QR 啟動一次 */
       if (q.get("home") === "1") return;               /* 明確要求首頁進場 */
       var key = q.get("store") || "nuan";
       if (!BRAND[key]) return;                          /* 未知品牌就維持原行為 */
