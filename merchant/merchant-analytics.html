@@ -217,7 +217,21 @@ body.embed .storebar .go{display:none}
       <a class="go" href="merchant.html">接單台 →</a>
     </div>
     <div class="period">
-      <span class="pill">📅 本週 07/20–07/26</span>
+      <span class="pill" id="wk-pill">📅 本週 08/31–09/06</span>
+      <script>
+      /* 「本週」依開頁當天動態計算（週一～週日，Asia/Taipei），不再停在某一週。
+         靜態文字保留為 JS 失效時的後備；verify-demo.py 讀的是靜態文字，所以它也要是近期。 */
+      (function(){
+        try {
+          var now = new Date(Date.now() + (8*60 - (-new Date().getTimezoneOffset()))*60000);
+          var dow = (now.getDay() + 6) % 7;                // 週一=0
+          var mon = new Date(now); mon.setDate(now.getDate() - dow);
+          var sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+          var f = function(d){ return ('0'+(d.getMonth()+1)).slice(-2) + '/' + ('0'+d.getDate()).slice(-2); };
+          document.getElementById('wk-pill').textContent = '📅 本週 ' + f(mon) + '–' + f(sun);
+        } catch (e) {}
+      })();
+      </script>
       <span class="pill">🧾 發票級數據</span>
       <span class="pill">🔒 跨店口徑已去識別化</span>
     </div>
